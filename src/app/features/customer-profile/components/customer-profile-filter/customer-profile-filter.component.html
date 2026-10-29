@@ -1,0 +1,50 @@
+<div class="base-border rounded-[0.6rem] p-[1rem]">
+  <h3 class="text-[#C62B29] font-bold mt-0">Search Customer Profile</h3>
+  <form
+    class="grid grid-cols-[auto_auto_auto_6rem_5rem] gap-4 items-center"
+    [formGroup]="searchForm"
+  >
+    <mat-form-field class="demoproj-input">
+      <span matPrefix>
+        <img src="icon-search.svg" alt="search" loading="lazy" />
+      </span>
+      <input
+        matInput
+        placeholder="National ID/Passport ID, Name, Phone no., Email"
+        formControlName="commonSearch"
+        (change)="trimSpaces('commonSearch')"
+      />
+    </mat-form-field>
+
+    <mat-form-field class="demoproj-input">
+      <span matPrefix>
+        <img src="icon-search.svg" alt="search" loading="lazy" />
+      </span>
+      <input
+        matInput
+        placeholder="Policy Number e.g. : GL-xxxxxxxx-xx"
+        formControlName="policyNumber"
+        (change)="trimSpaces('policyNumber')"
+      />
+    </mat-form-field>
+
+    <mat-form-field class="demoproj-input">
+      <span matPrefix>
+        <img src="icon-search.svg" alt="search" loading="lazy" />
+      </span>
+      <input
+        matInput
+        placeholder="Cert No. 1000000-XX with Policy No."
+        formControlName="certificateNumber"
+        (change)="trimSpaces('certificateNumber')"
+      />
+    </mat-form-field>
+
+    <button mat-button class="demoproj-btn" (click)="onSearch()">
+      <mat-icon>search</mat-icon>
+      Search
+    </button>
+
+    <button mat-button class="base-border" (click)="resetForm()">Clear</button>
+  </form>
+</div>

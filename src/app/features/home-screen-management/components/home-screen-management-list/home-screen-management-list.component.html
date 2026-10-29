@@ -1,0 +1,81 @@
+<div class="my-[1.5rem] flex items-center justify-end gap-[1rem]">
+  <button
+    *ngIf="!isEditOrder()"
+    mat-button
+    class="base-border base-btn-border-color"
+    [disabled]="((virtualHomeScreenManagements$ | async) || []).length === 0"
+    (click)="setEditOrder(true)"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <img src="edit.svg" alt="edit" [attr.loading]="'lazy'" />
+      Edit Order
+    </div>
+  </button>
+  <ng-container
+    *appHasPermissions="[
+      {
+        feature: featurePermissionCode.HomeScreenManagement,
+        action: actionPermissionCode.CreateEdit
+      }
+    ]"
+  >
+    <button
+      *ngIf="!isEditOrder()"
+      mat-button
+      class="demoproj-btn"
+      (click)="openCreateNewHomeScreen()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus></svg-plus>
+        New Section
+      </div>
+    </button>
+  </ng-container>
+  <ng-container *ngIf="isEditOrder()">
+    <button
+      mat-button
+      class="base-border base-btn-border-color"
+      (click)="cancelEditOrder()"
+    >
+      Cancel
+    </button>
+
+    <button
+      mat-button
+      class="demoproj-btn"
+      (click)="publishItems()"
+      [disabled]="reOrderLoading$ | async"
+    >
+      <mat-icon>check</mat-icon>
+      Publish
+    </button>
+  </ng-container>
+</div>
+<app-demoproj-table
+  class="min-w-full table-auto whitespace-nowrap"
+  [data]="(virtualHomeScreenManagements$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(listLoading$ | async)! || (getMissingBannerSettingsLoading$ | async)!"
+  [noDataMessage]="'No Section Set'"
+  [disableDragDrop]="!isEditOrder()"
+  (rowClick)="onRowClick($event)"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (dragDropChange)="onDragDropChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'is_published'">
+        <mat-slide-toggle
+          class="demoproj-slide-toggle"
+          hideIcon="true"
+          [checked]="rowData.is_published"
+          [disabled]="!isEditOrder()"
+          (change)="onToggleChange($event, rowData)"
+        ></mat-slide-toggle>
+      </ng-container>
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

@@ -1,0 +1,9 @@
+<app-demoproj-table
+  [data]="(notifications$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (rowClick)="onRowClick($event)"
+></app-demoproj-table>

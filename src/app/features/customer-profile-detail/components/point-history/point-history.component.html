@@ -1,0 +1,132 @@
+<div class="my-[1.5rem] flex items-center justify-between">
+  <div>
+    <h2 class="m-0">Point History</h2>
+    <div class="text-[#667185] font-light mt-[0.5rem]">
+      Point Data Display Table
+    </div>
+  </div>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    *appHasPermissions="[
+      {
+        feature: featurePermissionCode.CustomerProfile,
+        action: actionPermissionCode.CreateEdit
+      }
+    ]"
+    (click)="openAddPointDialog()"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-plus></svg-plus>
+      Add Point
+    </div>
+  </button>
+</div>
+
+<div class="my-[2rem] grid grid-cols-[repeat(auto-fill,_21rem)] gap-[1rem]">
+  <mat-card class="card card-red relative text-white" appearance="outlined">
+    <div class="flex items-center gap-[1rem]">
+      <div
+        class="w-[2rem] h-[2rem] rounded-[0.5rem] base-border flex items-center justify-center bg-white"
+      >
+        <img src="3d.svg" alt="3d.svg" loading="lazy" />
+      </div>
+      <span class="title">Total Point</span>
+    </div>
+    <div class="content">
+      <h1>
+        {{ (customerPoint$ | async)?.total_points || 0 | number : '1.0-2' }}
+      </h1>
+    </div>
+    <div class="deco-bottom"></div>
+  </mat-card>
+
+  <mat-card class="card" appearance="outlined">
+    <div class="flex items-center gap-[1rem]">
+      <div
+        class="w-[2rem] h-[2rem] rounded-[0.5rem] base-border flex items-center justify-center"
+      >
+        <img src="3d.svg" alt="3d.svg" loading="lazy" />
+      </div>
+      <span class="title">Point expiring soon</span>
+    </div>
+    <div class="content">
+      <h1>
+        {{
+          (customerPoint$ | async)?.expiring_total_points || 0
+            | number : '1.0-2'
+        }}
+      </h1>
+      <div
+        class="demoproj-red-color"
+        *ngIf="(customerPoint$ | async)?.expiring_date"
+      >
+        Expiry Date:
+        {{ (customerPoint$ | async)?.expiring_date | date : 'dd/MM/yyyy' }}
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<div class="grid grid-rows-[auto_auto] gap-[0.5rem]">
+  <nav
+    class="demoproj-tabs"
+    mat-tab-nav-bar
+    [tabPanel]="tabPanel"
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+  >
+    @for (tab of tabs(); track $index) {
+    <a
+      mat-tab-link
+      (click)="changeTab(tab.url)"
+      [active]="tab.url === activeTabUrl()"
+    >
+      {{ tab.label }}
+    </a>
+    }
+  </nav>
+
+  <div class="flex justify-end gap-[1rem]">
+    <button
+      mat-button
+      class="base-border base-btn-border-color"
+      *appHasPermissions="[
+        {
+          feature: featurePermissionCode.CustomerProfile,
+          action: actionPermissionCode.CreateEdit
+        }
+      ]"
+      (click)="openDeletePointDialog()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-delete class="h-[1.3rem]"></svg-delete>
+        Delete Point
+      </div>
+    </button>
+
+    <button
+      mat-button
+      class="demoproj-btn"
+      *appHasPermissions="[
+        {
+          feature: featurePermissionCode.CustomerProfile,
+          action: actionPermissionCode.CreateEdit
+        }
+      ]"
+      (click)="exportToExcel()"
+      [disabled]="exportLoading$ | async"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-export
+          [color]="(exportLoading$ | async) ? '#98a2b4' : 'white'"
+        ></svg-export>
+        Export to excel
+      </div>
+    </button>
+  </div>
+  <router-outlet></router-outlet>
+</div>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>

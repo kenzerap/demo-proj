@@ -1,0 +1,118 @@
+<div class="grid grid-cols-[1fr] gap-[1rem]">
+  <div class="my-[1.5rem] flex items-center justify-between">
+    <div>
+      <h2 class="m-0">{{ pointRuleId() ? 'Edit' : 'Create' }} Point Rule</h2>
+    </div>
+
+    <div class="flex gap-[1rem]">
+      <button
+        mat-button
+        type="button"
+        class="base-border base-btn-border-color"
+        (click)="setFormMode('edit')"
+        *ngIf="formMode() === 'view'"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <img src="edit.svg" alt="edit" loading="lazy" />
+          Edit
+        </div>
+      </button>
+
+      <button
+        mat-button
+        class="demoproj-btn"
+        (click)="onSubmit()"
+        [disabled]="loading$ | async"
+        *ngIf="formMode() !== 'view'"
+      >
+        <mat-icon>check</mat-icon>
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="grid gap-[1rem]">
+    <app-base-setting-section
+      [formGroup]="baseSettingForm"
+      [formMode]="formMode()"
+    ></app-base-setting-section>
+
+    <mat-card
+      class="grid gap-[1rem] p-[1rem]"
+      appearance="outlined"
+      [formGroup]="welcomeRuleDefaultPointForm"
+      *ngIf="
+        baseSettingForm.get('category')?.value === categoryCode.WelcomeRule
+      "
+    >
+      <h3>
+        #1 Default (Applied when no specific rules are associated with the user)
+      </h3>
+
+      <div class="flex flex-col demoproj-light-gray-background p-[1rem]">
+        <div class="base-text-color-gray">Set point *</div>
+        <app-demoproj-input
+          [formFieldGray]="true"
+          formControlName="set_point"
+          [inputType]="'number'"
+        >
+          <span
+            error
+            *ngIf="
+              welcomeRuleDefaultPointForm.get('set_point')?.hasError('required')
+            "
+          >
+            Please input Set point
+          </span>
+          <span
+            error
+            *ngIf="
+              welcomeRuleDefaultPointForm.get('set_point')?.hasError('min') ||
+              welcomeRuleDefaultPointForm.get('set_point')?.hasError('max')
+            "
+          >
+            Value must be a number greater than or equal 0 or less than 1,000,000
+          </span>
+        </app-demoproj-input>
+      </div>
+    </mat-card>
+
+    <app-welcome-rule-section
+      *ngIf="
+        baseSettingForm.get('category')?.value === categoryCode.WelcomeRule
+      "
+      [formGroup]="welcomeRuleForm"
+      [formMode]="formMode()"
+    ></app-welcome-rule-section>
+
+    <app-criteria-checkin-rule-section
+      *ngIf="
+        baseSettingForm.get('category')?.value ===
+          categoryCode.CriteriaBasedRule &&
+        baseSettingForm.get('criteria_type')?.value ===
+          criteriaCode.DailyCheckIn
+      "
+      [formGroup]="criteriaCheckinRuleForm"
+      [formMode]="formMode()"
+    ></app-criteria-checkin-rule-section>
+
+    <app-criteria-engagement-rule-section
+      *ngIf="
+        baseSettingForm.get('category')?.value ===
+          categoryCode.CriteriaBasedRule &&
+        baseSettingForm.get('criteria_type')?.value ===
+          criteriaCode.FeatureEngagement
+      "
+      [formGroup]="criteriaFeatureEngagementRuleForm"
+      [formMode]="formMode()"
+    ></app-criteria-engagement-rule-section>
+
+    <app-product-based-rule-section
+      *ngIf="
+        baseSettingForm.get('category')?.value === categoryCode.ProductBasedRule
+      "
+      [formGroup]="productBasedRuleForm"
+      [formMode]="formMode()"
+    ></app-product-based-rule-section>
+  </div>
+</div>

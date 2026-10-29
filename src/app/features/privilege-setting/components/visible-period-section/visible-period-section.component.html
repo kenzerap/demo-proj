@@ -1,0 +1,121 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex justify-between items-center">
+    <h3>Visible Period</h3>
+    <mat-slide-toggle
+      class="demoproj-slide-toggle"
+      hideIcon="true"
+      formControlName="is_visible"
+      >Visible</mat-slide-toggle
+    >
+  </div>
+
+  <div class="grid grid-cols-[1fr_1fr_1fr_1fr] gap-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Start Date *</div>
+      <mat-form-field class="demoproj-input">
+        <input
+          matInput
+          [matDatepicker]="picker1"
+          formControlName="start_date"
+        />
+        <mat-datepicker-toggle matTextSuffix [for]="picker1">
+          <svg-calendar matDatepickerToggleIcon></svg-calendar>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+        <mat-error *ngIf="startDateControl?.hasError('required')">
+          Please input date
+        </mat-error>
+
+        <mat-error
+          *ngIf="
+            !startDateControl?.hasError('required') &&
+            startDateControl?.hasError('matDatepickerMin')
+          "
+        >
+          Please select today or future date
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Time *</div>
+      <app-demoproj-timepicker formControlName="start_time">
+        <span error *ngIf="startTimeControl?.hasError('required')">
+          Please input time
+        </span>
+
+        <span error *ngIf="startTimeControl?.hasError('invalidTimeFormat')">
+          Invalid time
+        </span>
+
+        <span error *ngIf="startTimeControl?.hasError('invalidStartTime')">
+          Start Date Time must be a future date
+        </span>
+      </app-demoproj-timepicker>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">End Date *</div>
+      <mat-form-field class="demoproj-input">
+        <input
+          matInput
+          [matDatepicker]="picker2"
+          formControlName="end_date"
+          [min]="startDateControl?.getRawValue()"
+        />
+        <mat-datepicker-toggle matTextSuffix [for]="picker2">
+          <svg-calendar matDatepickerToggleIcon></svg-calendar>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+        <mat-error *ngIf="endDateControl?.hasError('required')">
+          Please input date
+        </mat-error>
+
+        <mat-error
+          *ngIf="
+            !endDateControl?.hasError('required') &&
+            endDateControl?.hasError('matDatepickerMin')
+          "
+        >
+          Please select today or future date
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Time *</div>
+      <app-demoproj-timepicker formControlName="end_time">
+        <span error *ngIf="endTimeControl?.hasError('required')">
+          Please input time
+        </span>
+
+        <span error *ngIf="endTimeControl?.hasError('invalidTimeFormat')">
+          Invalid time
+        </span>
+
+        <span error *ngIf="endTimeControl?.hasError('invalidEndTime')">
+          Date Time must be a future date
+        </span>
+      </app-demoproj-timepicker>
+    </div>
+  </div>
+
+  <div>
+    The ETL process may still be running before 12:00 PM. Please consider
+    selecting a start time of 12:00 PM or later to ensure complete segmentation
+    data.
+  </div>
+  <div>
+    Visible Period: The time when the privilege is shown to users but may not be
+    available for redemption.
+  </div>
+
+  <mat-checkbox formControlName="is_code_out" class="demoproj-checkbox">
+    Auto invisible when the code runs out.
+  </mat-checkbox>
+</mat-card>

@@ -1,0 +1,88 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <h3 class="mb-[1rem]">Healthcare package *</h3>
+
+  <div formArrayName="health_care_package_ids" class="grid gap-[1rem]">
+    <div
+      class="control-row"
+      *ngFor="
+        let healthcarePackageFormGroup of healthcarePackageIdsFormArray.controls;
+        let i = index
+      "
+      [formGroupName]="i"
+    >
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Package</div>
+
+        <mat-form-field class="demoproj-select demoproj-form-field-gray">
+          <mat-select
+            formControlName="health_care_package_id"
+            [hideSingleSelectionIndicator]="true"
+          >
+            <mat-select-trigger>
+              <span>{{
+                getDropdownValue(
+                  healthcarePackageFormGroup.get('health_care_package_id')
+                    ?.value,
+                  getRemainingHealthcarePackageOptions(
+                    healthcarePackageFormGroup.get('health_care_package_id')
+                      ?.value
+                  )
+                )
+              }}</span>
+              <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+            </mat-select-trigger>
+
+            @for (option of getRemainingHealthcarePackageOptions(
+            healthcarePackageFormGroup.get('health_care_package_id') ?.value );
+            track option) {
+            <mat-option [value]="option.code">{{ option.value }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-icon
+        class="cursor-pointer"
+        [class.delete-disabled]="formMode === 'view'"
+        (click)="removePackage(i)"
+        >close</mat-icon
+      >
+    </div>
+  </div>
+
+  <mat-error
+    class="text-[0.75rem] text-center"
+    *ngIf="healthcarePackageIdsFormArray.controls.length === 0"
+  >
+    Please select Package
+  </mat-error>
+
+  <div class="flex items-center justify-end">
+    <button
+      mat-button
+      class="base-border"
+      [disabled]="
+        healthcarePackageIdsFormArray.controls.length ===
+          healthcarePackageOptions.length || formMode === 'view'
+      "
+      (click)="addPackage()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus
+          [color]="
+            healthcarePackageIdsFormArray.controls.length ===
+              healthcarePackageOptions.length || formMode === 'view'
+              ? '#98a2b4'
+              : 'black'
+          "
+        ></svg-plus>
+        Add Package
+      </div>
+    </button>
+  </div>
+</mat-card>

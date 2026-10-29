@@ -1,0 +1,86 @@
+<mat-card
+  class="p-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <h3>Engagement-Based Rule</h3>
+  <div formArrayName="criteria_checkin_rules" class="mb-[1rem] grid gap-[1rem]">
+    <ng-container
+      *ngFor="let ruleFormGroup of rulesFormArray.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <div class="condition-row">
+        <div class="flex flex-col">
+          <div class="base-text-color-gray">Check-in Day(s) *</div>
+          <app-demoproj-input
+            [formFieldGray]="true"
+            formControlName="checkin_day"
+            [inputType]="'number'"
+          >
+            <span
+              error
+              *ngIf="ruleFormGroup?.get('checkin_day')?.hasError('required')"
+            >
+              Please input Check-in Day
+            </span>
+            <span
+              error
+              *ngIf="ruleFormGroup?.get('checkin_day')?.hasError('min')"
+            >
+              Value must be a number greater than 0
+            </span>
+          </app-demoproj-input>
+        </div>
+
+        <div class="flex flex-col">
+          <div class="base-text-color-gray">Earning Point *</div>
+          <app-demoproj-input
+            [formFieldGray]="true"
+            formControlName="earning_point"
+            [inputType]="'number'"
+          >
+            <span
+              error
+              *ngIf="ruleFormGroup?.get('earning_point')?.hasError('required')"
+            >
+              Please input Earning Point
+            </span>
+            <span
+              error
+              *ngIf="
+                ruleFormGroup?.get('earning_point')?.hasError('min') ||
+                ruleFormGroup?.get('earning_point')?.hasError('max')
+              "
+            >
+              Value must be a number greater than 0
+            </span>
+          </app-demoproj-input>
+        </div>
+
+        <mat-icon
+          class="cursor-pointer"
+          [class.delete-disabled]="formMode === 'view'"
+          (click)="removeCondition(i)"
+          >close</mat-icon
+        >
+      </div>
+    </ng-container>
+
+    <div class="flex items-center justify-end">
+      <button
+        mat-button
+        class="base-border"
+        [disabled]="formMode === 'view'"
+        (click)="addRule()"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <svg-plus
+            [color]="formMode === 'view' ? '#98a2b4' : 'black'"
+          ></svg-plus>
+          Add Rule
+        </div>
+      </button>
+    </div>
+  </div>
+</mat-card>

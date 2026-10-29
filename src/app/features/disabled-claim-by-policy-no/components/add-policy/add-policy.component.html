@@ -1,0 +1,27 @@
+<form
+  class="grid grid-cols-[auto_6rem] gap-4 items-center"
+  [formGroup]="addPolicyForm"
+>
+  <app-demoproj-input
+    formControlName="policyNo"
+    [placeholder]="'Add policy no.'"
+    class="min-w-[25rem]"
+  >
+  </app-demoproj-input>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    [disabled]="loading$ | async"
+    (click)="onAdd()"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-plus></svg-plus>
+      Add
+    </div>
+  </button>
+</form>
+<p class="text-[#A2A1A8] text-[0.875rem] mt-0 mb-[0.5rem]">
+  Enter a valid policy number to add it to the disabled claim list. Party ID,
+  Product Name, and Create Date auto-fill from the system.
+</p>

@@ -1,0 +1,179 @@
+<h3 class="mb-[1rem]">Messages</h3>
+
+<form
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+  class="grid grid-cols-2 gap-[1rem]"
+>
+  <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+    <img
+      src="us-flag.png"
+      alt="us-flag"
+      loading="lazy"
+      class="w-[3.1rem] h-[2rem]"
+    />
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Title *</div>
+      <div class="flex items-center gap-[0.5rem]">
+        <mat-form-field class="demoproj-input w-full">
+          <input
+            matInput
+            formControlName="message_title_en"
+            [maxlength]="100"
+          />
+
+          <mat-error *ngIf="messageTitleEnControl?.hasError('required')">
+            Please input title
+          </mat-error>
+        </mat-form-field>
+
+        <div class="base-text-color-gray">
+          {{ (messageTitleEnControl?.value || '').length }}/100
+        </div>
+      </div>
+    </div>
+
+    <div class="grid gap-[0.5rem]">
+      <div class="base-text-color-gray">Body *</div>
+      <p-editor
+        class="demoproj-editor"
+        formControlName="message_body_en_html_text"
+        [style]="{ height: '10rem' }"
+        (onTextChange)="editorTextChange($event, 'en')"
+        #EnEditor
+        [readonly]="!!messageBodyEnHtmlTextControl?.disabled"
+        tabindex="0"
+        (focusout)="onEditorTouched('en')"
+      >
+      </p-editor>
+
+      <div class="flex flex-wrap justify-between">
+        <div>
+          <mat-error
+            class="text-[0.75rem]"
+            *ngIf="
+              messageBodyEnControl?.touched &&
+              messageBodyEnControl?.hasError('required')
+            "
+          >
+            Please input body
+          </mat-error>
+
+          <mat-error
+            class="text-[0.75rem]"
+            *ngIf="messageBodyEnControl?.hasError('maxLength')"
+          >
+            Length must be less than 500 characters
+          </mat-error>
+        </div>
+
+        <div class="text-end base-text-color-gray">
+          {{ checkBodyLength('en') }}/500
+        </div>
+      </div>
+
+      <button mat-button class="demoproj-btn" (click)="changePreviewLanguage('en')">
+        Preview
+      </button>
+    </div>
+
+    <div class="flex flex-wrap gap-[0.5rem]">
+      <button
+        mat-button
+        class="base-border base-btn-border-color"
+        *ngFor="let item of variables"
+        (click)="selectVariable(item, 'en')"
+        [disabled]="messageBodyEnHtmlTextControl?.disabled"
+      >
+        {{ item.value }}
+      </button>
+    </div>
+  </mat-card>
+  <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+    <img
+      src="thai-flag.png"
+      alt="thai-flag"
+      loading="lazy"
+      class="w-[3.1rem] h-[2rem]"
+    />
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Title *</div>
+      <div class="flex items-center gap-[0.5rem]">
+        <mat-form-field class="demoproj-input w-full">
+          <input
+            matInput
+            formControlName="message_title_thai"
+            [maxlength]="100"
+          />
+
+          <mat-error *ngIf="messageTitleThaiControl?.hasError('required')">
+            Please input title
+          </mat-error>
+        </mat-form-field>
+
+        <div class="base-text-color-gray">
+          {{ (messageTitleThaiControl?.value || '').length }}/100
+        </div>
+      </div>
+    </div>
+
+    <div class="grid gap-[0.5rem]">
+      <div class="base-text-color-gray">Body *</div>
+      <p-editor
+        class="demoproj-editor"
+        formControlName="message_body_thai_html_text"
+        [style]="{ height: '10rem' }"
+        (onTextChange)="editorTextChange($event, 'th')"
+        #ThEditor
+        [readonly]="!!messageBodyThaiHtmlTextControl?.disabled"
+        tabindex="1"
+        (focusout)="onEditorTouched('th')"
+      >
+      </p-editor>
+
+      <div class="flex flex-wrap justify-between">
+        <div>
+          <mat-error
+            class="text-[0.75rem]"
+            *ngIf="
+              messageBodyThaiControl?.touched &&
+              messageBodyThaiControl?.hasError('required')
+            "
+          >
+            Please input body
+          </mat-error>
+
+          <mat-error
+            class="text-[0.75rem]"
+            *ngIf="messageBodyThaiControl?.hasError('maxLength')"
+          >
+            Length must be less than 500 characters
+          </mat-error>
+        </div>
+
+        <div class="text-end base-text-color-gray">
+          {{ checkBodyLength('th') }}/500
+        </div>
+      </div>
+
+      <button mat-button class="demoproj-btn" (click)="changePreviewLanguage('th')">
+        Preview
+      </button>
+    </div>
+
+    <div class="flex flex-wrap gap-[0.5rem]">
+      <button
+        mat-button
+        type="button"
+        class="base-border base-btn-border-color"
+        *ngFor="let item of variables"
+        (click)="selectVariable(item, 'th')"
+        [disabled]="messageBodyThaiHtmlTextControl?.disabled"
+      >
+        {{ item.value }}
+      </button>
+    </div>
+  </mat-card>
+</form>

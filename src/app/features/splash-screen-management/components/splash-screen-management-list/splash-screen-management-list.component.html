@@ -1,0 +1,53 @@
+<div class="my-[1.5rem] flex items-center justify-end gap-[1rem]">
+  <ng-container
+    *appHasPermissions="[
+      {
+        feature: featurePermissionCode.SplashScreenManagement,
+        action: actionPermissionCode.CreateEdit
+      }
+    ]"
+  >
+    <button mat-button class="demoproj-btn" (click)="createNewScreen()">
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus></svg-plus>
+        New Screen
+      </div>
+    </button>
+  </ng-container>
+</div>
+
+<app-demoproj-table
+  class="min-w-full table-auto whitespace-nowrap"
+  [data]="(splashScreenManagements$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  [noDataMessage]="'No Splash Screen Set'"
+  (pageChange)="onPageChange($event)"
+  (rowClick)="onRowClick($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'nameWithImage'">
+        <div class="flex items-center gap-[0.5rem] my-[0.5rem]">
+          <img
+            class="w-[3.25rem] h-[3.25rem]"
+            loading="lazy"
+            [src]="encodeImageUrl(rowData.image_data, rowData.image)"
+          />
+          <div>{{ rowData.name_th }}</div>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'is_active'">
+        <mat-slide-toggle
+          class="demoproj-slide-toggle"
+          hideIcon="true"
+          [checked]="rowData.status === 'ACTIVE'"
+          [disabled]="true"
+        ></mat-slide-toggle>
+      </ng-container>
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

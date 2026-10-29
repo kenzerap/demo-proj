@@ -1,0 +1,251 @@
+<mat-card class="p-[1rem]" appearance="outlined">
+  <h3 class="mb-[1rem]">Send time</h3>
+
+  <form *ngIf="formGroup" [formGroup]="formGroup">
+    <ng-container [ngSwitch]="sendTimeTypeControl?.value">
+      <ng-container *ngSwitchCase="pushNotificationType.IMMEDIATELY">
+        <div class="flex flex-col">
+          <div class="base-text-color-gray">Send time period *</div>
+
+          <mat-form-field class="demoproj-select w-[30%]">
+            <mat-select
+              formControlName="send_time_type"
+              [hideSingleSelectionIndicator]="true"
+            >
+              <mat-select-trigger>
+                <span>{{
+                  getDropdownValue(sendTimeTypeControl?.value, sendTimeTypes)
+                }}</span>
+                <mat-icon class="absolute right-0"
+                  >keyboard_arrow_down</mat-icon
+                >
+              </mat-select-trigger>
+              @for (type of sendTimeTypes; track type) {
+              <mat-option [value]="type.code">{{ type.value }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="pushNotificationType.SPECIFIC_TIME">
+        <div class="grid grid-cols-[auto_auto_auto] gap-[1rem]">
+          <div class="flex flex-col">
+            <div class="base-text-color-gray">Send time period *</div>
+            <mat-form-field class="demoproj-select">
+              <mat-select
+                formControlName="send_time_type"
+                [hideSingleSelectionIndicator]="true"
+              >
+                <mat-select-trigger>
+                  <span>{{
+                    getDropdownValue(sendTimeTypeControl?.value, sendTimeTypes)
+                  }}</span>
+                  <mat-icon class="absolute right-0"
+                    >keyboard_arrow_down</mat-icon
+                  >
+                </mat-select-trigger>
+                @for (type of sendTimeTypes; track type) {
+                <mat-option [value]="type.code">{{ type.value }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="base-text-color-gray">Date *</div>
+            <mat-form-field class="demoproj-input">
+              <input
+                matInput
+                [matDatepicker]="picker1"
+                formControlName="start_date"
+                [min]="currentDate"
+              />
+              <mat-datepicker-toggle matTextSuffix [for]="picker1">
+                <svg-calendar matDatepickerToggleIcon></svg-calendar>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="startDateControl?.hasError('required')">
+                Please input date
+              </mat-error>
+
+              <mat-error
+                *ngIf="
+                  !startDateControl?.hasError('required') &&
+                  startDateControl?.hasError('matDatepickerMin')
+                "
+              >
+                Please select today or future date
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="base-text-color-gray">Time *</div>
+            <app-demoproj-timepicker formControlName="start_time">
+              <span error *ngIf="startTimeControl?.hasError('required')">
+                Please input time
+              </span>
+
+              <span
+                error
+                *ngIf="startTimeControl?.hasError('invalidTimeFormat')"
+              >
+                Invalid time
+              </span>
+
+              <span
+                error
+                *ngIf="startTimeControl?.hasError('invalidStartTime')"
+              >
+                Start Date Time must be a future date
+              </span>
+            </app-demoproj-timepicker>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="pushNotificationType.TRIGGER_EVENT">
+        <div class="flex justify-end mb-[1rem]">
+          <mat-slide-toggle
+            class="demoproj-slide-toggle"
+            hideIcon="true"
+            formControlName="published"
+            >Published</mat-slide-toggle
+          >
+        </div>
+        <div class="grid grid-cols-[auto_auto_auto] gap-[1rem]">
+          <div class="flex flex-col">
+            <div class="base-text-color-gray">Send time period *</div>
+            <mat-form-field class="demoproj-select">
+              <mat-select
+                formControlName="send_time_type"
+                [hideSingleSelectionIndicator]="true"
+              >
+                <mat-select-trigger>
+                  <span>{{
+                    getDropdownValue(sendTimeTypeControl?.value, sendTimeTypes)
+                  }}</span>
+                  <mat-icon class="absolute right-0"
+                    >keyboard_arrow_down</mat-icon
+                  >
+                </mat-select-trigger>
+                @for (type of sendTimeTypes; track type) {
+                <mat-option [value]="type.code">{{ type.value }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="base-text-color-gray">Start Date *</div>
+            <mat-form-field class="demoproj-input">
+              <input
+                matInput
+                [matDatepicker]="picker1"
+                formControlName="start_date"
+                [min]="
+                  !!isSetEndDateControl?.value && !isCreateMode
+                    ? null
+                    : currentDate
+                "
+              />
+              <mat-datepicker-toggle matTextSuffix [for]="picker1">
+                <svg-calendar matDatepickerToggleIcon></svg-calendar>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="startDateControl?.hasError('required')">
+                Please input date
+              </mat-error>
+
+              <mat-error
+                *ngIf="
+                  !startDateControl?.hasError('required') &&
+                  startDateControl?.hasError('matDatepickerMin')
+                "
+              >
+                Please select today or future date
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="base-text-color-gray">Time *</div>
+            <app-demoproj-timepicker formControlName="start_time">
+              <span error *ngIf="startTimeControl?.hasError('required')">
+                Please input time
+              </span>
+
+              <span
+                error
+                *ngIf="startTimeControl?.hasError('invalidTimeFormat')"
+              >
+                Invalid time
+              </span>
+
+              <span
+                error
+                *ngIf="startTimeControl?.hasError('invalidStartTime')"
+              >
+                Start Date Time must be a future date
+              </span>
+            </app-demoproj-timepicker>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-[auto_auto_auto] gap-[1rem]">
+          <mat-checkbox formControlName="isSetEndDate" class="demoproj-checkbox">
+            End date (set end date)
+          </mat-checkbox>
+
+          <div class="flex flex-col" *ngIf="!!isSetEndDateControl?.value">
+            <div class="base-text-color-gray">End Date *</div>
+            <mat-form-field class="demoproj-input">
+              <input
+                matInput
+                [matDatepicker]="picker2"
+                formControlName="end_date"
+                [min]="getMinEndDate()"
+              />
+              <mat-datepicker-toggle matTextSuffix [for]="picker2">
+                <svg-calendar matDatepickerToggleIcon></svg-calendar>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error *ngIf="endDateControl?.hasError('required')">
+                Please input date
+              </mat-error>
+
+              <mat-error
+                *ngIf="
+                  !endDateControl?.hasError('required') &&
+                  endDateControl?.hasError('matDatepickerMin')
+                "
+              >
+                Please select today or future date
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col" *ngIf="!!isSetEndDateControl?.value">
+            <div class="base-text-color-gray">Time *</div>
+            <app-demoproj-timepicker formControlName="end_time">
+              <span error *ngIf="endTimeControl?.hasError('required')">
+                Please input time
+              </span>
+
+              <span error *ngIf="endTimeControl?.hasError('invalidTimeFormat')">
+                Invalid time
+              </span>
+
+              <span error *ngIf="endTimeControl?.hasError('invalidEndTime')">
+                Date Time must be a future date
+              </span>
+            </app-demoproj-timepicker>
+          </div>
+        </div>
+      </ng-container>
+
+      <div *ngSwitchDefault></div>
+    </ng-container>
+  </form>
+</mat-card>

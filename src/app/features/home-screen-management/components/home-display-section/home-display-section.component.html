@@ -1,0 +1,63 @@
+<mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+  <h3 class="mb-[1rem] mt-0">Section Display to DEMOPROJ365 User</h3>
+
+  <form
+    *ngIf="formGroup"
+    [formGroup]="formGroup"
+    class="grid grid-cols-2 gap-[1rem]"
+  >
+    <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+      <img
+        src="us-flag.png"
+        alt="us-flag"
+        loading="lazy"
+        class="w-[3.1rem] h-[2rem]"
+      />
+      <div class="grid gap-[0.5rem]">
+        <div class="base-text-color-gray">Title *</div>
+        <div class="flex items-center gap-[0.5rem]">
+          <app-demoproj-input
+            class="w-full"
+            formControlName="title_en"
+            [maxLength]="100"
+          >
+            <span error *ngIf="titleEnControl?.hasError('required')">
+              Please input title
+            </span>
+          </app-demoproj-input>
+
+          <div class="base-text-color-gray">
+            {{ (titleEnControl?.value || '').length }}/100
+          </div>
+        </div>
+      </div>
+    </mat-card>
+    <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+      <img
+        src="thai-flag.png"
+        alt="thai-flag"
+        loading="lazy"
+        class="w-[3.1rem] h-[2rem]"
+      />
+
+      <div class="grid gap-[0.5rem]">
+        <div class="base-text-color-gray">Title *</div>
+        <div class="flex items-center gap-[0.5rem]">
+          <app-demoproj-input
+            class="w-full"
+            formControlName="title_th"
+            [maxLength]="100"
+          >
+            <span error *ngIf="titleThControl?.hasError('required')">
+              Please input title
+            </span>
+          </app-demoproj-input>
+
+          <div class="base-text-color-gray">
+            {{ (titleThControl?.value || '').length }}/100
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </form>
+</mat-card>

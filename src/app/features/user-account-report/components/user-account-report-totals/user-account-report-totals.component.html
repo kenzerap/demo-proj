@@ -1,0 +1,173 @@
+<div class="grid grid-cols-5 gap-[1.5rem]">
+  <mat-card class="card col-span-3 col-end-4" appearance="outlined">
+    <div class="flex items-center justify-between gap-[0.5rem]">
+      <span class="title demoproj-red-color">Total DEMOPROJ365 User</span>
+
+      <div
+        class="w-[48px] min-w-[48px] h-[48px] rounded-[0.5rem] flex items-center justify-center bg-[#fcecec]"
+      >
+        <svg-3D-bg-red color="#c62B29"></svg-3D-bg-red>
+      </div>
+    </div>
+
+    <div class="content h-full flex flex-col justify-between">
+      <h1 class="">
+        {{
+          ((userAccountReportTotals$ | async)?.total | number: '1.0-2') ?? '_'
+        }}
+      </h1>
+    </div>
+  </mat-card>
+  <mat-card class="card col-span-1" appearance="outlined">
+    <div class="flex items-center justify-between gap-[0.5rem]">
+      <span class="title demoproj-green-color">Total Insured</span>
+      <div
+        class="w-[48px] min-w-[48px] h-[48px] rounded-[0.5rem] flex items-center justify-center bg-[#e7f6ec]"
+      >
+        <svg-verified-user color="#0F973D"></svg-verified-user>
+      </div>
+    </div>
+    <div class="content">
+      <h1>
+        {{
+          ((userAccountReportTotals$ | async)?.total_insured
+            | number: '1.0-2') ?? '_'
+        }}
+      </h1>
+    </div>
+  </mat-card>
+  <mat-card class="card col-span-1" appearance="outlined">
+    <div class="flex items-center justify-between gap-[0.5rem]">
+      <span class="title demoproj-yellow-color">Total Prospect</span>
+      <div
+        class="w-[48px] min-w-[48px] h-[48px] rounded-[0.5rem] flex items-center justify-center bg-[#fef6e7]"
+      >
+        <svg-shield-cross></svg-shield-cross>
+      </div>
+    </div>
+    <div class="content">
+      <h1>
+        {{
+          ((userAccountReportTotals$ | async)?.total_prospect
+            | number: '1.0-2') ?? '_'
+        }}
+      </h1>
+    </div>
+  </mat-card>
+  <mat-card class="card col-span-1" appearance="outlined">
+    <div class="flex items-center justify-between gap-[0.5rem]">
+      <span class="title text-[#0088FF]">Total user has Individual Policy</span>
+      <div
+        class="w-[48px] min-w-[48px] h-[48px] rounded-[0.5rem] flex items-center justify-center bg-[#B0DAFF]"
+      >
+        <svg-verified-user color="#0088FF"></svg-verified-user>
+      </div>
+    </div>
+    <div class="content">
+      <h1>
+        {{
+          ((userAccountReportTotals$ | async)?.total_individual
+            | number: '1.0-2') ?? '_'
+        }}
+      </h1>
+      @if ((userAccountReportTotals$ | async)?.calculated_at) {
+        <div class="text-[0.7rem]">
+          Updated
+          {{
+            (userAccountReportTotals$ | async)?.calculated_at
+              | date: 'dd/MM/yyyy, HH:mm'
+          }}
+        </div>
+      }
+    </div>
+  </mat-card>
+  <mat-card class="card col-span-1" appearance="outlined">
+    <div class="flex items-center justify-between gap-[0.5rem]">
+      <span class="title text-[#6155F5]">Total user has Group Policy</span>
+      <div
+        class="w-[48px] min-w-[48px] h-[48px] rounded-[0.5rem] flex items-center justify-center bg-[#ACA7E7]"
+      >
+        <svg-verified-user color="#6155F5"></svg-verified-user>
+      </div>
+    </div>
+    <div class="content">
+      <h1>
+        {{
+          ((userAccountReportTotals$ | async)?.total_group | number: '1.0-2') ??
+            '_'
+        }}
+      </h1>
+      @if ((userAccountReportTotals$ | async)?.calculated_at) {
+        <div class="text-[0.7rem]">
+          Updated
+          {{
+            (userAccountReportTotals$ | async)?.calculated_at
+              | date: 'dd/MM/yyyy, HH:mm'
+          }}
+        </div>
+      }
+    </div>
+  </mat-card>
+  <mat-card class="card col-span-1" appearance="outlined">
+    <div class="flex items-center justify-between gap-[0.5rem]">
+      <span class="title text-[#FF8D28]">Total user has Both Policy</span>
+      <div
+        class="w-[48px] min-w-[48px] h-[48px] rounded-[0.5rem] flex items-center justify-center bg-[#FFD7B5]"
+      >
+        <svg-verified-user color="#FF8D28"></svg-verified-user>
+      </div>
+    </div>
+    <div class="content">
+      <h1>
+        {{
+          ((userAccountReportTotals$ | async)?.total_both | number: '1.0-2') ??
+            '_'
+        }}
+      </h1>
+      @if ((userAccountReportTotals$ | async)?.calculated_at) {
+        <div class="text-[0.7rem]">
+          Updated
+          {{
+            (userAccountReportTotals$ | async)?.calculated_at
+              | date: 'dd/MM/yyyy, HH:mm'
+          }}
+        </div>
+      }
+    </div>
+  </mat-card>
+  <mat-card class="card col-span-1" appearance="outlined">
+    <div class="flex items-center justify-between gap-[0.5rem]">
+      <span class="title text-[#667185]">Total Fraud</span>
+      <div
+        class="w-[48px] min-w-[48px] h-[48px] rounded-[0.5rem] flex items-center justify-center bg-[#e4e7ec]"
+      >
+        <svg-user color="#1d2739"></svg-user>
+      </div>
+    </div>
+    <div class="content">
+      <h1>
+        {{
+          ((userAccountReportTotals$ | async)?.total_fraud | number: '1.0-2') ??
+            '_'
+        }}
+      </h1>
+    </div>
+  </mat-card>
+
+  <mat-card class="card col-span-1" appearance="outlined">
+    <div class="flex items-center justify-between gap-[0.5rem]">
+      <span class="title text-[#667185]">Total Blocked</span>
+      <div
+        class="w-[48px] min-w-[48px] h-[48px] rounded-[0.5rem] flex items-center justify-center bg-[#e4e7ec]"
+      ></div>
+    </div>
+    <div class="content">
+      <h1>
+        {{
+          ((userAccountReportTotals$ | async)?.total_blocked
+            | number: '1.0-2') ?? '_'
+        }}
+      </h1>
+    </div>
+  </mat-card>
+</div>

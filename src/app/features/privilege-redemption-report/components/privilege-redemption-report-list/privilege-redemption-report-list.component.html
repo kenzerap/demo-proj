@@ -1,0 +1,52 @@
+<div class="my-[1.5rem] flex items-center justify-between gap-[1rem]">
+  <app-privilege-redemption-report-filter></app-privilege-redemption-report-filter>
+  <button
+    mat-button
+    class="demoproj-btn"
+    *appHasPermissions="[
+      {
+        feature: featurePermissionCode.PrivilegeRedemption,
+        action: actionPermissionCode.Export
+      }
+    ]"
+    (click)="exportToExcel()"
+    [disabled]="(exportLoading$ | async) || !(filters$ | async) || !hasFilter((filters$ | async)!)"
+    >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-export></svg-export>
+      Export to excel
+    </div>
+  </button>
+</div>
+<app-demoproj-table
+  class="min-w-full table-auto whitespace-nowrap"
+  [data]="(privilegeRedemptionReport$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(listLoading$ | async)!"
+  [noDataMessage]="
+    !(selectCommonSearch$ | async)
+      ? 'Use the filters above to display your report data.'
+      : 'No Privilege Redemption Report found. Please refine your search'
+"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  [tableStyle]="{ 'width.rem': 160 }"
+>
+<ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+  <ng-container [ngSwitch]="columnCode">
+    <ng-container *ngSwitchCase="'party_id'">
+      <a class="demoproj-link" (click)="navigateToCustomerProfile(rowData.party_id); $event.stopPropagation()"
+        style="cursor: pointer; color: #1671D9; text-decoration: underline;">
+        <span [appHighlightText]="(selectSearchHighlightText$ | async)!">{{ rowData.party_id }}</span>
+      </a>
+    </ng-container>
+    <ng-container *ngSwitchCase="'rh_month'">
+      <span class="text-nowrap">
+        {{ rowData.rh_month}}/{{ rowData.rh_year }}
+      </span>
+    </ng-container>
+    <ng-container *ngSwitchDefault></ng-container>
+  </ng-container>
+</ng-template>
+</app-demoproj-table>

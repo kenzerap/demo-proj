@@ -1,0 +1,127 @@
+<aside
+  class="sidebar bg-white h-screen px-[0.5rem] grid grid-rows-[auto_1fr_auto]"
+  [class.sidebar-colapsed]="isSidebarColapsed()"
+>
+  <div class="relative logo-bar mt-[2rem] mb-[1rem]">
+    <img
+      *ngIf="!isSidebarColapsed(); else colapsedLogo"
+      [src]="'logo.png'"
+      alt="Logo"
+      class="cursor-pointer w-[14rem] h-[2.5rem] object-cover"
+      loading="lazy"
+      (click)="navigateHome()"
+    />
+    <ng-template #colapsedLogo>
+      <img
+        [src]="'logo-mini.png'"
+        alt="Logo"
+        class="cursor-pointer"
+        loading="lazy"
+        (click)="navigateHome()"
+      />
+    </ng-template>
+
+    <div class="colapsed-icon absolute">
+      <mat-icon
+        [fontIcon]="
+          isSidebarColapsed() ? 'keyboard_arrow_right' : 'keyboard_arrow_left'
+        "
+        (click)="toggleSidebarColapsed()"
+      ></mat-icon>
+    </div>
+  </div>
+
+  <div class="menu">
+    @for (item of sidebarItems(); track $index) {
+    <ng-container *appHasPermissions="item.permissions; checkRule: 'any'">
+      <div class="px-[0.5rem]" *ngIf="!isSidebarColapsed(); else colapsedItem">
+        <app-title-with-icons
+          [leftImg]="item.iconImg || ''"
+          [textContent]="item.title"
+          [matIconRight]="
+            selectedSidebarCode() !== item.code
+              ? 'keyboard_arrow_down'
+              : 'keyboard_arrow_up'
+          "
+          [itemSelected]="checkMenuSelected(item)"
+          (itemClicked)="toggerMenu(item)"
+        ></app-title-with-icons>
+      </div>
+
+      <ng-template #colapsedItem>
+        <div
+          [ngClass]="
+            checkMenuSelected(item)
+              ? 'menu-item-mini-selected'
+              : 'menu-item-mini'
+          "
+          (click)="toggerMenu(item)"
+        >
+          <img
+            [src]="item.iconImg || ''"
+            [alt]="item.iconImg || ''"
+            loading="lazy"
+          />
+        </div>
+      </ng-template>
+    </ng-container>
+
+    <div
+      class="overflow-hidden"
+      *ngIf="selectedSidebarCode() === item.code && !isSidebarColapsed()"
+      @dropDownAnimation
+    >
+      @for (childItem of item.childrens || []; track $index) {
+      <div
+        [ngClass]="
+          selectedChildCode() === childItem.code
+            ? 'expanded-item-selected'
+            : 'expanded-item'
+        "
+        (click)="selectChildItem(childItem.code, item)"
+      >
+        <div class="empty-div"></div>
+        <div>{{ childItem.title }}</div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  <div
+    class="grid grid-cols-[auto_1fr_auto] items-center justify-center gap-[0.5rem] overflow-hidden mt-[1rem] mb-[1rem] px-[0.5rem]"
+    *ngIf="!isSidebarColapsed(); else colapsedBottom"
+  >
+    <img
+      src="default-avartar.svg"
+      alt="default-avartar"
+      class="w-[2.5rem] h-[2.5rem]"
+      loading="lazy"
+    />
+    <div class="overflow-hidden">
+      <div class="font-bold">
+        {{ userInfo()?.name }}
+      </div>
+      <div class="truncate" [matTooltip]="userInfo()?.username || ''">
+        {{ userInfo()?.username }}
+      </div>
+    </div>
+    <img
+      src="sign-out.svg"
+      alt="sign-out"
+      class="cursor-pointer"
+      loading="lazy"
+      (click)="signOut()"
+    />
+  </div>
+
+  <ng-template #colapsedBottom>
+    <div class="flex items-center justify-center mb-[1rem]">
+      <img
+        src="default-avartar.svg"
+        alt="default-avartar"
+        class="w-[2.5rem] h-[2.5rem] cursor-pointer"
+        loading="lazy"
+      />
+    </div>
+  </ng-template>
+</aside>

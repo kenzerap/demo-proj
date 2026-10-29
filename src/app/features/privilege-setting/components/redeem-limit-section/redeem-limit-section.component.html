@@ -1,0 +1,61 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex justify-between items-center">
+    <h3 class="mb-[1rem]">Redeem limit *</h3>
+
+    <mat-checkbox formControlName="is_advance" class="demoproj-checkbox">
+      Advance limit
+    </mat-checkbox>
+  </div>
+
+  <div class="condition-row">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Redeem condition</div>
+
+      <mat-form-field class="demoproj-select demoproj-form-field-gray">
+        <mat-select
+          formControlName="condition"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(
+                conditionControl?.value,
+                redeemLimitConditionOptions
+              )
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of redeemLimitConditionOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col"
+      *ngIf="
+      conditionControl?.value !== redeemLimitConditions.ONE_TIME_REDEEM &&
+      conditionControl?.value !== redeemLimitConditions.UNLIMITED_REDEEM
+      ">
+      <div class="base-text-color-gray">Redeem Quota for this privillege *</div>
+
+      <app-demoproj-input
+        formControlName="quota"
+        [inputType]="'number'"
+        [formFieldGray]="true"
+      >
+        <span error *ngIf="quotaControl?.hasError('required')">
+          Please input Redeem Quota
+        </span>
+        <span error *ngIf="quotaControl?.hasError('min')">
+          Value must be a number greater than 0
+        </span>
+      </app-demoproj-input>
+    </div>
+  </div>
+</mat-card>

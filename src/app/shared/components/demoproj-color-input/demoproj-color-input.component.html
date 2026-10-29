@@ -1,0 +1,26 @@
+<div class="relative">
+  <div
+    class="base-border w-[1rem] h-[1rem] absolute top-[22px] z-[1]"
+    [(colorPicker)]="color"
+    [style.background]="color"
+    [cpPosition]="'bottom'"
+    (colorPickerChange)="colorChange($event)"
+    [cpDisabled]="disabled"
+  ></div>
+
+  <mat-form-field class="demoproj-input w-full">
+    <input
+      class="input-padding"
+      matInput
+      [type]="'text'"
+      [formControl]="formControl"
+      [maxlength]="maxLength"
+      (change)="trimSpaces()"
+      (blur)="onBlur()"
+    />
+
+    <mat-error>
+      <ng-content select="[error]"></ng-content>
+    </mat-error>
+  </mat-form-field>
+</div>

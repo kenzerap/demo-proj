@@ -1,0 +1,78 @@
+<div class="grid grid-rows-[auto_auto_auto] gap-[1rem]">
+  <nav
+    class="demoproj-tabs"
+    mat-tab-nav-bar
+    [tabPanel]="tabPanel"
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+  >
+    @for (tab of tabs(); track $index) {
+    <a
+      mat-tab-link
+      (click)="changeTab(tab.url)"
+      [active]="tab.url === activeTabUrl()"
+    >
+      {{ tab.label }}
+    </a>
+    }
+  </nav>
+
+  <div class="my-[1.5rem] flex items-center justify-between gap-[1rem]">
+    <app-privilege-list-filter></app-privilege-list-filter>
+    <button
+      mat-button
+      class="demoproj-btn"
+      *appHasPermissions="[
+        {
+          feature: featurePermissionCode.PrivilegeSetting,
+          action: actionPermissionCode.CreateEdit
+        }
+      ]"
+      (click)="navigateCreatePrivilege()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus></svg-plus>
+        New Privilege
+      </div>
+    </button>
+  </div>
+
+  <div class="flex flex-wrap gap-[0.5rem]" [loading]="loading$ | async">
+    <ng-container *ngIf="!(loading$ | async)">
+      <button
+        mat-button
+        mat-dialog-close
+        class="filter-category"
+        *ngFor="let item of targetGroupUserCount$ | async"
+        [class.active]="
+          checkEqualTargetGroupIds(
+            (selectSelectedTargetGroupIds$ | async) || [],
+            item.target_group_ids,
+            item.id
+          )
+        "
+        (click)="selectTargetGroup(item)"
+      >
+        <div class="flex items-center">
+          <svg-dots-circle
+            *ngIf="item.target_group_ids.includes(-2)"
+            class="mr-[0.2rem]"
+          ></svg-dots-circle>
+
+          <span
+            class="truncate block max-w-[9.3rem]"
+            [matTooltip]="item.name || ''"
+            >{{ item.name }}</span
+          >
+          <span *ngIf="!item.target_group_ids.includes(-2)">
+            ({{ item.count | number : '1.0-2' }})
+          </span>
+        </div>
+      </button>
+    </ng-container>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>

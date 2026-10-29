@@ -1,0 +1,82 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex justify-between items-center">
+    <h3 class="mb-[1rem]">Inventory *</h3>
+
+    <button
+      mat-button
+      class="base-border"
+      [disabled]="inventoryControl?.valid || formMode === 'view'"
+      (click)="openAddInventoryDialog()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus
+          [color]="
+            inventoryControl?.valid || formMode === 'view' ? '#98a2b4' : 'black'
+          "
+        ></svg-plus>
+        Add Inventory
+      </div>
+    </button>
+  </div>
+
+  <div
+    class="control-row"
+    *ngIf="inventoryControl && inventoryControl.getRawValue()?.inventory_id"
+  >
+    <table aria-describedby="inventory-table">
+      <tr>
+        <th>Inventory Stocks Name</th>
+        <th>Description</th>
+        <th>Brand</th>
+        <th>Quantity Selected</th>
+        <th>Stock Ready to use</th>
+        <th>Expiry Date</th>
+        <th>Updated Date</th>
+      </tr>
+      <tr>
+        <td>{{ inventoryControl.getRawValue().inventory_name }}</td>
+        <td>{{ inventoryControl.getRawValue().inventory_description }}</td>
+        <td>{{ inventoryControl.getRawValue().brand_name }}</td>
+        <td>{{ quantityControl?.getRawValue() || 0 | number: '1.0-2' }}</td>
+        <td>
+          {{
+            inventoryControl.getRawValue().ready_to_use || 0 | number: '1.0-2'
+          }}
+        </td>
+        <td>
+          {{
+            inventoryControl.getRawValue().expire_date_time
+              | date: 'dd/MM/yyyy, HH:mm'
+          }}
+        </td>
+        <td>
+          {{
+            inventoryControl.getRawValue().updated_date
+              | date: 'dd/MM/yyyy, HH:mm'
+          }}
+        </td>
+      </tr>
+    </table>
+
+    <button
+      mat-button
+      [disabled]="formMode === 'view'"
+      (click)="openAddInventoryDialog()"
+      class="edit-btn"
+    >
+      <img src="edit.svg" alt="edit" loading="lazy" />
+    </button>
+  </div>
+
+  <mat-error
+    class="text-[0.75rem] text-center"
+    *ngIf="formGroup.invalid && formGroup.touched"
+  >
+    Please select Inventory
+  </mat-error>
+</mat-card>

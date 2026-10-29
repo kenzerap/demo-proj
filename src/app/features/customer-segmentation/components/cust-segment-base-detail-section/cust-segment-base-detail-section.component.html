@@ -1,0 +1,37 @@
+<mat-card class="p-[1rem]" appearance="outlined">
+  <h3 class="mb-[1rem]">Segment Detail</h3>
+
+  <form *ngIf="formGroup" [formGroup]="formGroup" class="grid gap-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Segment Name *</div>
+      <app-demoproj-input formControlName="name">
+        <span error *ngIf="segmentNameControl?.hasError('required')">
+          Please input segment name
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray mb-[1rem]">Segment Detail *</div>
+      <p-editor
+        class="demoproj-editor"
+        formControlName="description_html"
+        [style]="{ height: '8rem', fontSize: '1rem' }"
+        (onTextChange)="editorTextChange($event)"
+        #DetailEditor
+        [readonly]="!!segmentDescriptionHtmlControl?.disabled"
+        (focusout)="segmentDescriptionHtmlControl?.markAsTouched()"
+      >
+      </p-editor>
+      <mat-error
+        class="text-[0.75rem]"
+        *ngIf="
+          segmentDescriptionHtmlControl?.touched &&
+          segmentDescriptionControl?.hasError('required')
+        "
+      >
+        Please input segment detail
+      </mat-error>
+    </div>
+  </form>
+</mat-card>

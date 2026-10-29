@@ -1,0 +1,64 @@
+<mat-card class="grid gap-[1rem] p-[1rem]" appearance="outlined">
+  <h3>Master List Name</h3>
+
+  <form
+    *ngIf="formGroup"
+    [formGroup]="formGroup"
+    class="grid grid-cols-2 gap-[1rem]"
+  >
+    <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+      <img
+        src="us-flag.png"
+        alt="us-flag"
+        loading="lazy"
+        class="w-[3.1rem] h-[2rem]"
+      />
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Name *</div>
+        <div class="flex items-center gap-[0.5rem]">
+          <app-demoproj-input
+            class="w-full"
+            formControlName="name_en"
+            [maxLength]="100"
+          >
+            <span error *ngIf="nameEnControl?.hasError('required')">
+              Please input name
+            </span>
+          </app-demoproj-input>
+
+          <div class="base-text-color-gray">
+            {{ (nameEnControl?.value || '').length }}/100
+          </div>
+        </div>
+      </div>
+    </mat-card>
+    <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+      <img
+        src="thai-flag.png"
+        alt="thai-flag"
+        loading="lazy"
+        class="w-[3.1rem] h-[2rem]"
+      />
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Name *</div>
+        <div class="flex items-center gap-[0.5rem]">
+          <app-demoproj-input
+            class="w-full"
+            formControlName="name_th"
+            [maxLength]="100"
+          >
+            <span error *ngIf="nameThControl?.hasError('required')">
+              Please input name
+            </span>
+          </app-demoproj-input>
+
+          <div class="base-text-color-gray">
+            {{ (nameThControl?.value || '').length }}/100
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </form>
+</mat-card>

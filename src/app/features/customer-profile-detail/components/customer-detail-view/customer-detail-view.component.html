@@ -1,0 +1,423 @@
+<aside
+  class="base-border sidebar p-[1rem] flex flex-col gap-[1rem]"
+  [class.sidebar-colapsed]="isSidebarColapsed()"
+>
+  <div class="colapsed-icon absolute">
+    <mat-icon
+      [fontIcon]="
+        isSidebarColapsed() ? 'keyboard_arrow_right' : 'keyboard_arrow_left'
+      "
+      (click)="toggleSidebarColapsed()"
+    ></mat-icon>
+  </div>
+
+  @if (loading$ | async) {
+    <div class="flex justify-center items-center h-[6rem]">
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="50"
+        class="demoproj-spinner"
+      >
+      </mat-progress-spinner>
+    </div>
+  } @else {
+    <ng-container *ngIf="customerDetail$ | async as customerDetail">
+      <ng-container *ngIf="!isSidebarColapsed(); else colapsedContent">
+        <!-- header -->
+        <div
+          class="grid grid-cols-[auto_1fr_auto] items-center justify-center gap-[0.5rem] h-[3rem] mb-[2rem]"
+        >
+          @if (customerDetail.avatar) {
+            <img
+              [src]="customerDetail.avatar"
+              [alt]="customerDetail.avatar"
+              class="w-[3.5rem] h-[3.5rem] rounded-full"
+              loading="lazy"
+            />
+          } @else {
+            <img src="default-user.svg" alt="default-user" loading="lazy" />
+          }
+
+          <div class="grid items-center">
+            <div class="demoproj-red-color font-bold flex flex-wrap gap-[0.5rem]">
+              <div
+                class="truncate max-w-[14rem]"
+                [matTooltip]="
+                  (customerDetail.first_name || '') +
+                  ' ' +
+                  (customerDetail.last_name || '')
+                "
+              >
+                {{
+                  (customerDetail.first_name || '') +
+                    ' ' +
+                    (customerDetail.last_name || '')
+                }}
+              </div>
+              <mat-chip class="status status-active"
+                ><div class="text-[#10973e]">
+                  {{ getCustomerStatus(customerDetail) }}
+                </div>
+              </mat-chip>
+            </div>
+
+            <div
+              class="max-w-[14rem] truncate"
+              [matTooltip]="customerDetail.email || ''"
+            >
+              {{ customerDetail.email }}
+            </div>
+          </div>
+          <ng-container
+            *appHasPermissions="[
+              {
+                feature: featurePermissionCode.CustomerProfile,
+                action: actionPermissionCode.CreateEdit,
+              },
+            ]"
+          >
+            <button
+              mat-button
+              class="base-border base-btn-border-color"
+              (click)="setEditMode(true)"
+              *ngIf="!isEditMode()"
+            >
+              <div class="flex items-center justify-center gap-[0.5rem]">
+                <img src="edit.svg" alt="edit" loading="lazy" />
+                Edit
+              </div>
+            </button>
+
+            <button
+              *ngIf="isEditMode()"
+              mat-button
+              class="demoproj-btn"
+              (click)="saveCustomerProfile()"
+              [disabled]="isSaving$ | async"
+            >
+              <mat-icon>check</mat-icon>
+              Save
+            </button>
+          </ng-container>
+        </div>
+
+        <!-- body -->
+        @if (!isEditMode()) {
+          <div
+            class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+          >
+            <svg-users color="#98a2b4"></svg-users>
+            <div class="flex flex-col gap-[0.5rem]">
+              <div class="base-text-color-gray">Party ID</div>
+              <div>{{ customerDetail.party_id }}</div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+
+          <div
+            class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+          >
+            <svg-verified-user color="#98a2b4"></svg-verified-user>
+            <div class="flex flex-col gap-[0.5rem]">
+              <div class="base-text-color-gray">National ID/Passport ID</div>
+              <div>{{ customerDetail.security_no | securityNoFormat }}</div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+
+          <div
+            class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+          >
+            <svg-phone color="#98a2b4"></svg-phone>
+            <div class="flex flex-col gap-[0.5rem]">
+              <div class="base-text-color-gray">Phone Number</div>
+              <div>{{ customerDetail.mobile_no | phoneFormat }}</div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+
+          <div
+            class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+          >
+            <svg-compass color="#98a2b4"></svg-compass>
+            <div class="flex flex-col gap-[0.5rem]">
+              <div class="base-text-color-gray">Address</div>
+              <div class="break-all">
+                {{ getCustomerAddress(customerDetail) }}
+              </div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+
+          <div
+            class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+          >
+            <svg-birthday-cake color="#98a2b4"></svg-birthday-cake>
+            <div class="flex flex-col gap-[0.5rem]">
+              <div class="base-text-color-gray">Birthdate</div>
+              <div>
+                {{ customerDetail.birth_date | date: 'dd/MM/yyyy' }}
+              </div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+        } @else {
+          <app-customer-detail-edit
+            [customerDetail]="customerDetail"
+            [isSaveCustomerProfile]="isSaveCustomerProfile()"
+            (dispatchUpdate)="updateCustomerProfile($event)"
+          ></app-customer-detail-edit>
+        }
+
+        <div
+          class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+        >
+          <svg-battery color="#98a2b4"></svg-battery>
+          <div class="flex flex-col gap-[0.5rem]">
+            <div class="base-text-color-gray">PIN Updated Date</div>
+            <div>
+              {{ customerDetail.pin_updated_date | date: 'dd/MM/yyyy, HH:mm' }}
+            </div>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div
+          class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+        >
+          <svg-battery color="#98a2b4"></svg-battery>
+          <div class="flex flex-col gap-[0.5rem]">
+            <div class="base-text-color-gray">PIN Last Entered</div>
+            <div>
+              {{
+                customerDetail.pin_last_entered_date | date: 'dd/MM/yyyy, HH:mm'
+              }}
+            </div>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+
+        <mat-expansion-panel class="demoproj-expansion-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Terms and condition and Social </mat-panel-title>
+          </mat-expansion-panel-header>
+          <!-- expansion content -->
+          <div class="flex flex-col gap-[0.5rem]">
+            <div
+              class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+            >
+              <svg-globe color="#98a2b4"></svg-globe>
+              <div class="flex flex-col gap-[0.5rem]">
+                <div class="base-text-color-gray">Line</div>
+                <div>{{ customerDetail.line }}</div>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+
+            <div
+              class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+            >
+              <svg-globe color="#98a2b4"></svg-globe>
+              <div class="flex flex-col gap-[0.5rem]">
+                <div class="base-text-color-gray">facebook</div>
+                <div>{{ customerDetail.facebook }}</div>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+
+            <div
+              class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+            >
+              <svg-verified-user color="#98a2b4"></svg-verified-user>
+              <div class="flex flex-col gap-[0.5rem]">
+                <div class="base-text-color-gray">
+                  Terms and condition version:
+                </div>
+                <div>{{ customerDetail.terms_conditions_id }}</div>
+                <div *ngIf="customerDetail.accepted_terms_conditions_date">
+                  Accept Date:
+                  {{
+                    customerDetail.accepted_terms_conditions_date
+                      | date: 'dd/MM/yyyy, HH:mm'
+                  }}
+                </div>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+
+            <div
+              class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]"
+            >
+              <svg-verified-user color="#98a2b4"></svg-verified-user>
+              <div class="flex flex-col gap-[0.5rem]">
+                <div class="base-text-color-gray">Marketing version:</div>
+                <div>{{ customerDetail.marketing_id }}</div>
+                <div *ngIf="customerDetail.accepted_marketing_date">
+                  Accept Date:
+                  {{
+                    customerDetail.accepted_marketing_date
+                      | date: 'dd/MM/yyyy, HH:mm'
+                  }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <mat-divider></mat-divider>
+
+        <div
+          class="grid grid-cols-[1fr_auto] items-center justify-center gap-[1rem]"
+        >
+          <div class="flex flex-col gap-[0.5rem]">
+            <div class="font-medium">Mark as Fraud</div>
+            <div class="base-text-color-gray">
+              Admin can flag the customer is a fraud
+            </div>
+          </div>
+
+          <mat-slide-toggle
+            class="demoproj-slide-toggle"
+            hideIcon="true"
+            [checked]="customerDetail.is_fraud"
+            [disabled]="!hasEditPermission"
+            (change)="onFraudToggle($event)"
+          ></mat-slide-toggle>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div
+          class="grid grid-cols-[1fr_auto] items-center justify-center gap-[1rem]"
+        >
+          <div class="flex flex-col gap-[0.5rem]">
+            <div class="font-medium">Block</div>
+            <div class="base-text-color-gray">
+              Admin can flag the customer is a blacklist
+            </div>
+          </div>
+
+          <mat-slide-toggle
+            class="demoproj-slide-toggle"
+            hideIcon="true"
+            [checked]="customerDetail.is_blocked"
+            [disabled]="!hasEditPermission"
+            (change)="onBlockToggle($event)"
+          ></mat-slide-toggle>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div
+          class="grid grid-cols-[1fr_auto] items-center justify-center gap-[1rem]"
+        >
+          <div class="flex flex-col gap-[0.5rem]">
+            <div class="font-medium">Mark as delete</div>
+            <div class="base-text-color-gray">
+              Admin can flag the customer is a mark as deleted
+            </div>
+          </div>
+
+          <button
+            mat-button
+            class="base-border base-btn-border-color"
+            *appHasPermissions="[
+              {
+                feature: featurePermissionCode.CustomerProfile,
+                action: actionPermissionCode.CreateEdit,
+              },
+            ]"
+            [disabled]="isDeleting$ | async"
+            (click)="onDeleteCustomer()"
+          >
+            <div class="flex items-center justify-center gap-[0.5rem]">
+              <svg-delete
+                class="h-[1.3rem]"
+                [color]="(isDeleting$ | async) ? '#98a2b4' : 'black'"
+              ></svg-delete>
+              Delete
+            </div>
+          </button>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div
+          class="grid justify-end items-center base-text-color-gray text-[0.625rem]"
+        >
+          <div class="flex gap-[0.5rem]">
+            <div>Created Date:</div>
+            <div>
+              {{ customerDetail.created_date | date: 'dd/MM/yyyy, HH:mm' }}
+            </div>
+          </div>
+          <div class="flex gap-[0.5rem]">
+            <div>Updated By:</div>
+            <div>{{ customerDetail.last_updated_by }}</div>
+          </div>
+          <div class="flex gap-[0.5rem]">
+            <div>Updated Date:</div>
+            <div>
+              {{ customerDetail.updated_date | date: 'dd/MM/yyyy, HH:mm' }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #colapsedContent>
+        <div class="flex flex-col items-center justify-center gap-[1rem]">
+          @if (customerDetail.avatar) {
+            <img
+              [src]="customerDetail.avatar"
+              [alt]="customerDetail.avatar"
+              class="w-[3.5rem] h-[3.5rem] rounded-full"
+              loading="lazy"
+            />
+          } @else {
+            <img src="default-user.svg" alt="default-user" loading="lazy" />
+          }
+        </div>
+
+        <div
+          class="text-center overflow-hidden"
+          [matTooltip]="getCustomerStatus(customerDetail) || ''"
+        >
+          <mat-chip class="status status-active"
+            ><div class="text-[#10973e] w-[3rem] truncate">
+              {{ getCustomerStatus(customerDetail) }}
+            </div>
+          </mat-chip>
+        </div>
+
+        <svg-users class="text-center" color="#98a2b4"></svg-users>
+
+        <svg-verified-user
+          class="text-center"
+          color="#98a2b4"
+        ></svg-verified-user>
+
+        <svg-phone class="text-center" color="#98a2b4"></svg-phone>
+
+        <svg-compass class="text-center" color="#98a2b4"></svg-compass>
+
+        <div class="flex flex-col items-center justify-center gap-[0.5rem]">
+          <div>Fraud</div>
+          <mat-slide-toggle
+            class="demoproj-slide-toggle"
+            hideIcon="true"
+            [checked]="customerDetail.is_fraud"
+            [disabled]="!hasEditPermission"
+            (change)="onFraudToggle($event)"
+          ></mat-slide-toggle>
+        </div>
+
+        <div class="flex flex-col items-center justify-center gap-[0.5rem]">
+          <div>Block</div>
+          <mat-slide-toggle
+            class="demoproj-slide-toggle"
+            hideIcon="true"
+            [checked]="customerDetail.is_blocked"
+            [disabled]="!hasEditPermission"
+            (change)="onBlockToggle($event)"
+          ></mat-slide-toggle>
+        </div>
+      </ng-template>
+    </ng-container>
+  }
+</aside>

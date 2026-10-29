@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+}
+
+.virtual-notification-popup {
+  width: 23.3rem;
+  min-height: 8.2rem;
+  left: 1.6rem;
+  top: 1.17rem;
+  position: absolute;
+  border-radius: 0.25rem;
+  background-color: white;
+  padding: 1rem;
+}

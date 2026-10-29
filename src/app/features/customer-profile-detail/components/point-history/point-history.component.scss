@@ -1,0 +1,23 @@
+@use 'styles/variables.scss' as *;
+
+.card {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  width: 21rem;
+  border: 1px solid $base-border-color;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card-red {
+  background-color: #b3222b;
+
+  .deco-bottom {
+    height: 2rem;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: $base-color-red;
+  }
+}

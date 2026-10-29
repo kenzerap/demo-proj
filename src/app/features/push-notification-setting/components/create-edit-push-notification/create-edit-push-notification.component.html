@@ -1,0 +1,109 @@
+<div class="grid grid-cols-[1fr_26.5rem] gap-[1rem]">
+  <div>
+    <div class="my-[1.5rem] flex items-center justify-between">
+      <div>
+        <h2 class="m-0">
+          {{ notificationId() ? 'Edit' : 'Create' }} Push Notification
+        </h2>
+      </div>
+
+      <button
+        mat-button
+        type="button"
+        class="base-border base-btn-border-color"
+        (click)="setFormMode('edit')"
+        *ngIf="
+          formMode() === 'view' &&
+          sendTimeForm.get('send_time_type')?.value !==
+            pushNotificationType.IMMEDIATELY
+        "
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <img src="edit.svg" alt="edit" loading="lazy" />
+          Edit
+        </div>
+      </button>
+
+      <button
+        mat-button
+        class="demoproj-btn"
+        (click)="onSubmit()"
+        [disabled]="loading$ | async"
+        *ngIf="formMode() !== 'view'"
+      >
+        <mat-icon>check</mat-icon>
+        Save
+      </button>
+    </div>
+
+    <div class="grid gap-[1rem]">
+      <app-send-time-section
+        [formGroup]="sendTimeForm"
+        [isCreateMode]="formMode() === 'create'"
+      ></app-send-time-section>
+
+      <mat-card
+        class="p-[1rem]"
+        appearance="outlined"
+        [formGroup]="platformForm"
+      >
+        <h3 class="mb-[1rem]">Platform *</h3>
+
+        <div class="flex items-center mb-[1rem] gap-[16rem]">
+          <mat-checkbox formControlName="android" class="demoproj-checkbox">
+            Android
+          </mat-checkbox>
+          <mat-checkbox formControlName="ios" class="demoproj-checkbox">
+            iOS
+          </mat-checkbox>
+        </div>
+
+        <mat-error *ngIf="checkPlatformError()" class="text-[0.75rem]">
+          Please select platform
+        </mat-error>
+      </mat-card>
+
+      <mat-card class="p-[1rem]" appearance="outlined">
+        <h3 class="mb-[1rem]">Message Box</h3>
+
+        <mat-checkbox [formControl]="messageBoxControl" class="demoproj-checkbox">
+          Show in Message Box
+        </mat-checkbox>
+      </mat-card>
+
+      <app-target-group-section
+        [formGroup]="targetGroupForm"
+        [tierGroups]="(tierGroups$ | async)!"
+        [segmentGroups]="(segmentGroups$ | async)!"
+        [tierSegmentIncludeExclude]="tierSegmentIncludeExclude()"
+        [isEditable]="formMode() !== 'view'"
+        (includeExcludelistChange)="segmentTierListChange($event)"
+      ></app-target-group-section>
+
+      <app-trigger-event-section
+        *ngIf="
+          sendTimeForm.get('send_time_type')?.value ===
+          pushNotificationType.TRIGGER_EVENT
+        "
+        [formGroup]="triggerEventForm"
+        (changeTriggerEventType)="onChangeTriggerEventType($event)"
+      ></app-trigger-event-section>
+
+      <app-setting-destination-section
+        [isCreateMode]="formMode() === 'create'"
+        [formGroup]="settingDestinationForm"
+      ></app-setting-destination-section>
+      <app-messages-section
+        [formGroup]="messagesForm"
+        [triggerEventTypeValue]="getTriggerEventTypeValueForMessage()"
+        [isSendTriggerEvent]="
+          sendTimeForm.get('send_time_type')?.value ===
+          pushNotificationType.TRIGGER_EVENT
+        "
+      ></app-messages-section>
+    </div>
+  </div>
+  <app-mobile-preview
+    [targetGroupId]="targetGroupForm.get('target_group_type')?.value"
+  ></app-mobile-preview>
+</div>

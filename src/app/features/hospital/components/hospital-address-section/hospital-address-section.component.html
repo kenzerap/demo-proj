@@ -1,0 +1,154 @@
+<mat-card
+  class="grid gap-[1rem] p-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <h3>Hospital Address</h3>
+
+  <div class="grid grid-cols-[1fr_1fr_1fr] gap-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Telephone *</div>
+      <app-demoproj-input formControlName="telephone">
+        <span error *ngIf="telephoneControl?.hasError('required')">
+          Please input Telephone
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Latitude *</div>
+      <app-demoproj-input formControlName="latitude">
+        <span error *ngIf="latitudeControl?.hasError('required')">
+          Please input Latitude
+        </span>
+        <span error *ngIf="latitudeControl?.hasError('invalidLatitude')">
+          Invalid Latitude
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Longitude *</div>
+      <app-demoproj-input formControlName="longitude">
+        <span error *ngIf="longitudeControl?.hasError('required')">
+          Please input Longitude
+        </span>
+        <span error *ngIf="longitudeControl?.hasError('invalidLongitude')">
+          Invalid Longitude
+        </span>
+      </app-demoproj-input>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[1fr_1fr_1fr] gap-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Province *</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="province"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(
+                provinceControl?.value,
+                (provinceOptions$ | async) || []
+              )
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of (provinceOptions$ | async) || []; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">District *</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="district"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(
+                districtControl?.value,
+                (districtOptions$ | async) || []
+              )
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of (districtOptions$ | async) || []; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+
+        <mat-error *ngIf="districtControl?.hasError('required')">
+          Please select District
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="empty-div"></div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-[1rem]">
+    <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+      <img
+        src="us-flag.png"
+        alt="us-flag"
+        loading="lazy"
+        class="w-[3.1rem] h-[2rem]"
+      />
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Address *</div>
+        <div class="flex items-center gap-[0.5rem]">
+          <app-demoproj-input
+            class="w-full"
+            formControlName="address_en"
+            [maxLength]="1000"
+          >
+            <span error *ngIf="addressEnControl?.hasError('required')">
+              Please input Address
+            </span>
+          </app-demoproj-input>
+
+          <div class="base-text-color-gray">
+            {{ (addressEnControl?.value || '').length }}/1000
+          </div>
+        </div>
+      </div>
+    </mat-card>
+    <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+      <img
+        src="thai-flag.png"
+        alt="thai-flag"
+        loading="lazy"
+        class="w-[3.1rem] h-[2rem]"
+      />
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Address *</div>
+        <div class="flex items-center gap-[0.5rem]">
+          <app-demoproj-input
+            class="w-full"
+            formControlName="address_th"
+            [maxLength]="1000"
+          >
+            <span error *ngIf="addressThControl?.hasError('required')">
+              Please input Address
+            </span>
+          </app-demoproj-input>
+
+          <div class="base-text-color-gray">
+            {{ (addressThControl?.value || '').length }}/1000
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</mat-card>

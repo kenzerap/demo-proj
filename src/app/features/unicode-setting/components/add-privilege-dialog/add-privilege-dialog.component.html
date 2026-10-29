@@ -1,0 +1,58 @@
+<h2 mat-dialog-title class="demoproj-red-color mb-[2rem]">Add Privilege</h2>
+<mat-dialog-content class="mat-typography">
+  <app-privilege-dialog-filter></app-privilege-dialog-filter>
+
+  <app-demoproj-table
+    [data]="privileges"
+    [isPaginatorEnabled]="false"
+    [tableColumns]="codeUploadedTableColumns()"
+    [isSingleSelect]="true"
+    [tableSectionStyle]="{ 'max-height': '15rem' }"
+    [selectedItems]="[selectedItem()]"
+    [sortField]="defaultParams().sort_by || ''"
+    [sortDirection]="defaultParams().sort_direction || ''"
+    (selectedItemsChange)="onSelectedItemsChange($event)"
+    (sortChange)="onSortChange($event)"
+  >
+    <ng-template
+      #customColumn
+      let-columnCode="columnCode"
+      let-rowData="rowData"
+    >
+      <ng-container [ngSwitch]="columnCode">
+        <ng-container *ngSwitchCase="'privilegeName'">
+          <div class="flex items-center gap-[0.5rem] my-[0.5rem]">
+            <img
+              class="w-[3.25rem] h-[3.25rem]"
+              loading="lazy"
+              [src]="rowData.thumbnailImage"
+              [alt]="rowData.privilegeName"
+            />
+            <div [appHighlightText]="(selectCommonSearch$ | async)!">
+              {{ rowData.privilegeName }}
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchDefault></ng-container>
+      </ng-container>
+    </ng-template>
+  </app-demoproj-table>
+
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button
+    mat-button
+    (click)="onCancel()"
+    class="base-border base-btn-border-color"
+  >
+    Cancel
+  </button>
+
+  <button mat-button class="demoproj-btn" (click)="onSubmit()">
+    <mat-icon>check</mat-icon>
+    Add
+  </button>
+</mat-dialog-actions>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>

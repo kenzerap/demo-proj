@@ -1,0 +1,50 @@
+<mat-form-field
+  class="demoproj-autocomplete w-full"
+  [class.demoproj-form-field-gray]="formFieldGray"
+>
+  <input
+    type="text"
+    matInput
+    [formControl]="formControl"
+    [maxlength]="maxLength"
+    [matAutocomplete]="autoGroup"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    (blur)="onBlur()"
+  />
+  <mat-autocomplete
+    #autoGroup="matAutocomplete"
+    [hideSingleSelectionIndicator]="true"
+    [displayWith]="displayFn"
+    (optionSelected)="onOptionSelected($event)"
+  >
+    <ng-container *ngIf="isGrouped; else nonGroup">
+      @for (group of filteredGroupOptions; track group) {
+        <mat-optgroup [label]="group.groupName">
+          @for (item of group.groupItems; track item) {
+            <mat-option
+              [value]="item.code"
+              [class.item-selected]="item.code === selectedCode"
+              >{{ item.value }}</mat-option
+            >
+          }
+        </mat-optgroup>
+      }
+    </ng-container>
+
+    <ng-template #nonGroup>
+      @for (item of filteredNonGroupOptions; track item) {
+        <mat-option
+          [style]="item.code === selectedCode ? selectedItemStyle() : ''"
+          [value]="item.code"
+        >
+          {{ item.value }}
+        </mat-option>
+      }
+    </ng-template>
+  </mat-autocomplete>
+
+  <mat-error>
+    <ng-content select="[error]"></ng-content>
+  </mat-error>
+</mat-form-field>

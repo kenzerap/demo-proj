@@ -1,0 +1,30 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+
+{
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "baseUrl": ".",
+    "allowJs": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,  // Allow default imports
+    "types": [
+      "jest",  // Make sure Jest types are included
+      "node"
+    ],
+    "skipLibCheck": true,
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "src/app/*": ["src/app/*"],
+      "@env/*": ["src/environments/*"],
+      "@core/*": ["src/app/core/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@features/*": ["src/app/features/*"],
+    }
+  },
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"],
+}

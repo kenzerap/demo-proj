@@ -1,0 +1,126 @@
+<div class="grid grid-cols-[1fr] gap-[1rem]">
+  <div class="my-[1.5rem] flex items-center justify-between">
+    <div>
+      <h2 class="m-0">{{ privilegeId() ? 'Edit' : 'Create' }} Privilege</h2>
+    </div>
+
+    <div class="flex gap-[1rem]">
+      <button
+        mat-button
+        type="button"
+        class="base-border base-btn-border-color"
+        (click)="clonePrivilege()"
+        *ngIf="formMode() === 'view'"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <svg-copy></svg-copy>
+          Clone
+        </div>
+      </button>
+
+      <button
+        mat-button
+        type="button"
+        class="base-border base-btn-border-color"
+        (click)="setFormMode('edit')"
+        *ngIf="formMode() === 'view'"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <img src="edit.svg" alt="edit" loading="lazy" />
+          Edit
+        </div>
+      </button>
+
+      <button
+        mat-button
+        type="button"
+        class="demoproj-btn"
+        [disabled]="publishedLoading$ | async"
+        *ngIf="
+          formMode() === 'view' &&
+          !!activePeriodForm.get('is_published')?.getRawValue()
+        "
+        (click)="unpublishPrivilege()"
+      >
+        Unpublish
+      </button>
+
+      <button
+        *ngIf="formMode() !== 'view'"
+        mat-button
+        class="base-border base-btn-border-color"
+        (click)="onSubmit(true)"
+      >
+        Save Draft
+      </button>
+
+      <button
+        mat-button
+        class="demoproj-btn"
+        (click)="onSubmit()"
+        [disabled]="loading$ | async"
+        *ngIf="formMode() !== 'view'"
+      >
+        <mat-icon>check</mat-icon>
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="grid gap-[1rem]">
+    <app-active-period-section
+      [formGroup]="activePeriodForm"
+    ></app-active-period-section>
+
+    <app-visible-period-section
+      [formGroup]="visiblePeriodForm"
+    ></app-visible-period-section>
+
+    <app-privilege-setting-section
+      [formGroup]="privilegeSettingForm"
+      [privilegeId]="privilegeId()"
+      [formMode]="formMode()"
+    ></app-privilege-setting-section>
+
+    <app-messages-section
+      [formGroup]="messagesForm"
+      [formMode]="formMode()"
+    ></app-messages-section>
+
+    <app-target-group-section
+      [formGroup]="targetGroupForm"
+      [tierGroups]="(tierGroups$ | async)!"
+      [segmentGroups]="(segmentGroups$ | async)!"
+      [tierSegmentIncludeExclude]="tierSegmentIncludeExclude()"
+      [isEditable]="formMode() !== 'view'"
+      (includeExcludelistChange)="segmentTierListChange($event)"
+    ></app-target-group-section>
+
+    <app-healthcare-package-section
+      *ngIf="
+        privilegeSettingForm.get('privilege_type')?.value ===
+        privilegeType.HEALTH_CARE
+      "
+      [formGroup]="healthcarePackageForm"
+      [formMode]="formMode()"
+    ></app-healthcare-package-section>
+
+    <app-inventory-section
+      [formGroup]="inventoryForm"
+      [formMode]="formMode()"
+    ></app-inventory-section>
+
+    <app-redeem-section
+      [formGroup]="redeemForm"
+      [formMode]="formMode()"
+    ></app-redeem-section>
+
+    <app-redeem-limit-section
+      [formGroup]="redeemLimitForm"
+    ></app-redeem-limit-section>
+
+    <app-point-discount-section
+      [formGroup]="pointDiscountForm"
+    ></app-point-discount-section>
+  </div>
+</div>

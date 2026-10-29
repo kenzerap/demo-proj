@@ -1,0 +1,77 @@
+<h2 mat-dialog-title class="demoproj-red-color mb-[1rem]">Add point</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="addPointForm">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col">
+        <div class="text-black">Point *</div>
+
+        <app-demoproj-input formControlName="point" [inputType]="'number'">
+          <span suffix class="demoproj-red-color">Point</span>
+
+          <span error *ngIf="pointControl?.hasError('required')">
+            Please input point value
+          </span>
+
+          <span
+            error
+            *ngIf="
+              pointControl?.hasError('min') ||
+              pointControl?.hasError('max') ||
+              pointControl?.hasError('pattern')
+            "
+          >
+            Points must be a number greater than 0 and smaller or equal to
+            {{ 1000000 | number : '1.0-2' }}.
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="text-black">Expiry Date *</div>
+
+        <mat-form-field class="demoproj-input">
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="expiryDate"
+            [min]="minDate"
+          />
+          <mat-datepicker-toggle matTextSuffix [for]="picker">
+            <svg-calendar matDatepickerToggleIcon></svg-calendar>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="expiryDateControl?.hasError('required')">
+            Please input expiry date value
+          </mat-error>
+          <mat-error *ngIf="expiryDateControl?.hasError('matDatepickerMin')">
+            Must accept valid future dates
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="flex flex-col mt-[1rem]">
+      <div class="text-black">Remark</div>
+
+      <mat-form-field class="demoproj-input w-full">
+        <input matInput formControlName="remark" />
+      </mat-form-field>
+    </div>
+  </form>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button mat-button mat-dialog-close class="base-border base-btn-border-color">
+    Cancel
+  </button>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    (click)="onSubmit()"
+    [disabled]="loading$ | async"
+  >
+    <mat-icon>check</mat-icon>
+    Add Point
+  </button>
+</mat-dialog-actions>

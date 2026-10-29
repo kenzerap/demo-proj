@@ -1,0 +1,116 @@
+<mat-card class="p-[1rem]" appearance="outlined">
+  <h3 class="mb-[1rem]">Trigger event</h3>
+
+  <form *ngIf="formGroup" [formGroup]="formGroup">
+    <div class="flex flex-col w-[calc(100%/3_-_1rem)]">
+      <div class="base-text-color-gray">Select event *</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="trigger_event_type"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(triggerEventTypeControl?.value, eventOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of eventOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+
+        <mat-error *ngIf="triggerEventTypeControl?.hasError('required')">
+          Please input type
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div></div>
+    <div></div>
+
+    <div class="grid grid-cols-[auto_auto_auto] gap-[1rem]">
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Send condition *</div>
+        <mat-form-field class="demoproj-select">
+          <mat-select
+            formControlName="trigger_event_condition"
+            [hideSingleSelectionIndicator]="true"
+          >
+            <mat-select-trigger>
+              <span>{{
+                getDropdownValue(
+                  triggerEventConditionControl?.value,
+                  conditionOptions
+                )
+              }}</span>
+              <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+            </mat-select-trigger>
+            @for (type of conditionOptions; track type) {
+            <mat-option [value]="type.code">{{ type.value }}</mat-option>
+            }
+          </mat-select>
+
+          <mat-error *ngIf="triggerEventConditionControl?.hasError('required')">
+            Please input condition
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Value *</div>
+        <ng-container [ngSwitch]="triggerEventConditionControl?.value">
+          <ng-container *ngSwitchCase="compareConditionType.Before">
+            <app-demoproj-input
+              formControlName="trigger_event_value"
+              [inputType]="'number'"
+            >
+              <span
+                error
+                *ngIf="triggerEventValueControl?.hasError('required')"
+              >
+                Please input value
+              </span>
+
+              <span error *ngIf="triggerEventValueControl?.hasError('min')">
+                The value must be a number greater than or equal to 0
+              </span>
+            </app-demoproj-input>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="compareConditionType.Is">
+            <mat-form-field class="demoproj-input w-full">
+              <input matInput formControlName="trigger_event_value" />
+
+              <mat-error *ngIf="triggerEventValueControl?.hasError('required')">
+                Please input value
+              </mat-error>
+            </mat-form-field>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault></ng-container>
+        </ng-container>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Unit *</div>
+        <mat-form-field class="demoproj-select">
+          <mat-select
+            formControlName="trigger_event_unit"
+            [hideSingleSelectionIndicator]="true"
+          >
+            <mat-select-trigger>
+              <span>{{
+                getDropdownValue(triggerEventUnitControl?.value, unitOptions)
+              }}</span>
+              <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+            </mat-select-trigger>
+            @for (type of unitOptions; track type) {
+            <mat-option [value]="type.code">{{ type.value }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-card>

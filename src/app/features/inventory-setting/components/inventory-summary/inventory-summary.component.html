@@ -1,0 +1,94 @@
+<div class="grid gap-[1rem] justify-center my-[1rem]">
+  <h2 class="text-center">Inventory Quantity Code</h2>
+
+  <div class="grid grid-cols-2 gap-[1rem]">
+    <div class="demoproj-red-color">
+      <div>Ready to use</div>
+      <div>
+        {{
+          (inventorySummary$ | async)?.ready_to_use
+            ? ((inventorySummary$ | async)?.ready_to_use | number : '1.0-2')
+            : '-'
+        }}
+      </div>
+    </div>
+
+    <div>
+      <div>Reserved for Privilege</div>
+      <div>
+        {{
+          (inventorySummary$ | async)?.reserved
+            ? ((inventorySummary$ | async)?.reserved | number : '1.0-2')
+            : '-'
+        }}
+      </div>
+    </div>
+
+    <div>
+      <div>Redeemed</div>
+      <div>
+        {{
+          (inventorySummary$ | async)?.redeemed
+            ? ((inventorySummary$ | async)?.redeemed | number : '1.0-2')
+            : '-'
+        }}
+      </div>
+    </div>
+
+    <div>
+      <div>Used</div>
+      <div>
+        {{
+          (inventorySummary$ | async)?.used
+            ? ((inventorySummary$ | async)?.used | number : '1.0-2')
+            : '-'
+        }}
+      </div>
+    </div>
+
+    <div>
+      <div>Total Quantity Code</div>
+      <div>
+        {{
+          (inventorySummary$ | async)?.quantity
+            ? ((inventorySummary$ | async)?.quantity | number : '1.0-2')
+            : '-'
+        }}
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center relative">
+    <div class="progress-container">
+      <mat-progress-spinner
+        [diameter]="100"
+        [mode]="'determinate'"
+        [value]="
+          (((inventorySummary$ | async)?.ready_to_use_percent || 0) * 80) / 100
+        "
+        strokeWidth="13"
+        class="progress-circle demoproj-spinner z-[1]"
+      ></mat-progress-spinner>
+      <svg-defective-thin-circle
+        class="background-circle"
+        [width]="92"
+        [height]="90"
+      ></svg-defective-thin-circle>
+
+      <div class="progress-icon">
+        <div class="circle-icon">
+          <svg-ticket></svg-ticket>
+        </div>
+      </div>
+      <div class="progress-text">
+        <span class="text-[0.8rem]"
+          >{{
+            (inventorySummary$ | async)?.ready_to_use_percent || 0
+              | number : '1.0-2'
+          }}%</span
+        >
+      </div>
+    </div>
+    <h2 class="absolute my-0 bottom-[-2rem]">Ready to use</h2>
+  </div>
+</div>

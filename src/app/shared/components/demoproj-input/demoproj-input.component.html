@@ -1,0 +1,42 @@
+<mat-form-field
+  class="demoproj-input w-full"
+  [class.demoproj-form-field-gray]="formFieldGray"
+>
+  <span matPrefix>
+    <ng-content select="[prefix]"></ng-content>
+  </span>
+
+  <ng-container [ngSwitch]="inputType">
+    <input
+      *ngSwitchCase="'number'"
+      matInput
+      [type]="inputType"
+      [formControl]="formControl"
+      [maxlength]="maxLength"
+      [placeholder]="placeholder"
+      appDecimalLimiter
+      [decimalPlaces]="decimalPlaces"
+      (change)="trimSpaces()"
+      (blur)="onBlur()"
+    />
+
+    <input
+      *ngSwitchDefault
+      matInput
+      [type]="inputType"
+      [formControl]="formControl"
+      [maxlength]="maxLength"
+      [placeholder]="placeholder"
+      (change)="trimSpaces()"
+      (blur)="onBlur()"
+    />
+  </ng-container>
+
+  <span matTextSuffix>
+    <ng-content select="[suffix]"></ng-content>
+  </span>
+
+  <mat-error>
+    <ng-content select="[error]"></ng-content>
+  </mat-error>
+</mat-form-field>

@@ -1,0 +1,34 @@
+@use 'styles/variables.scss' as *;
+
+.sidebar {
+  position: relative;
+  width: 26rem;
+  transition: width 200ms;
+  border-radius: 0.5rem;
+  min-height: calc(100vh - 13rem);
+}
+
+.sidebar-colapsed {
+  width: 6rem;
+}
+
+.colapsed-icon {
+  right: -0.8rem;
+  top: calc(50% - 0.75rem);
+  border: 1px solid #cacfd6;
+  display: flex;
+  border-radius: 0.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.status {
+  height: 1.5rem !important;
+  pointer-events: none;
+}
+
+.status-active {
+  background-color: #e7f6ec !important;
+}

@@ -1,0 +1,126 @@
+<mat-card
+  class="p-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex justify-between items-center mb-[1rem]">
+    <h3>Inventory Stocks Setting</h3>
+    <mat-slide-toggle
+      class="demoproj-slide-toggle"
+      hideIcon="true"
+      formControlName="status"
+      >Active</mat-slide-toggle
+    >
+  </div>
+
+  <div class="grid grid-cols-[repeat(4,_minmax(12rem,_1fr))] gap-[1rem]">
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Inventory Stocks Name *</div>
+      <app-demoproj-input formControlName="inventory_name">
+        <span error *ngIf="inventoryNameControl?.hasError('required')">
+          Please input inventory stocks name
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Description *</div>
+      <app-demoproj-input formControlName="description">
+        <span error *ngIf="descriptionControl?.hasError('required')">
+          Please input description
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Select Brand *</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="brand_id"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(
+                brandIdControl?.value,
+                (brandOptions$ | async) || []
+              )
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of (brandOptions$ | async); track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Inventory Type *</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="inventory_type"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(inventoryTypeControl?.value, inventoryTypes)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of inventoryTypes; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Expiry Date *</div>
+      <mat-form-field class="demoproj-input">
+        <input
+          matInput
+          [matDatepicker]="picker1"
+          formControlName="expire_date"
+          [min]="formMode !== 'create' ? null : currentDate"
+        />
+        <mat-datepicker-toggle matTextSuffix [for]="picker1">
+          <svg-calendar matDatepickerToggleIcon></svg-calendar>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+        <mat-error *ngIf="expireDateControl?.hasError('required')">
+          Please input Expiry date
+        </mat-error>
+
+        <mat-error
+          *ngIf="
+            !expireDateControl?.hasError('required') &&
+            expireDateControl?.hasError('matDatepickerMin')
+          "
+        >
+          Expiry Date must be a future date
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Expiry Time *</div>
+      <app-demoproj-timepicker formControlName="expire_time">
+        <span error *ngIf="expireTimeControl?.hasError('required')">
+          Please input time
+        </span>
+
+        <span error *ngIf="expireTimeControl?.hasError('invalidTimeFormat')">
+          Invalid time
+        </span>
+
+        <span error *ngIf="expireTimeControl?.hasError('invalidExpireTime')">
+          Expiry Date Time must be a future date
+        </span>
+      </app-demoproj-timepicker>
+    </div>
+  </div>
+</mat-card>

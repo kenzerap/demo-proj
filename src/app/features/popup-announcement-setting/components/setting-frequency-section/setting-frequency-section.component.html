@@ -1,0 +1,47 @@
+<mat-card class="p-[1rem]" appearance="outlined">
+  <h3 class="mb-[1rem]">Setting Frequency</h3>
+
+  <form *ngIf="formGroup" [formGroup]="formGroup">
+    <div class="grid grid-cols-3 gap-[1rem]">
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Frequency Capping</div>
+
+        <app-demoproj-input formControlName="frequencyCap" [inputType]="'number'">
+          <span error *ngIf="frequencyCapControl?.hasError('required')">
+            Please input popup name
+          </span>
+
+          <span error *ngIf="frequencyCapControl?.hasError('min')">
+            Please input number greater than or equal to 1
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Frequency Period</div>
+
+        <mat-form-field class="demoproj-select">
+          <mat-select
+            formControlName="frequencyPeriod"
+            [hideSingleSelectionIndicator]="true"
+          >
+            <mat-select-trigger>
+              <span>{{
+                getDropdownValue(
+                  frequencyPeriodControl?.value,
+                  selectFrequencyPeriodOptions
+                )
+              }}</span>
+              <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+            </mat-select-trigger>
+            @for (type of selectFrequencyPeriodOptions; track type) {
+            <mat-option [value]="type.code">{{ type.value }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div></div>
+    </div>
+  </form>
+</mat-card>

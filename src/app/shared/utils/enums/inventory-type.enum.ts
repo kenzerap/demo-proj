@@ -1,0 +1,6 @@
+export enum InventoryType {
+  UPLOAD_CODE = 'UPLOAD_CODE',
+  GENERIC_CODE = 'GENERIC_CODE',
+  PREFIX_CODE = 'PREFIX_CODE',
+  PRODUCT = 'PRODUCT',
+}

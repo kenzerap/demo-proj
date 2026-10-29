@@ -1,0 +1,11 @@
+<div class="w-full grid items-center justify-center gap-[1rem] text-center">
+  <div>
+    <img [src]="imgUrl" alt="telescope" />
+  </div>
+  <div *ngIf="title" class="base-text-color-gray">
+    {{ title }}
+  </div>
+  <div *ngIf="subTitle" class="w-[22rem] text-[#D0D5DD]">
+    {{ subTitle }}
+  </div>
+</div>

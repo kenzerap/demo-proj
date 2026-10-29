@@ -1,0 +1,14 @@
+<div class="my-[1.5rem] flex items-center justify-between">
+  <div>
+    <h2 class="m-0">OTP History</h2>
+  </div>
+</div>
+
+<app-demoproj-table
+  [data]="(otpHistories$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+></app-demoproj-table>

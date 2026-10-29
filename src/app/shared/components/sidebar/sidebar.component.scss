@@ -1,0 +1,75 @@
+@use 'styles/variables.scss' as *;
+
+.sidebar {
+  height: calc(100% - 0.25rem);
+  border-top: 0.25rem solid $base-color-red;
+  width: 16rem;
+  transition: width 200ms;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-colapsed {
+  width: 5rem;
+
+  .logo-bar {
+    display: flex;
+    justify-content: center;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .menu-item-mini,
+  .menu-item-mini-selected {
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+
+  .menu-item-mini-selected {
+    background-color: $base-color-red;
+  }
+}
+
+.expanded-item,
+.expanded-item-selected {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 3rem;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+.expanded-item-selected {
+  background-color: $base-color-red;
+  color: white;
+}
+
+.expanded-item:hover,
+.menu-item-mini:hover {
+  background-color: #e8e7eb;
+  color: #344054;
+}
+
+.colapsed-icon {
+  right: -1.2rem;
+  top: calc(50% - 0.75rem);
+  border: 1px solid #cacfd6;
+  display: flex;
+  border-radius: 0.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: white;
+  cursor: pointer;
+}

@@ -1,0 +1,9 @@
+<div
+  class="item-layout grid grid-cols-[auto_1fr_auto] items-center justify-center gap-[0.5rem] h-[3rem] text-[#344054] cursor-pointer"
+  [class.item-layout-selected]="itemSelected"
+  (click)="onClickItem()"
+>
+  <img [src]="leftImg" [alt]="leftImg" loading="lazy" />
+  <div>{{ textContent }}</div>
+  <mat-icon [fontIcon]="matIconRight"></mat-icon>
+</div>

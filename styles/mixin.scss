@@ -1,0 +1,27 @@
+@use 'styles/variables.scss' as *;
+
+@mixin base-btn {
+  background-color: $base-color-red !important;
+  color: white !important;
+
+  &:disabled {
+    background-color: $base-btn-border-color !important;
+    color: white !important;
+  }
+}
+
+@mixin base-btn-border-color {
+  border-color: $base-btn-border-color !important;
+}
+
+@mixin base-color-gray {
+  color: $base-color-gray;
+}
+
+@mixin base-color-red {
+  color: $base-color-red;
+}
+
+@mixin base-color-green {
+  color: $base-color-green;
+}

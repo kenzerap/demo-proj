@@ -1,0 +1,21 @@
+<form
+  class="grid grid-cols-[auto_auto_6rem_5rem] gap-4 items-center"
+  [formGroup]="searchForm"
+>
+  <app-demoproj-input
+    formControlName="commonSearch"
+    [placeholder]="'Search Point Rule'"
+    class="min-w-[25rem]"
+  >
+    <span prefix>
+      <img src="icon-search.svg" alt="search" loading="lazy" />
+    </span>
+  </app-demoproj-input>
+
+  <button mat-button class="demoproj-btn" (click)="onSearch()">
+    <mat-icon>search</mat-icon>
+    Search
+  </button>
+
+  <button mat-button class="base-border" (click)="resetForm()">Clear</button>
+</form>

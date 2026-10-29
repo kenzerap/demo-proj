@@ -1,0 +1,57 @@
+<div class="my-[1.5rem] flex items-center justify-end gap-[1rem]">
+  <button
+    mat-button
+    class="demoproj-btn"
+    *appHasPermissions="[
+      {
+        feature: featurePermissionCode.BrandSetting,
+        action: actionPermissionCode.CreateEdit
+      }
+    ]"
+    (click)="createBrand()"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-plus></svg-plus>
+      New Brand
+    </div>
+  </button>
+</div>
+
+<app-demoproj-table
+  [data]="(brands$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  [noDataMessage]="'No brand profile set'"
+  (pageChange)="onPageChange($event)"
+  (rowClick)="onRowClick($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'brandNameWithImage'">
+        <div class="flex items-center gap-[0.5rem] my-[0.5rem]">
+          <img
+            class="w-[3.25rem] h-[3.25rem]"
+            loading="lazy"
+            [src]="encodeImageUrl(rowData.preview_brand_logo_url, rowData.brand_logo)"
+            [alt]="rowData.brand_name_thai"
+          />
+          <div>{{ rowData.brand_name_thai }}</div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'status'">
+        <mat-slide-toggle
+          class="demoproj-slide-toggle"
+          hideIcon="true"
+          [checked]="rowData.is_active"
+          [disabled]="true"
+          (change)="onToggleChange($event, rowData)"
+        ></mat-slide-toggle>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

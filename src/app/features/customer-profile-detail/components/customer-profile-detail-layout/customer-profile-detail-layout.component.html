@@ -1,0 +1,23 @@
+<div class="grid grid-rows-[auto_auto] gap-[0.5rem]">
+  <nav
+    class="demoproj-tabs"
+    mat-tab-nav-bar
+    [tabPanel]="tabPanel"
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+  >
+    @for (tab of tabs(); track $index) {
+    <a
+      mat-tab-link
+      (click)="changeTab(tab.url)"
+      [active]="tab.url === activeTabUrl()"
+    >
+      {{ tab.label }}
+    </a>
+    }
+  </nav>
+
+  <router-outlet></router-outlet>
+</div>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>

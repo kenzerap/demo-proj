@@ -1,0 +1,16 @@
+@use 'styles/variables.scss' as *;
+
+.condition-row {
+  display: grid;
+  grid-template-columns: 1fr 2rem;
+  gap: 1rem;
+  align-items: center;
+  background-color: $base-color-light-gray;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+.delete-disabled {
+  pointer-events: none;
+  color: $base-color-gray;
+}

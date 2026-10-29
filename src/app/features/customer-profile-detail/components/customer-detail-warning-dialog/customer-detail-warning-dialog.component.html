@@ -1,0 +1,60 @@
+<mat-dialog-content class="mat-typography dialog-content text-center">
+  <svg-warning-circle class="mb-[2rem]"></svg-warning-circle>
+  <div class="mb-[1rem]">
+    <div class="font-bold mb-[1rem]">Duplicate Data Detected</div>
+    @if (data.dup_security_no && data.dup_mobile_no &&
+    data.dup_security_no.party_id === data.dup_mobile_no.party_id) {
+    <div>
+      "<span class="demoproj-red-color">{{ data.mobile_no }}</span
+      >" and "<span class="demoproj-red-color">{{ data.security_no }}</span
+      >" is already associated with:
+      <a class="link" (click)="navigateToDetail(data.dup_security_no.party_id)">
+        {{
+          (data.dup_security_no.first_name || '') +
+            ' ' +
+            (data.dup_security_no.last_name || '')
+        }}
+      </a>
+    </div>
+    } @else {
+    <div *ngIf="data.dup_mobile_no">
+      "<span class="demoproj-red-color">{{ data.mobile_no }}</span
+      >" is already associated with:
+      <a class="link" (click)="navigateToDetail(data.dup_mobile_no.party_id)">
+        {{
+          (data.dup_mobile_no.first_name || '') +
+            ' ' +
+            (data.dup_mobile_no.last_name || '')
+        }}
+      </a>
+    </div>
+    <div *ngIf="data.dup_security_no">
+      "<span class="demoproj-red-color">{{ data.security_no }}</span
+      >" is already associated with:
+      <a class="link" (click)="navigateToDetail(data.dup_security_no.party_id)">
+        {{
+          (data.dup_security_no.first_name || '') +
+            ' ' +
+            (data.dup_security_no.last_name || '')
+        }}
+      </a>
+    </div>
+
+    <div *ngIf="data.dup_email">
+      "<span class="demoproj-red-color">{{ data.email }}</span
+      >" is already associated with:
+      <a class="link" (click)="navigateToDetail(data.dup_email.party_id)">
+        {{
+          (data.dup_email.first_name || '') +
+            ' ' +
+            (data.dup_email.last_name || '')
+        }}
+      </a>
+    </div>
+    }
+  </div>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button mat-button class="demoproj-btn" mat-dialog-close>Close</button>
+</mat-dialog-actions>

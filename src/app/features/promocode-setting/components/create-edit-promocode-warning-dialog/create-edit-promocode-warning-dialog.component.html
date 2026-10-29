@@ -1,0 +1,25 @@
+<mat-dialog-content class="mat-typography dialog-content text-center">
+  <svg-warning-circle class="mb-[2rem]"></svg-warning-circle>
+  <div class="mb-[1rem]">
+    <div class="font-bold mb-[1rem]">This promo code is already used</div>
+    <div>
+      This promo code is already used in another promo code set.
+      <a
+        class="link"
+        [href]="
+          'privilege-management/promocode-setting/form/' +
+          data.promocode_id +
+          '/view-edit'
+        "
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {{ data.promocode_name }}
+      </a>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button mat-button class="demoproj-btn" mat-dialog-close>Close</button>
+</mat-dialog-actions>

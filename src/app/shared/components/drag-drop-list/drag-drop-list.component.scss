@@ -1,0 +1,12 @@
+@use 'styles/variables.scss' as *;
+
+.drag-item-placeholder {
+  background-color: #ccc;
+  height: 3.5rem;
+  width: 100%;
+  border: dotted 3px #999;
+}
+
+.drag-disabled {
+  color: $base-color-gray;
+}

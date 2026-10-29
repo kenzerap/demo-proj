@@ -1,0 +1,176 @@
+<h2 mat-dialog-title class="demoproj-red-color mb-[1rem]">Import Party ID</h2>
+<mat-dialog-content class="mat-typography dialog-content">
+  <form [formGroup]="uploadPartyIdForm" class="grid gap-[1rem] mb-[2rem]">
+    <div
+      *ngIf="
+        (loadingValidate$ | async)! || (loadingUploadPartyId$ | async)!;
+        else contentTemplate
+      "
+      [loading]="
+        (loadingValidate$ | async)! || (loadingUploadPartyId$ | async)!
+      "
+      class="min-h-[3rem]"
+    ></div>
+    <ng-template #contentTemplate>
+      <div
+        class="upload-image"
+        [class.upload-image-error]="isInvalidUploadPartyId()"
+        appDragDropUpload
+        (fileDropped)="onFileDropped($event)"
+      >
+        <ng-container *ngIf="!isInvalidUploadPartyId()">
+          <div class="cover-image">
+            <svg-cloud-upload></svg-cloud-upload>
+          </div>
+          <div class="text-center">
+            <div class="demoproj-red-color font-semibold mb-[0.5rem]">
+              {{ imageNameUploaded() }}
+            </div>
+
+            <div class="base-text-color-gray">.csv</div>
+          </div>
+          <div class="w-full relative">
+            <div class="base-text-color-gray label-divider">OR</div>
+            <mat-divider></mat-divider>
+          </div>
+
+          <input
+            type="file"
+            #uploadFile
+            (change)="onFileSelected($event)"
+            class="hidden"
+            accept=".csv"
+          />
+          <button
+            mat-button
+            class="demoproj-btn mt-[1rem]"
+            type="button"
+            (click)="uploadFile.click()"
+          >
+            Browse Files
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="isInvalidUploadPartyId()">
+          <div class="cover-image demoproj-light-red-background">
+            <svg-exclamation-mark [color]="'#c72b29'"></svg-exclamation-mark>
+          </div>
+          <div class="text-center">
+            <div class="font-semibold mb-[0.5rem]">File upload failed.</div>
+
+            <div class="base-text-color-gray">Please check the file again.</div>
+          </div>
+
+          <input
+            type="file"
+            #uploadFile
+            (change)="onFileSelected($event)"
+            class="hidden"
+          />
+          <button
+            mat-button
+            class="demoproj-red-color"
+            type="button"
+            (click)="uploadFile.click()"
+          >
+            <div class="flex items-center justify-center gap-[0.5rem]">
+              <svg-refresh></svg-refresh>
+              Browse Files
+            </div>
+          </button>
+        </ng-container>
+
+        <mat-error
+          *ngIf="
+            imageFileControl?.touched && imageFileControl?.hasError('required')
+          "
+          class="text-[0.75rem] absolute bottom-[0rem]"
+        >
+          Please upload file
+        </mat-error>
+      </div>
+
+      <ng-container *ngIf="isInvalidUploadPartyId()">
+        <div>Total Error ({{ validateUploadPartyId()?.total_errors }})</div>
+
+        <div class="grid gap-[0.5rem]">
+          <div
+            *ngIf="!!getValidateError('INCORRECT_FORMAT')"
+            class="warning-toast"
+          >
+            <div class="w-full h-full bg-[#F3A218]"></div>
+            <div class="exclamation-icon">
+              <svg-exclamation-mark
+                [width]="9"
+                [height]="8.5"
+                [color]="'#F3A218'"
+              ></svg-exclamation-mark>
+            </div>
+            <div class="my-[0.5rem]">
+              <div class="font-bold">Incorrect Format</div>
+              <div class="text-[#6C7585]">
+                There should be no gaps left in
+                <span class="text-[#c72b29]"
+                  >Code row
+                  {{
+                    getValidateError('INCORRECT_FORMAT')?.rows?.join(', ')
+                  }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="getValidateError('DUPLICATED_DATA')"
+            class="warning-toast"
+          >
+            <div class="w-full h-full bg-[#F3A218]"></div>
+            <div class="exclamation-icon">
+              <svg-exclamation-mark
+                [width]="9"
+                [height]="8.5"
+                [color]="'#F3A218'"
+              ></svg-exclamation-mark>
+            </div>
+            <div class="my-[0.5rem]">
+              <div class="font-bold">Duplicated Data</div>
+              <div class="text-[#6C7585]">
+                Duplicate Party ID in
+                <span class="text-[#c72b29]"
+                  >Code row
+                  {{
+                    getValidateError('DUPLICATED_DATA')?.rows?.join(', ')
+                  }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-template>
+  </form>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button
+    mat-button
+    mat-dialog-close
+    class="base-border base-btn-border-color"
+    [disabled]="(loadingValidate$ | async)! || (loadingUploadPartyId$ | async)!"
+  >
+    Cancel
+  </button>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    (click)="onSubmit()"
+    [disabled]="
+      uploadPartyIdForm.invalid ||
+      (loadingValidate$ | async)! ||
+      (loadingUploadPartyId$ | async)!
+    "
+  >
+    Upload
+  </button>
+</mat-dialog-actions>

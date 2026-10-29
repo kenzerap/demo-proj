@@ -1,0 +1,95 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <h3>Nationality</h3>
+
+  <div
+    formArrayName="nationalities"
+    class="grid gap-[1rem]"
+    *ngIf="nationalityOptions$ | async as nationalityOptions"
+  >
+    <div
+      *ngFor="
+        let nationalityFormGroup of nationalitiesFormArray.controls;
+        let i = index
+      "
+      [formGroupName]="i"
+      class="condition-row"
+    >
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Nationality</div>
+        <mat-form-field class="demoproj-select demoproj-form-field-gray">
+          <mat-select
+            formControlName="nationality"
+            [hideSingleSelectionIndicator]="true"
+          >
+            <mat-select-trigger>
+              <span>{{
+                getDropdownValue(
+                  nationalityFormGroup.get('nationality')?.value,
+                  nationalityOptions
+                )
+              }}</span>
+              <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+            </mat-select-trigger>
+            @for (item of nationalityOptions; track item) {
+              <mat-option
+                [value]="item.code"
+                [disabled]="disableItemDropdown(item.code)"
+                >{{ item.value }}</mat-option
+              >
+            }
+          </mat-select>
+          <mat-error
+            *ngIf="
+              nationalityFormGroup.get('nationality')?.hasError('required')
+            "
+          >
+            Please select Nationality
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-checkbox formControlName="allowed" class="demoproj-checkbox">
+        Allowed
+      </mat-checkbox>
+
+      <mat-icon
+        class="cursor-pointer"
+        [class.delete-disabled]="formMode === 'view'"
+        (click)="removeNationality(i)"
+        >close</mat-icon
+      >
+    </div>
+  </div>
+
+  <mat-error
+    class="text-[0.75rem] text-center"
+    *ngIf="nationalitiesFormArray.controls.length === 0"
+  >
+    Please add a nationality
+  </mat-error>
+
+  <div class="flex items-center justify-end">
+    <button
+      mat-button
+      class="base-border"
+      [disabled]="formMode === 'view' || isAllNationalitiesSelected()"
+      (click)="addNationality()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus
+          [color]="
+            formMode === 'view' || isAllNationalitiesSelected()
+              ? '#98a2b4'
+              : 'black'
+          "
+        ></svg-plus>
+        Add nationality
+      </div>
+    </button>
+  </div>
+</mat-card>

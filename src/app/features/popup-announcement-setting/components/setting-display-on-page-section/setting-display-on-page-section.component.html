@@ -1,0 +1,26 @@
+<mat-card class="p-[1rem]" appearance="outlined">
+  <h3 class="mb-[1rem]">Setting Display on Page</h3>
+
+  <form *ngIf="formGroup" [formGroup]="formGroup">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Select Page App *</div>
+
+      <mat-form-field class="demoproj-select w-[calc(100%/3_-_1rem)]">
+        <mat-select
+          formControlName="pageId"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span *ngIf="((popupAnnouncementTabs$ | async)?.length || 0) > 0">{{
+              getDropdownValue(pageIdControl?.value, pageOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of pageOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-card>

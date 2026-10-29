@@ -1,0 +1,27 @@
+<form *ngIf="formGroup" [formGroup]="formGroup">
+  <mat-card class="p-[1rem]" appearance="outlined">
+    <div class="flex justify-between items-center mb-[1rem]">
+      <h3>Package Setting</h3>
+      <mat-slide-toggle class="demoproj-slide-toggle mb-[1rem]" hideIcon="true"
+        formControlName="published">Published</mat-slide-toggle>
+    </div>
+    <div class="flex gap-[1rem] mb-[1rem]">
+      <div class="flex flex-col w-full">
+        <div class="base-text-color-gray">Package Name *</div>
+        <app-demoproj-input formControlName="name">
+          <span error *ngIf="packageNameControl?.hasError('required')">
+            Please input package name
+          </span>
+        </app-demoproj-input>
+      </div>
+      <div class="flex flex-col w-full">
+        <div class="base-text-color-gray">Description *</div>
+        <app-demoproj-input formControlName="description">
+          <span error *ngIf="descriptionControl?.hasError('required')">
+            Please input description
+          </span>
+        </app-demoproj-input>
+      </div>
+    </div>
+  </mat-card>
+</form>

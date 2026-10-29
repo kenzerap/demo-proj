@@ -1,0 +1,35 @@
+<div class="grid grid-cols-[1fr] gap-[1rem]">
+    <div class="my-[1.5rem] flex items-center justify-between">
+        <div>
+            <h2 class="m-0">
+                {{ checkupPackageId() ? 'Edit' : 'Create' }} Package
+            </h2>
+        </div>
+        <ng-container *appHasPermissions="[
+                {
+                  feature: featurePermissionCode.CheckupPackage,
+                  action: actionPermissionCode.CreateEdit
+                }
+              ]">
+        <div class="flex gap-[1rem]">
+            <button mat-button type="button" class="base-border base-btn-border-color" (click)="setFormMode('edit')"
+                *ngIf="formMode() === 'view'">
+                <div class="flex items-center justify-center gap-[0.5rem]">
+                    <img src="edit.svg" alt="edit" loading="lazy" />
+                    Edit
+                </div>
+            </button>
+
+            <button mat-button class="demoproj-btn" (click)="onSubmit()" [disabled]="createLoading$ | async"
+                *ngIf="formMode() !== 'view'">
+                <mat-icon>check</mat-icon>
+                Save
+            </button>
+        </div>
+        </ng-container>
+    </div>
+    <div class="grid gap-[1rem]">
+        <app-package-setting-section [formGroup]="packageSettingForm"></app-package-setting-section>
+        <app-master-list-section [formGroup]="masterListForm"></app-master-list-section>
+    </div>
+</div>

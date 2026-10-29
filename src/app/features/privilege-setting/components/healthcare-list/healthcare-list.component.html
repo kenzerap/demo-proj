@@ -1,0 +1,41 @@
+<app-demoproj-table
+  [data]="(privileges$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  [noDataMessage]="
+    !(selectCommonSearch$ | async) && !(selectPrivilegeId$ | async)
+      ? 'No privilege set'
+      : 'No privileges found. Please refine your search.'
+  "
+  [searchHighlightText]="(selectCommonSearch$ | async)!"
+  [sortField]="defaultParams().sort_by || ''"
+  [sortDirection]="defaultParams().sort_direction || ''"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (rowClick)="onRowClick($event)"
+  (sortChange)="onSortChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'redeemed_per_total'">
+        <div class="flex items-center gap-[0.5rem] my-[0.5rem]">
+          <div>
+            {{ rowData.redeemed_quantity | number: '1.0-2' }}/{{
+              rowData.quantity | number: '1.0-2'
+            }}
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'is_published'">
+        <mat-slide-toggle
+          class="demoproj-slide-toggle"
+          hideIcon="true"
+          [checked]="rowData.is_published"
+          [disabled]="true"
+        ></mat-slide-toggle>
+      </ng-container>
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

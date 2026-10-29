@@ -1,0 +1,40 @@
+@use 'styles/variables.scss' as *;
+
+.table-container {
+  border-radius: 0.25rem;
+  overflow: auto;
+}
+
+.table-header {
+  background-color: #f9fafb;
+  color: #344054;
+}
+
+.table-row:hover {
+  background-color: #f9fafb;
+  cursor: pointer;
+}
+
+.column-word-break {
+  display: block;
+  word-break: break-all;
+}
+
+.selected {
+  background-color: $base-color-light-red;
+
+  &:hover {
+    background-color: $base-color-light-red;
+  }
+}
+
+.drag-item-placeholder {
+  background-color: #ccc;
+  height: 3.5rem;
+  width: 100%;
+  border: dotted 3px #999;
+}
+
+.drag-disabled {
+  color: $base-color-gray;
+}

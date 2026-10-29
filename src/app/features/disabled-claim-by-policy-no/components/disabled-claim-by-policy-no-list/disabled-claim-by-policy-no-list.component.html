@@ -1,0 +1,88 @@
+<div class="grid grid-rows-[auto_1fr] gap-4">
+  <div
+    class="base-border rounded-[0.6rem] p-[1rem]"
+    *appHasPermissions="[
+      {
+        feature: featurePermissionCode.DisabledClaimByPolicyNo,
+        action: actionPermissionCode.CreateEdit,
+      },
+    ]"
+  >
+    <h3 class="text-[#C62B29] font-bold mt-0">Add Policy</h3>
+    <app-add-policy></app-add-policy>
+  </div>
+
+  <div class="base-border rounded-[0.6rem] p-[1rem]">
+    <h3 class="text-[#C62B29] font-bold mt-0 flex items-center justify-between">
+      <span> Disabled Claim by Policy No. list </span>
+      <span>{{ (pagination$ | async)?.totalItems }} policies</span>
+    </h3>
+
+    <div class="my-[1.5rem] gap-[1rem]">
+      <app-disabled-claim-by-policy-no-list-filter></app-disabled-claim-by-policy-no-list-filter>
+    </div>
+
+    <app-demoproj-table
+      [data]="(disabledClaimPolicies$ | async)!"
+      [tableColumns]="tableColumns()"
+      [pagination]="pagination$ | async"
+      [loading]="(loading$ | async)!"
+      [noDataMessage]="
+        !(selectCommonSearch$ | async)
+          ? 'No policies excluded yet. Add a policy number above.'
+          : 'No policies found. Please refine your search'
+      "
+      [searchHighlightText]="(selectCommonSearch$ | async)!"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    >
+      <ng-template
+        #customColumn
+        let-columnCode="columnCode"
+        let-rowData="rowData"
+      >
+        <ng-container [ngSwitch]="columnCode">
+          <ng-container *ngSwitchCase="'party_ids'">
+            <ng-container
+              *ngFor="let partyId of rowData.party_ids; let last = last"
+            >
+              <a
+                class="demoproj-link"
+                style="
+                  cursor: pointer;
+                  color: #1671d9;
+                  text-decoration: underline;
+                "
+                [routerLink]="[
+                  '/user-management/customer-profile',
+                  partyId,
+                  'overview',
+                ]"
+                (click)="$event.stopPropagation()"
+                >{{ partyId }}</a
+              >{{ last ? '' : ', ' }}
+            </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="'actions'">
+            <button
+              mat-button
+              type="button"
+              class="action-btn"
+              [disabled]="(deleting$ | async)!"
+              *appHasPermissions="[
+                {
+                  feature: featurePermissionCode.DisabledClaimByPolicyNo,
+                  action: actionPermissionCode.CreateEdit,
+                },
+              ]"
+              (click)="deleteDisabledClaimPolicy(rowData)"
+            >
+              <svg-delete color="#c72b29"></svg-delete>
+            </button>
+          </ng-container>
+          <ng-container *ngSwitchDefault></ng-container>
+        </ng-container>
+      </ng-template>
+    </app-demoproj-table>
+  </div>
+</div>

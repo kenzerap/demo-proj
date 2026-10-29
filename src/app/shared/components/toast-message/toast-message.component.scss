@@ -1,0 +1,46 @@
+@use 'styles/variables.scss' as *;
+
+:host {
+  color: black;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.toast-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  border-radius: 0.5rem;
+}
+
+.error {
+  border-color: #f2bcba !important;
+  background-color: $base-color-light-red;
+}
+
+.success {
+  border-color: #b5e3c4 !important;
+  background-color: #e7f6ec;
+}
+
+.warning {
+  border-color: #fbe2b8 !important;
+  background-color: #fef6e7;
+}
+
+.toast-close {
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.toast-content {
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}

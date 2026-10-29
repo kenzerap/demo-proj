@@ -1,0 +1,220 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex justify-between items-center">
+    <h3>Code</h3>
+    <mat-checkbox
+      formControlName="is_share_quota_allocation"
+      class="demoproj-checkbox"
+    >
+      Share Quota allocation
+    </mat-checkbox>
+  </div>
+
+  <div class="shared-quota-row" *ngIf="!!isShareQuotaAllocationControl?.value">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Quota *</div>
+      <app-demoproj-input formControlName="sharedQuota" [inputType]="'number'">
+        <span error *ngIf="sharedQuotaControl?.hasError('required')">
+          Please input Quota
+        </span>
+        <span error *ngIf="sharedQuotaControl?.hasError('min')">
+          Value must be a number greater than or equal 0
+        </span>
+        <span error *ngIf="sharedQuotaControl?.hasError('minRedeemed')">
+          Value must be greater than or equal
+          {{sharedQuotaControl?.errors?.['minRedeemed']}}
+        </span>
+        <span error *ngIf="sharedQuotaControl?.hasError('max')">
+          Quota should be less than or equal to 20,000
+        </span>
+      </app-demoproj-input>
+    </div>
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">
+        Prefix code (5 Alphanumeric characters) *
+      </div>
+      <app-demoproj-input
+        formControlName="sharedCode"
+        [maxLength]="5"
+        (input)="transformSharedCode(sharedCodeControl)"
+      >
+        <span error *ngIf="sharedCodeControl?.hasError('required')">
+          Please input Prefix code
+        </span>
+        <span
+          error
+          *ngIf="
+            sharedCodeControl?.hasError('minlength') &&
+            isControlOnly1Error(sharedCodeControl)
+          "
+        >
+          Prefix code must be exactly 5 alphanumeric characters.
+        </span>
+        <span
+          error
+          *ngIf="
+            sharedCodeControl?.hasError('pattern') &&
+            !sharedCodeControl?.hasError('required')
+          "
+        >
+          Prefix code can only contain letters (A-Z) and numbers (0-9).
+        </span>
+      </app-demoproj-input>
+    </div>
+    <div class="empty-div"></div>
+    <div class="empty-div"></div>
+  </div>
+
+  <div formArrayName="codes" class="grid gap-[1rem]">
+    <div
+      class="parent-row"
+      *ngFor="let codeFormGroup of codesFormArray.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <div class="control-row">
+        <div
+          class="flex flex-col"
+          *ngIf="!isShareQuotaAllocationControl?.value"
+        >
+          <div class="base-text-color-gray">
+            Prefix code (5 Alphanumeric characters) *
+          </div>
+          <app-demoproj-input
+            [formFieldGray]="true"
+            formControlName="code"
+            [maxLength]="5"
+            (input)="transformCode(codeFormGroup?.get('code'))"
+          >
+            <span error *ngIf="codeFormGroup.get('code')?.hasError('required')">
+              Please input Prefix code
+            </span>
+            <span
+              error
+              *ngIf="
+                codeFormGroup.get('code')?.hasError('minlength') &&
+                isControlOnly1Error(codeFormGroup.get('code'))
+              "
+            >
+              Prefix code must be exactly 5 alphanumeric characters.
+            </span>
+            <span
+              error
+              *ngIf="
+                codeFormGroup.get('code')?.hasError('pattern') &&
+                !codeFormGroup.get('code')?.hasError('required')
+              "
+            >
+              Prefix code can only contain letters (A-Z) and numbers (0-9).
+            </span>
+          </app-demoproj-input>
+        </div>
+
+        <div class="flex flex-col">
+          <div class="base-text-color-gray">Channel</div>
+
+          <app-demoproj-autocomplete-dropdown
+            formControlName="channel"
+            [formFieldGray]="true"
+            [nonGroupOptions]="(channelOptions$ | async)!"
+            (input)="reValidateOtherChannels(codeFormGroup)"
+            (optionSelected)="reValidateOtherChannels(codeFormGroup)"
+          >
+            <span
+              error
+              *ngIf="codeFormGroup.get('channel')?.hasError('required')"
+            >
+              Please input Channel
+            </span>
+            <span
+              error
+              *ngIf="codeFormGroup.get('channel')?.hasError('sameChannel')"
+            >
+              Cannot set same code and same channel
+            </span>
+          </app-demoproj-autocomplete-dropdown>
+        </div>
+
+        <div
+          class="flex flex-col"
+          *ngIf="!isShareQuotaAllocationControl?.value"
+        >
+          <div class="base-text-color-gray">Quota *</div>
+          <app-demoproj-input
+            [formFieldGray]="true"
+            formControlName="quota"
+            [inputType]="'number'"
+          >
+            <span
+              error
+              *ngIf="codeFormGroup.get('quota')?.hasError('required')"
+            >
+              Please input Quota
+            </span>
+            <span error *ngIf="codeFormGroup.get('quota')?.hasError('min')">
+              Value must be a number greater than or equal 0
+            </span>
+            <span
+              error
+              *ngIf="codeFormGroup.get('quota')?.hasError('minRedeemed')"
+            >
+              Value must be greater than or equal
+              {{codeFormGroup.get('quota')?.errors?.['minRedeemed']}}
+            </span>
+            <span error *ngIf="codeFormGroup.get('quota')?.hasError('max')">
+              Quota should be less than or equal to 20,000
+            </span>
+          </app-demoproj-input>
+        </div>
+        <ng-container *ngIf="!!isShareQuotaAllocationControl?.value">
+          <div class="empty-div"></div>
+          <div class="empty-div"></div>
+        </ng-container>
+
+        <mat-icon
+          class="cursor-pointer"
+          [class.delete-disabled]="
+            formMode === 'view' ||
+            !!codeFormGroup.get('redeemed_quota')?.getRawValue()
+          "
+          (click)="removePackage(i)"
+          >close</mat-icon
+        >
+      </div>
+      <div *ngIf="!!codeFormGroup.get('redeemed_quota')?.getRawValue()">
+        This code can't be removed or have its quota reduced because it has
+        already been redeemed.
+      </div>
+    </div>
+  </div>
+
+  <mat-error
+    class="text-[0.75rem] text-center"
+    *ngIf="codesFormArray.controls.length === 0"
+  >
+    Please select channel
+  </mat-error>
+
+  <div class="flex items-center justify-end">
+    <button
+      mat-button
+      class="base-border"
+      [disabled]="formMode === 'view' || isSharedAllRedeemedCode()"
+      (click)="addCode()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus
+          [color]="
+            formMode === 'view' || isSharedAllRedeemedCode()
+              ? '#98a2b4'
+              : 'black'
+          "
+        ></svg-plus>
+        Add channel
+      </div>
+    </button>
+  </div>
+</mat-card>

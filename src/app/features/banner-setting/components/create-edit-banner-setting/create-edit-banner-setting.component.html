@@ -1,0 +1,65 @@
+<div class="grid grid-cols-[1fr_26.5rem] gap-[1rem] pt-[1.5rem]">
+  <div>
+    <div class="mb-[1.5rem] flex items-center justify-between">
+      <div>
+        <h2 class="m-0">{{ bannerSettingId() ? 'Edit' : 'Create' }} Banner</h2>
+      </div>
+
+      <button
+        mat-button
+        type="button"
+        class="base-border base-btn-border-color"
+        (click)="setFormMode('edit')"
+        *ngIf="formMode() === 'view'"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <img src="edit.svg" alt="edit" loading="lazy" />
+          Edit
+        </div>
+      </button>
+
+      <button
+        mat-button
+        class="demoproj-btn"
+        (click)="onSubmit()"
+        [disabled]="(createLoading$ | async) || (updateLoading$ | async)"
+        *ngIf="formMode() !== 'view'"
+      >
+        <mat-icon>check</mat-icon>
+        Save
+      </button>
+    </div>
+
+    <div class="grid gap-[1rem]">
+      <app-banner-base-setting-section
+        [formGroup]="baseSettingForm"
+        [formMode]="formMode()"
+      ></app-banner-base-setting-section>
+
+      <app-target-group-section
+        [formGroup]="targetGroupForm"
+        [tierGroups]="(tierGroups$ | async)!"
+        [segmentGroups]="(segmentGroups$ | async)!"
+        [tierSegmentIncludeExclude]="tierSegmentIncludeExclude()"
+        [isEditable]="formMode() !== 'view'"
+        (includeExcludelistChange)="segmentTierListChange($event)"
+      ></app-target-group-section>
+
+      <app-setting-display-on-page-section
+        [formGroup]="settingDisplayOnPageForm"
+        [isCreateMode]="formMode() === 'create'"
+      ></app-setting-display-on-page-section>
+
+      <app-banner-setting-destination-section
+        [isCreateMode]="formMode() === 'create'"
+        [formGroup]="settingDestinationForm"
+      ></app-banner-setting-destination-section>
+    </div>
+  </div>
+
+  <app-mobile-banner-setting-preview
+    [images]="(previewImages$ | async) || []"
+    [targetGroupId]="targetGroupForm.get('target_group_type')?.value"
+    [showSummary]="true"
+  ></app-mobile-banner-setting-preview>
+</div>

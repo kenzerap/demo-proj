@@ -1,0 +1,153 @@
+<div class="grid grid-cols-[auto_1fr] gap-[1rem]">
+  <div *ngIf="formMode === 'view'" class="review-imgage">
+    <img
+      [src]="encodeImageUrl(imageUrlControl?.value, imageNameControl?.value)"
+      class="w-full h-full object-cover"
+      alt="review-imgage"
+      [attr.loading]="'lazy'"
+    />
+  </div>
+
+  <div
+    class="upload-image"
+    appDragDropUpload
+    *ngIf="formMode !== 'view'"
+    (fileDropped)="onFileDropped($event)"
+  >
+    <div class="cover-image">
+      <svg-default-image></svg-default-image>
+    </div>
+    <div class="text-center">
+      <div class="demoproj-red-color font-semibold mb-[0.5rem]">
+        {{ imageNameUploaded() }}
+      </div>
+      <div class="base-text-color-gray">
+        SVG, PNG, JPG or GIF (max. 1040 x 1040px)
+      </div>
+    </div>
+    <div class="w-full relative">
+      <div class="base-text-color-gray label-divider">OR</div>
+      <mat-divider></mat-divider>
+    </div>
+    <input
+      type="file"
+      #uploadFile
+      (change)="onFileSelected($event)"
+      class="hidden"
+      accept=".svg,.png,.jpg,.jpeg,.gif"
+    />
+    <button
+      mat-button
+      class="demoproj-btn"
+      (click)="uploadFile.click()"
+      type="button"
+    >
+      Browse Files
+    </button>
+
+    <mat-error
+      *ngIf="
+        imageFileControl?.touched && imageFileControl?.hasError('required')
+      "
+      class="text-[0.75rem] absolute bottom-[0rem]"
+    >
+      Please upload brand image
+    </mat-error>
+  </div>
+  <div>
+    <h3 class="mb-[1rem]">Brand Setting</h3>
+
+    <form *ngIf="formGroup" [formGroup]="formGroup">
+      <mat-slide-toggle
+        class="demoproj-slide-toggle mb-[1rem]"
+        hideIcon="true"
+        formControlName="is_active"
+      >
+        Active
+      </mat-slide-toggle>
+
+      <div class="flex gap-[1rem] mb-[1rem]">
+        <div class="flex flex-col w-full">
+          <div class="base-text-color-gray">Brand name (TH) *</div>
+          <app-demoproj-input formControlName="brand_name_thai">
+            <span error *ngIf="brandNameThaiControl?.hasError('required')">
+              Please input brand name
+            </span>
+          </app-demoproj-input>
+        </div>
+
+        <div class="flex flex-col w-full">
+          <div class="base-text-color-gray">Brand name (EN) *</div>
+          <app-demoproj-input formControlName="brand_name_english">
+            <span error *ngIf="brandNameEnglishControl?.hasError('required')">
+              Please input brand name
+            </span>
+          </app-demoproj-input>
+        </div>
+      </div>
+
+      <div class="flex justify-between mb-[1rem]">
+        <div>
+          <div class="base-text-color-gray mb-[1rem]">
+            {{
+              selectedBrandCategory()
+                ? 'Privilege Type TH'
+                : 'Select Privilege Type'
+            }}
+          </div>
+          <div>
+            {{ selectedBrandCategory()?.brand_category_name_thai || '' }}
+          </div>
+          <mat-error
+            *ngIf="
+              brandCategoryIdControl?.touched &&
+              brandCategoryIdControl?.hasError('required')
+            "
+            class="text-[0.75rem]"
+          >
+            Please select Privilege Type
+          </mat-error>
+        </div>
+        <button
+          mat-button
+          class="base-border base-btn-border-color"
+          [disabled]="formMode === 'view'"
+          (click)="addPrivilegeType()"
+        >
+          <div class="flex items-center justify-center gap-[0.5rem]">
+            <svg-plus
+              [color]="formMode === 'view' ? '#98a2b4' : 'black'"
+            ></svg-plus>
+            Add Privilege Type
+          </div>
+        </button>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Display Order *</div>
+
+        <app-demoproj-input formControlName="display_order" [inputType]="'number'">
+          <span error *ngIf="displayOrderControl?.hasError('required')">
+            Please input display order
+          </span>
+          <span error *ngIf="displayOrderControl?.hasError('min')">
+            Display order must be a number greater than 0
+          </span>
+          <span
+            error
+            *ngIf="displayOrderControl?.hasError('displayOrderExists')"
+          >
+            Display order already existed
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <div>
+        Display order was used:
+        <span class="demoproj-red-color">{{
+          (brandDisplayOrders$ | async)?.join(', ')
+        }}</span>
+      </div>
+    </form>
+  </div>
+</div>

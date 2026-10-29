@@ -1,0 +1,95 @@
+<mat-card class="p-[1rem]" appearance="outlined">
+  <h3 class="mb-[1rem]">Setting Destination</h3>
+
+  <form *ngIf="formGroup" [formGroup]="formGroup">
+    <div class="grid grid-cols-3 gap-[1rem]">
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Select Destination *</div>
+
+        <mat-form-field class="demoproj-select">
+          <mat-select
+            formControlName="destination_type"
+            [hideSingleSelectionIndicator]="true"
+          >
+            <mat-select-trigger>
+              <span>{{
+                getDropdownValue(
+                  destinationTypeControl?.value,
+                  selectDestinationOptions
+                )
+              }}</span>
+              <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+            </mat-select-trigger>
+            @for (type of selectDestinationOptions; track type) {
+            <mat-option [value]="type.code">{{ type.value }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <div
+          class="flex flex-col"
+          *ngIf="destinationTypeControl?.value === destinationCode.Privilege"
+        >
+          <div class="base-text-color-gray">Select Privilege *</div>
+
+          <mat-form-field class="demoproj-select">
+            <mat-select
+              formControlName="destination_value"
+              [hideSingleSelectionIndicator]="true"
+            >
+              <mat-select-trigger>
+                <span *ngIf="((privileges$ | async)?.length || 0) > 0">{{
+                  getDropdownValue(
+                    destinationValueControl?.value,
+                    privilegeOptions
+                  )
+                }}</span>
+                <mat-icon class="absolute right-0"
+                  >keyboard_arrow_down</mat-icon
+                >
+              </mat-select-trigger>
+              @for (type of privilegeOptions; track type) {
+              <mat-option [value]="type.code">{{ type.value }}</mat-option>
+              }
+            </mat-select>
+            <mat-error *ngIf="destinationValueControl?.hasError('required')">
+              Please select privilege
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="flex flex-col"
+          *ngIf="destinationTypeControl?.value === destinationCode.URL"
+        >
+          <div class="base-text-color-gray">URL *</div>
+          <mat-form-field class="demoproj-input w-full">
+            <span matPrefix>
+              <mat-icon class="rotate-[-45deg]">link</mat-icon>
+            </span>
+
+            <input matInput formControlName="destination_value" />
+
+            <mat-error *ngIf="destinationValueControl?.hasError('required')">
+              Please input URL
+            </mat-error>
+
+            <mat-error
+              *ngIf="
+                (destinationValueControl?.touched ||
+                  destinationValueControl?.dirty) &&
+                destinationValueControl?.hasError('invalidUrl')
+              "
+            >
+              Invalid URL
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div></div>
+    </div>
+  </form>
+</mat-card>

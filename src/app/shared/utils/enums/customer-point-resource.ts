@@ -1,0 +1,4 @@
+export enum CustomerPointResource {
+  EXPIRING_TOTAL_POINTS = 'EXPIRING_TOTAL_POINTS',
+  TOTAL_POINTS = 'TOTAL_POINTS',
+}

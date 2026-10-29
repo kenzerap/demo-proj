@@ -1,0 +1,240 @@
+<h3 class="mb-[1rem] mt-0">Messages</h3>
+
+<form
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+  class="grid grid-cols-2 gap-[1rem]"
+>
+  <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+    <img
+      src="us-flag.png"
+      alt="us-flag"
+      loading="lazy"
+      class="w-[3.1rem] h-[2rem]"
+    />
+
+    <div class="grid gap-[0.5rem]">
+      <div class="base-text-color-gray">Body *</div>
+      <p-editor
+        formControlName="message_body_en_html_text"
+        [style]="{ height: '10rem' }"
+        (onTextChange)="editorTextChange($event, 'en')"
+        #EnEditor
+        [readonly]="!!messageBodyEnHtmlTextControl?.disabled"
+        tabindex="0"
+        (focusout)="onEditorTouched('en')"
+      >
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+            <select class="ql-header" aria-label="Header">
+              <option selected></option>
+              <option value="1"></option>
+              <option value="2"></option>
+              <option value="3"></option>
+            </select>
+          </span>
+
+          <span class="ql-formats">
+            <button type="button" class="ql-bold" aria-label="Bold"></button>
+            <button
+              type="button"
+              class="ql-italic"
+              aria-label="Italic"
+            ></button>
+            <button
+              type="button"
+              class="ql-underline"
+              aria-label="Underline"
+            ></button>
+          </span>
+
+          <span class="ql-formats">
+            <select class="ql-color" aria-label="Text Color"></select>
+          </span>
+
+          <span class="ql-formats">
+            <button
+              type="button"
+              class="ql-list"
+              value="ordered"
+              aria-label="Ordered List"
+            ></button>
+            <button
+              type="button"
+              class="ql-list"
+              value="bullet"
+              aria-label="Bullet List"
+            ></button>
+
+            <select class="ql-align" aria-label="Align">
+              <button
+                class="ql-align ql-align-left"
+                aria-label="align-left"
+                value=""
+              ></button>
+              <button
+                class="ql-align"
+                value="center"
+                aria-label="align-center"
+              ></button>
+              <button
+                class="ql-align"
+                value="right"
+                aria-label="align-right"
+              ></button>
+            </select>
+          </span>
+
+          <span class="ql-formats">
+            <button
+              type="button"
+              class="ql-link"
+              aria-label="Insert Link"
+            ></button>
+          </span>
+        </ng-template>
+      </p-editor>
+
+      <div class="flex flex-wrap justify-between">
+        <div>
+          <mat-error
+            class="text-[0.75rem]"
+            *ngIf="
+              messageBodyEnControl?.touched &&
+              messageBodyEnControl?.hasError('required')
+            "
+          >
+            Please input body
+          </mat-error>
+
+          <mat-error
+            class="text-[0.75rem]"
+            *ngIf="messageBodyEnControl?.hasError('maxLength')"
+          >
+            Length must be less than 10,000 characters
+          </mat-error>
+        </div>
+
+        <div class="text-end base-text-color-gray">
+          {{ checkBodyLength('en') | number }}/10,000
+        </div>
+      </div>
+    </div>
+  </mat-card>
+  <mat-card class="p-[1rem] gap-[1rem]" appearance="outlined">
+    <img
+      src="thai-flag.png"
+      alt="thai-flag"
+      loading="lazy"
+      class="w-[3.1rem] h-[2rem]"
+    />
+
+    <div class="grid gap-[0.5rem]">
+      <div class="base-text-color-gray">Body *</div>
+      <p-editor
+        formControlName="message_body_thai_html_text"
+        [style]="{ height: '10rem' }"
+        (onTextChange)="editorTextChange($event, 'th')"
+        #ThEditor
+        [readonly]="!!messageBodyThaiHtmlTextControl?.disabled"
+        tabindex="1"
+        (focusout)="onEditorTouched('th')"
+      >
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+            <select class="ql-header" aria-label="Header">
+              <option selected></option>
+              <option value="1"></option>
+              <option value="2"></option>
+              <option value="3"></option>
+            </select>
+          </span>
+
+          <span class="ql-formats">
+            <button type="button" class="ql-bold" aria-label="Bold"></button>
+            <button
+              type="button"
+              class="ql-italic"
+              aria-label="Italic"
+            ></button>
+            <button
+              type="button"
+              class="ql-underline"
+              aria-label="Underline"
+            ></button>
+          </span>
+
+          <span class="ql-formats">
+            <select class="ql-color" aria-label="Text Color"></select>
+          </span>
+
+          <span class="ql-formats">
+            <button
+              type="button"
+              class="ql-list"
+              value="ordered"
+              aria-label="Ordered List"
+            ></button>
+            <button
+              type="button"
+              class="ql-list"
+              value="bullet"
+              aria-label="Bullet List"
+            ></button>
+
+            <select class="ql-align" aria-label="Align">
+              <button
+                class="ql-align ql-align-left"
+                aria-label="align-left"
+                value=""
+              ></button>
+              <button
+                class="ql-align"
+                value="center"
+                aria-label="align-center"
+              ></button>
+              <button
+                class="ql-align"
+                value="right"
+                aria-label="align-right"
+              ></button>
+            </select>
+          </span>
+
+          <span class="ql-formats">
+            <button
+              type="button"
+              class="ql-link"
+              aria-label="Insert Link"
+            ></button>
+          </span>
+        </ng-template>
+      </p-editor>
+
+      <div class="flex flex-wrap justify-between">
+        <div>
+          <mat-error
+            class="text-[0.75rem]"
+            *ngIf="
+              messageBodyThaiControl?.touched &&
+              messageBodyThaiControl?.hasError('required')
+            "
+          >
+            Please input body
+          </mat-error>
+
+          <mat-error
+            class="text-[0.75rem]"
+            *ngIf="messageBodyThaiControl?.hasError('maxLength')"
+          >
+            Length must be less than 10,000 characters
+          </mat-error>
+        </div>
+
+        <div class="text-end base-text-color-gray">
+          {{ checkBodyLength('th') | number }}/10,000
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</form>

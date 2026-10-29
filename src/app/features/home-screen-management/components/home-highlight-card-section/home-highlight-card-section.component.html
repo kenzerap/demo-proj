@@ -1,0 +1,298 @@
+<form [formGroup]="formGroup">
+  <ng-container formArrayName="highlightCards">
+    <div
+      cdkDropList
+      [cdkDropListData]="highlightCardsFormArray.controls"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListDisabled]="formMode === 'view'"
+      class="grid gap-[1rem]"
+    >
+      <div
+        *ngFor="
+          let highlightCardsFormGroup of highlightCardsFormArray.controls;
+          let i = index
+        "
+        [formGroupName]="i"
+        cdkDrag
+      >
+        <mat-card class="p-[1rem] gap-[1rem] grid" appearance="outlined">
+          <div class="flex items-center gap-[1rem]">
+            <mat-icon
+              cdkDragHandle
+              [class.drag-disabled]="formMode === 'view'"
+              [class.cursor-move]="formMode !== 'view'"
+              class="mt-[1.5rem]"
+              >drag_indicator</mat-icon
+            >
+            <div class="flex-1">
+              <div class="flex items-center justify-between mb-[1rem]">
+                <h3># {{ i + 1 }} Highlight Card Setting</h3>
+
+                <button
+                  mat-button
+                  type="button"
+                  class="action-btn"
+                  *ngIf="highlightCardsFormArray.length > 0"
+                  [disabled]="formMode === 'view'"
+                  (click)="deleteHighlightCard(i)"
+                >
+                  <svg-delete [color]="'#c72b29'"></svg-delete>
+                </button>
+              </div>
+
+              <h3 class="mb-[1rem] mt-0">Highlight Card</h3>
+              <div
+                class="grid grid-cols-[14rem_auto_auto] gap-[1rem] mb-[1rem]"
+              >
+                <div *ngIf="formMode === 'view'" class="review-imgage">
+                  <img
+                    [src]="highlightCardsFormGroup.get('imageUrl')?.value"
+                    class="w-full h-full object-cover"
+                    alt="review-imgage"
+                    [attr.loading]="'lazy'"
+                  />
+                </div>
+                <div
+                  *ngIf="formMode !== 'view'"
+                  class="upload-image"
+                  appDragDropUpload
+                  (fileDropped)="onFileDropped($event, i)"
+                >
+                  <div class="cover-image">
+                    <svg-default-image
+                      [width]="14"
+                      [height]="14"
+                    ></svg-default-image>
+                  </div>
+                  <div class="text-center">
+                    <div
+                      class="demoproj-red-color font-semibold mb-[0.5rem] max-w-[12rem] truncate"
+                      [matTooltip]="
+                        highlightCardsFormGroup
+                          .get('imageName')
+                          ?.getRawValue() || ''
+                      "
+                    >
+                      {{
+                        highlightCardsFormGroup
+                          .get('imageName')
+                          ?.getRawValue() || 'Upload file'
+                      }}
+                    </div>
+                    <div class="base-text-color-gray">
+                      SVG, PNG, JPG or GIF (1000 x 520 px)
+                    </div>
+                  </div>
+                  <div class="w-full relative">
+                    <div class="base-text-color-gray label-divider">OR</div>
+                    <mat-divider></mat-divider>
+                  </div>
+                  <input
+                    type="file"
+                    #uploadFile
+                    (change)="onFileSelected($event, i)"
+                    class="hidden"
+                    accept=".svg,.png,.jpg,.jpeg,.gif"
+                  />
+                  <button
+                    mat-button
+                    class="demoproj-btn h-[1.5rem] mt-[0.5rem]"
+                    type="button"
+                    (click)="uploadFile.click()"
+                  >
+                    Browse Files
+                  </button>
+
+                  <mat-error
+                    *ngIf="
+                      (getImageFileControl(i)?.touched ||
+                        getImageFileControl(i)?.dirty) &&
+                      getImageFileControl(i)?.hasError('required')
+                    "
+                    class="text-[0.75rem] absolute bottom-[0rem]"
+                  >
+                    Please upload highlight card image
+                  </mat-error>
+                </div>
+                <mat-card
+                  class="display-grid p-[1rem] gap-[1rem]"
+                  appearance="outlined"
+                >
+                  <img
+                    src="us-flag.png"
+                    alt="us-flag"
+                    loading="lazy"
+                    class="w-[3.1rem] h-[2rem]"
+                  />
+                  <div class="grid gap-[0.5rem]">
+                    <div class="base-text-color-gray">
+                      Highlight Card Name *
+                    </div>
+                    <div class="flex items-center gap-[0.5rem]">
+                      <app-demoproj-input
+                        class="w-full"
+                        formControlName="highlightCard_en"
+                        [maxLength]="100"
+                      >
+                        <span
+                          error
+                          *ngIf="
+                            (getHighlightCardEnControl(i)?.dirty ||
+                              getHighlightCardEnControl(i)?.touched) &&
+                            getHighlightCardEnControl(i)?.hasError('required')
+                          "
+                        >
+                          Please input highlight card name
+                        </span>
+                      </app-demoproj-input>
+
+                      <div class="base-text-color-gray">
+                        {{
+                          (getHighlightCardEnControl(i)?.value || '').length
+                        }}/100
+                      </div>
+                    </div>
+                  </div>
+                </mat-card>
+                <mat-card
+                  class="display-grid p-[1rem] gap-[1rem]"
+                  appearance="outlined"
+                >
+                  <img
+                    src="thai-flag.png"
+                    alt="thai-flag"
+                    loading="lazy"
+                    class="w-[3.1rem] h-[2rem]"
+                  />
+
+                  <div class="grid gap-[0.5rem]">
+                    <div class="base-text-color-gray">
+                      Highlight Card Name *
+                    </div>
+                    <div class="flex items-center gap-[0.5rem]">
+                      <app-demoproj-input
+                        class="w-full"
+                        formControlName="highlightCard_th"
+                        [maxLength]="100"
+                      >
+                        <span
+                          error
+                          *ngIf="
+                            (getHighlightCardThControl(i)?.dirty ||
+                              getHighlightCardThControl(i)?.touched) &&
+                            getHighlightCardThControl(i)?.hasError('required')
+                          "
+                        >
+                          Please input highlight card name
+                        </span>
+                      </app-demoproj-input>
+
+                      <div class="base-text-color-gray">
+                        {{
+                          (getHighlightCardThControl(i)?.value || '').length
+                        }}/100
+                      </div>
+                    </div>
+                  </div>
+                </mat-card>
+              </div>
+
+              <div class="grid grid-cols-3 gap-[1rem]">
+                <div class="flex flex-col">
+                  <div class="base-text-color-gray">Select Destination *</div>
+
+                  <mat-form-field class="demoproj-select">
+                    <mat-select
+                      formControlName="destination_type"
+                      [hideSingleSelectionIndicator]="true"
+                      (selectionChange)="
+                        destinationTypeChange($event, highlightCardsFormGroup)
+                      "
+                    >
+                      <mat-select-trigger>
+                        <span>{{
+                          getDropdownValue(
+                            getDestinationTypeControl(i)?.value,
+                            selectDestinationOptions
+                          )
+                        }}</span>
+                        <mat-icon class="absolute right-0"
+                          >keyboard_arrow_down</mat-icon
+                        >
+                      </mat-select-trigger>
+                      @for (type of selectDestinationOptions; track type) {
+                      <mat-option [value]="type.code">{{
+                        type.value
+                      }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <div
+                    class="flex flex-col"
+                    *ngIf="
+                      getDestinationTypeControl(i)?.value ===
+                      destinationCode.URL
+                    "
+                  >
+                    <div class="base-text-color-gray">URL *</div>
+                    <app-demoproj-input
+                      class="w-full"
+                      formControlName="destination_value"
+                    >
+                      <span prefix>
+                        <mat-icon class="rotate-[-45deg]">link</mat-icon>
+                      </span>
+                      <span
+                        error
+                        *ngIf="
+                          getDestinationValueControl(i)?.hasError('required')
+                        "
+                      >
+                        Please input URL
+                      </span>
+                      <span
+                        error
+                        *ngIf="
+                          (getDestinationValueControl(i)?.touched ||
+                            getDestinationValueControl(i)?.dirty) &&
+                          getDestinationValueControl(i)?.hasError('invalidUrl')
+                        "
+                      >
+                        Invalid URL
+                      </span>
+                    </app-demoproj-input>
+                  </div>
+                </div>
+                <div class="empty-div"></div>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <mat-error
+        *ngIf="highlightCardsFormArray.controls.length === 0"
+        class="text-[0.75rem] text-center"
+      >
+        Please add Highlight Card
+      </mat-error>
+    </div>
+  </ng-container>
+</form>
+<div class="flex justify-end mt-[1rem]">
+  <button
+    mat-button
+    class="base-border base-btn-border-color"
+    [disabled]="formMode === 'view'"
+    (click)="addHighlightCard()"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-plus
+        [color]="formMode === 'view' ? '#98a2b4' : '#344054'"
+      ></svg-plus>
+      Add Card
+    </div>
+  </button>
+</div>

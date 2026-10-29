@@ -1,0 +1,26 @@
+<div class="grid gap-[1rem]">
+  <div class="font-bold">Client Info. from SVOC</div>
+
+  <app-demoproj-table
+    [data]="(clientsInfoSvoc$ | async)!"
+    [tableColumns]="tableColumns()"
+    [loading]="(loading$ | async)!"
+    [noDataMessage]="'No client information found in SVOC.'"
+    [isPaginatorEnabled]="false"
+  >
+    <ng-template
+      #customColumn
+      let-columnCode="columnCode"
+      let-rowData="rowData"
+    >
+      <ng-container [ngSwitch]="columnCode">
+        <ng-container *ngSwitchCase="'party_id'">
+          {{ partyId || '-' }}
+        </ng-container>
+        <ng-container *ngSwitchDefault></ng-container>
+      </ng-container>
+    </ng-template>
+  </app-demoproj-table>
+
+  <mat-divider></mat-divider>
+</div>

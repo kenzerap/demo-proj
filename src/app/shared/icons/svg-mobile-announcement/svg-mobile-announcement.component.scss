@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+}
+
+.virtual-announcement-popup {
+  position: absolute;
+  height: 495px;
+  width: 343px;
+  top: 12.5rem;
+  z-index: 2;
+}
+
+.backdrop {
+  position: absolute;
+  height: 100%;
+  width: 393px;
+  background-color: black;
+  z-index: 1;
+  opacity: 0.5;
+  margin-top: 3.3rem;
+}

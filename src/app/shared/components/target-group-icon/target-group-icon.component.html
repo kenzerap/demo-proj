@@ -1,0 +1,65 @@
+<mat-radio-group
+  aria-label="Select an option"
+  class="grid grid-cols-[repeat(auto-fill,_10.5rem)] gap-[1rem]"
+  [formControl]="targetGroupControl"
+>
+  @for (item of targetGroups(); track $index) {
+  <div
+    class="group-card"
+    appearance="outlined"
+    [class.selected-group]="targetGroupControl.value === item.code"
+    (click)="changeGroup(item.code)"
+  >
+    <div class="flex justify-end">
+      <mat-radio-button
+        class="demoproj-radio-button flex items-center justify-center w-[1.3rem] h-[1.3rem]"
+        [value]="item.code"
+      ></mat-radio-button>
+    </div>
+    <ng-container [ngSwitch]="item.code">
+      <ng-container *ngSwitchCase="targetGroupType.ALL">
+        <svg-group
+          [color]="targetGroupControl.value === item.code ? '#c72b29' : 'black'"
+          [width]="68"
+          [height]="62"
+          class="flex justify-center items-center"
+        ></svg-group>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="targetGroupType.PUBLIC">
+        <svg-users
+          [color]="targetGroupControl.value === item.code ? '#c72b29' : 'black'"
+          [width]="68"
+          [height]="62"
+          class="flex justify-center items-center"
+        ></svg-users>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="targetGroupType.INSURED">
+        <div class="flex justify-center items-center">
+          <img
+            src="person-check.svg"
+            alt="search"
+            loading="lazy"
+            width="68"
+            height="62"
+            [class.img-filter-red]="targetGroupControl.value === item.code"
+          />
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="targetGroupType.TARGET_GROUP">
+        <svg-person
+          [color]="targetGroupControl.value === item.code ? '#c72b29' : 'black'"
+          [width]="68"
+          [height]="62"
+          class="flex justify-center items-center"
+        ></svg-person>
+      </ng-container>
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+
+    <div class="flex justify-center items-end">{{ item.value }}</div>
+  </div>
+  }
+</mat-radio-group>

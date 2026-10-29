@@ -1,0 +1,26 @@
+<div
+  cdkDropList
+  (cdkDropListDropped)="drop($event)"
+  [cdkDropListDisabled]="!isEditable"
+  class="grid gap-[1rem]"
+>
+  @for (item of listItem; track item) {
+  <div cdkDrag>
+    <div
+      class="p-[1rem] bg-[#F7F9FC] rounded-[0.25rem] grid grid-cols-[auto_1fr_auto] gap-[1rem] items-center justify-between"
+    >
+      <mat-icon
+        cdkDragHandle
+        [class.drag-disabled]="!isEditable"
+        [class.cursor-move]="isEditable"
+        >drag_indicator</mat-icon
+      >
+      {{ item.name }}
+      <mat-icon class="cursor-pointer" (click)="removeItem(item)"
+        >close</mat-icon
+      >
+    </div>
+    <div *cdkDragPlaceholder class="drag-item-placeholder"></div>
+  </div>
+  }
+</div>

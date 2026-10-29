@@ -1,0 +1,30 @@
+<mat-dialog-content class="mat-typography dialog-content text-center">
+  <svg-warning-circle class="mb-[2rem]"></svg-warning-circle>
+  <div class="mb-[1rem]">
+    <div class="font-bold mb-[1rem]">{{ data.title }}</div>
+    <div>
+      <div>
+        {{ data.message }}
+      </div>
+
+      <div>
+        The privilege associated list:
+        <ng-container
+          *ngFor="let linkedPrivilege of data.linkedPrivileges; let last = last"
+        >
+          <a
+            class="link"
+            (click)="navigateToDetail(linkedPrivilege.privilege_id)"
+          >
+            {{ linkedPrivilege.name_th }}
+          </a>
+          {{ last ? '' : ', ' }}
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button mat-button class="demoproj-btn" mat-dialog-close>Close</button>
+</mat-dialog-actions>

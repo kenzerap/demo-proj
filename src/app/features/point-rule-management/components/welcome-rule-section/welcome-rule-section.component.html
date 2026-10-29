@@ -1,0 +1,215 @@
+<form *ngIf="formGroup" [formGroup]="formGroup">
+  <div formArrayName="rules" class="mb-[1rem] grid gap-[1rem]">
+    <mat-card
+      class="p-[1rem]"
+      appearance="outlined"
+      *ngFor="let ruleFormGroup of rulesFormArray.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <div class="flex items-center justify-between mb-[1rem]">
+        <h3>#{{ i + 2 }} Rule</h3>
+
+        <button
+          mat-button
+          type="button"
+          class="action-btn"
+          *ngIf="rulesFormArray.length > 0"
+          [disabled]="formMode === 'view'"
+          (click)="deleteWelcomeRule(i)"
+        >
+          <svg-delete [color]="'#c72b29'"></svg-delete>
+        </button>
+      </div>
+
+      <div formArrayName="rule_conditions">
+        <div
+          *ngFor="
+            let conditionFormGroup of getConditionsFormArray(i).controls;
+            let j = index
+          "
+          [formGroupName]="j"
+        >
+          <div class="condition-row">
+            <div class="flex flex-col">
+              <div class="base-text-color-gray">Select Attribute</div>
+
+              <mat-form-field class="demoproj-select demoproj-form-field-gray">
+                <mat-select
+                  formControlName="attribute"
+                  [hideSingleSelectionIndicator]="true"
+                  (selectionChange)="
+                    attributeChange($event, conditionFormGroup)
+                  "
+                >
+                  <mat-select-trigger>
+                    <span>{{
+                      getDropdownValue(
+                        conditionFormGroup.get('attribute')?.value,
+                        attributeOptions
+                      )
+                    }}</span>
+                    <mat-icon class="absolute right-0"
+                      >keyboard_arrow_down</mat-icon
+                    >
+                  </mat-select-trigger>
+                  @for (type of attributeOptions; track type) {
+                  <mat-option [value]="type.code">{{ type.value }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="flex flex-col">
+              <div class="base-text-color-gray">Select a Condition</div>
+
+              <mat-form-field class="demoproj-select demoproj-form-field-gray">
+                <mat-select
+                  formControlName="condition"
+                  [hideSingleSelectionIndicator]="true"
+                >
+                  <mat-select-trigger>
+                    <span>{{
+                      getDropdownValue(
+                        conditionFormGroup.get('condition')?.value,
+                        conditionOptions
+                      )
+                    }}</span>
+                    <mat-icon class="absolute right-0"
+                      >keyboard_arrow_down</mat-icon
+                    >
+                  </mat-select-trigger>
+                  @for (type of conditionOptions; track type) {
+                  <mat-option [value]="type.code">{{ type.value }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="flex flex-col">
+              <div class="base-text-color-gray">Value</div>
+
+              <mat-form-field class="demoproj-select demoproj-form-field-gray">
+                <mat-select
+                  formControlName="value"
+                  [hideSingleSelectionIndicator]="true"
+                >
+                  <mat-select-trigger>
+                    <span>{{
+                      getDropdownValue(
+                        conditionFormGroup.get('value')?.value,
+                        getValueOptions(
+                          conditionFormGroup.get('attribute')?.value
+                        )
+                      )
+                    }}</span>
+                    <mat-icon class="absolute right-0"
+                      >keyboard_arrow_down</mat-icon
+                    >
+                  </mat-select-trigger>
+                  @for (type of
+                  getValueOptions(conditionFormGroup.get('attribute')?.value);
+                  track type) {
+                  <mat-option [value]="type.code">{{ type.value }}</mat-option>
+                  }
+                </mat-select>
+                <mat-error
+                  *ngIf="conditionFormGroup.get('value')?.hasError('required')"
+                >
+                  Please select Value
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <mat-icon
+              class="cursor-pointer"
+              [class.delete-disabled]="formMode === 'view'"
+              (click)="removeCondition(getConditionsFormArray(i), j)"
+              >close</mat-icon
+            >
+          </div>
+
+          <div
+            *ngIf="conditionFormGroup.get('group_condition')?.value"
+            class="flex items-center justify-center relative min-h-[3rem] mb-[1rem]"
+          >
+            <mat-divider class="w-full"></mat-divider>
+            <mat-button-toggle-group
+              name="option"
+              aria-label="option"
+              [hideSingleSelectionIndicator]="true"
+              formControlName="group_condition"
+              class="demoproj-button-toggle-group condition-toggle"
+            >
+              <mat-button-toggle [value]="compareConditionType.AND"
+                >AND</mat-button-toggle
+              >
+            </mat-button-toggle-group>
+          </div>
+        </div>
+        <mat-error
+          *ngIf="getConditionsFormArray(i).controls.length === 0"
+          class="text-[0.75rem] text-center"
+        >
+          Please select rule condition or delete rule
+        </mat-error>
+      </div>
+      <div class="flex items-center justify-end">
+        <button
+          mat-button
+          class="base-border"
+          [disabled]="formMode === 'view'"
+          (click)="addCondition(i)"
+        >
+          <div class="flex items-center justify-center gap-[0.5rem]">
+            <svg-plus
+              [color]="formMode === 'view' ? '#98a2b4' : 'black'"
+            ></svg-plus>
+            Add Condition
+          </div>
+        </button>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Earning Point *</div>
+        <app-demoproj-input formControlName="earning_point" [inputType]="'number'">
+          <span
+            error
+            *ngIf="
+              (ruleFormGroup.get('earning_point')?.dirty ||
+                ruleFormGroup.get('earning_point')?.touched) &&
+              ruleFormGroup.get('earning_point')?.hasError('required')
+            "
+          >
+            Please input Earning Point
+          </span>
+          <span
+            error
+            *ngIf="
+              (ruleFormGroup.get('earning_point')?.dirty ||
+                ruleFormGroup.get('earning_point')?.touched) &&
+              (ruleFormGroup.get('earning_point')?.hasError('min') ||
+                ruleFormGroup.get('earning_point')?.hasError('max'))
+            "
+          >
+            Value must be a number greater than or equal 0
+          </span>
+        </app-demoproj-input>
+      </div>
+    </mat-card>
+  </div>
+
+  <button
+    mat-button
+    [class.base-text-color-gray]="formMode === 'view'"
+    [class.demoproj-red-color]="formMode !== 'view'"
+    [disabled]="formMode === 'view'"
+    (click)="addWelcomeRule()"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-plus
+        [color]="formMode === 'view' ? '#98a2b4' : '#c72b29'"
+      ></svg-plus>
+      Add Rule
+    </div>
+  </button>
+</form>

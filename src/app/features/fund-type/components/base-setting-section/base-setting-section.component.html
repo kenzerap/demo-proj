@@ -1,0 +1,214 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex justify-between items-center">
+    <h3>Fund Information</h3>
+    <div class="text-end">
+      <mat-slide-toggle
+        class="demoproj-slide-toggle"
+        hideIcon="true"
+        formControlName="isActive"
+        >Active</mat-slide-toggle
+      >
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[1fr_1fr_1fr] gap-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">AMCS *</div>
+      <app-demoproj-input formControlName="amcs">
+        <span error *ngIf="amcsControl?.hasError('required')">
+          Please input AMCS
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Fund Code (AMCS) *</div>
+      <app-demoproj-input [maxLength]="64" formControlName="fund_code_amcs">
+        <span error *ngIf="fundCodeAmcsControl?.hasError('required')">
+          Please input Fund Code (AMCS)
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Fund Code (AS400) *</div>
+      <app-demoproj-input [maxLength]="64" formControlName="fund_code_as400">
+        <span error *ngIf="fundCodeAs400Control?.hasError('required')">
+          Please input Fund Code (AS400)
+        </span>
+      </app-demoproj-input>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[1fr_1fr_1fr] gap-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Fund Name (TH) *</div>
+      <app-demoproj-input formControlName="fund_th">
+        <span error *ngIf="fundThControl?.hasError('required')">
+          Please input Fund Name (TH)
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Fund Name (EN) *</div>
+      <app-demoproj-input formControlName="fund_en">
+        <span error *ngIf="fundEnControl?.hasError('required')">
+          Please input Fund Name (EN)
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Fund Type *</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="fund_type"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(fundTypeControl?.value, fundTypeOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (item of fundTypeOptions; track item) {
+            <mat-option [value]="item.code">{{ item.value }}</mat-option>
+          }
+        </mat-select>
+        <mat-error *ngIf="fundTypeControl?.hasError('required')">
+          Please select Fund Type
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[1fr_1fr_1fr] gap-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Fund Type (TH)</div>
+      <app-demoproj-input formControlName="fund_type_th"></app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Fund Type (Marketing)</div>
+      <app-demoproj-input formControlName="fund_type_mkt"></app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Fund Class</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="fund_class"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(fundClassControl?.value, fundClassOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (item of fundClassOptions; track item) {
+            <mat-option [value]="item.code">{{ item.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[1fr_1fr_1fr] gap-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Risk Level *</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="risk_level"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(riskLevelControl?.value, riskLevelOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (item of riskLevelOptions; track item) {
+            <mat-option [value]="item.code">{{ item.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">FX Rate Flag</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="fx_rate_flag"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(fxRateFlagControl?.value, fxRateFlagOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (item of fxRateFlagOptions; track item) {
+            <mat-option [value]="item.code">{{ item.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">FX Hedging (Prive)</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="fx_hedging_prive"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(
+                fxHedgingPriveControl?.value,
+                fxHedgingPriveOptions
+              )
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (item of fxHedgingPriveOptions; track item) {
+            <mat-option [value]="item.code">{{ item.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[1fr_1fr_1fr] gap-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">FX Hedging (CEP)</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="fx_hedging_cep"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(fxHedgingCepControl?.value, fxHedgingCepOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (item of fxHedgingCepOptions; track item) {
+            <mat-option [value]="item.code">{{ item.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col col-span-2">
+      <div class="base-text-color-gray">Remark</div>
+      <app-demoproj-input formControlName="remark"></app-demoproj-input>
+    </div>
+  </div>
+</mat-card>

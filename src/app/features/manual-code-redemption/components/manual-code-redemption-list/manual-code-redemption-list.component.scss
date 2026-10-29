@@ -1,0 +1,10 @@
+@use 'styles/variables.scss' as *;
+
+.badge-green {
+    background-color: rgba($base-color-green, 0.1);
+    color: $base-color-green;
+}
+.badge-red {
+    background-color: rgba($base-color-red, 0.1);
+    color: $base-color-red;
+}

@@ -1,0 +1,16 @@
+<div
+  class="toast-icon"
+  [class.error]="data.type === toastMessageType.ERROR"
+  [class.success]="data.type === toastMessageType.SUCCESS"
+  [class.warning]="data.type === toastMessageType.WARNING"
+>
+  <svg-check [color]="getColorIcon()"></svg-check>
+</div>
+<div class="toast-content">
+  <div class="font-bold">{{ data.title }}</div>
+  <div [innerHTML]="data.message"></div>
+</div>
+
+<div class="toast-close" (click)="close()">
+  <mat-icon class="text-[1.25rem] text-center">close</mat-icon>
+</div>

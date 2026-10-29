@@ -1,0 +1,69 @@
+@use 'styles/material.scss';
+@use 'styles/primeng.scss';
+@use 'styles/mixin.scss' as *;
+@use 'styles/variables.scss' as *;
+@import '../node_modules/quill/dist/quill.core.css';
+@import '../node_modules/quill/dist/quill.snow.css';
+
+:root {
+  font-family: Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.base-border {
+  border: 1px solid $base-border-color !important;
+}
+
+.base-text-color-gray {
+  @include base-color-gray;
+}
+
+.demoproj-btn {
+  @include base-btn;
+}
+
+.base-btn-border-color {
+  @include base-btn-border-color;
+}
+
+.demoproj-red-color {
+  color: $base-color-red !important;
+}
+
+.demoproj-green-color {
+  color: $base-color-green !important;
+}
+
+.demoproj-yellow-color {
+  color: $base-color-yellow !important;
+}
+
+.demoproj-white-background {
+  background-color: $base-color-white !important;
+}
+
+.demoproj-red-background {
+  background-color: $base-color-red !important;
+}
+
+.demoproj-light-red-background {
+  background-color: $base-color-light-red !important;
+}
+
+.demoproj-light-gray-background {
+  background-color: $base-color-light-gray !important;
+}
+
+.demoproj-gray-background {
+  background-color: $base-color-gray !important;
+}
+
+.link {
+  color: #1e00ee;
+  cursor: pointer;
+  text-decoration: underline;
+}

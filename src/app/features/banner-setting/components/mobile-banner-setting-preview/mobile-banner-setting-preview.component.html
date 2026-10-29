@@ -1,0 +1,63 @@
+<div class="grid gap-[1rem] justify-center my-[1rem]" *ngIf="showSummary">
+  <h2 class="text-center">
+    Total Target:
+    {{ (targetGroupUserSummary$ | async)?.count | number : '1.0-2' }}
+  </h2>
+  <div class="flex justify-center">
+    <div class="progress-container">
+      <mat-progress-spinner
+        [diameter]="100"
+        [mode]="'determinate'"
+        [value]="
+          (((targetGroupUserSummary$ | async)?.percentage || 0) * 80) / 100
+        "
+        strokeWidth="13"
+        class="progress-circle demoproj-spinner z-[1]"
+      ></mat-progress-spinner>
+      <svg-defective-thin-circle
+        class="background-circle"
+        [width]="92"
+        [height]="90"
+      ></svg-defective-thin-circle>
+
+      <div class="progress-icon">
+        <div class="circle-icon">
+          <svg-default-user [width]="23" [height]="23"></svg-default-user>
+        </div>
+      </div>
+      <div class="progress-text">
+        <span class="text-[0.8rem]"
+          >{{ (targetGroupUserSummary$ | async)?.percentage || 0 }}%</span
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sticky top-[-2rem] flex justify-center">
+  <svg-mobile-banner-setting
+    [showBanner]="images.length > 0"
+    class="justify-center"
+  >
+    <div banner-setting *ngIf="images.length > 0">
+      <p-carousel
+        [value]="images"
+        [numVisible]="1"
+        [numScroll]="1"
+        [circular]="true"
+        [showIndicators]="false"
+        [showNavigators]="images.length > 1"
+        class="demoproj-carousel demoproj-carousel-inside-navigators relative"
+      >
+        <ng-template let-image pTemplate="item">
+          <img
+            [src]="encodeImageUrl(image.imageData, image.image)"
+            [alt]="image.image"
+            class="w-[393px] h-[155px] object-contain"
+            loading="lazy"
+          />
+        </ng-template>
+      </p-carousel>
+    </div>
+  </svg-mobile-banner-setting>
+</div>

@@ -1,0 +1,35 @@
+@use 'styles/mixin.scss' as *;
+
+.breadcrumb {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+}
+.breadcrumb-item {
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.breadcrumb-item a {
+  text-decoration: none;
+}
+.breadcrumb-item.active {
+  font-weight: bold;
+}
+
+.normal-text {
+  font-weight: normal;
+  @include base-color-gray;
+}
+
+.icon-back {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

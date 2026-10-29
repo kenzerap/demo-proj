@@ -1,0 +1,21 @@
+<div class="virtual-announcement-popup">
+  <ng-content select="[announcement-popup]"></ng-content>
+</div>
+<div class="backdrop" *ngIf="backdrop"></div>
+
+<div class="w-[393px]">
+  <h2 class="font-bold text-center mt-[1rem] mb-[0.5rem]">Preview</h2>
+  <img
+    src="mobile-header.svg"
+    alt="mobile-header"
+    loading="lazy"
+    class="flex"
+  />
+  <img
+    src="mobile-banner.svg"
+    alt="mobile-header"
+    loading="lazy"
+    class="flex"
+  />
+  <img src="mobile-body.svg" alt="mobile-body" loading="lazy" class="flex" />
+</div>

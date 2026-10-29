@@ -1,0 +1,57 @@
+<form class="gap-4 flex items-center justify-between" [formGroup]="searchForm">
+  <div class="flex gap-[1rem] items-center justify-center">
+    <app-demoproj-input
+      formControlName="search_text"
+      [placeholder]="'Search by redeem code'"
+      class="min-w-[18rem]"
+    >
+      <span prefix>
+        <img src="icon-search.svg" alt="search" loading="lazy" />
+      </span>
+    </app-demoproj-input>
+    <button
+      mat-button
+      class="demoproj-btn"
+      (click)="onSearch()"
+      [disabled]="!hasFilter(searchForm.value)"
+    >
+      <mat-icon>search</mat-icon>
+      Search
+    </button>
+    <button
+      mat-button
+      class="base-border"
+      [disabled]="(listLoading$ | async)!"
+      (click)="resetForm()"
+    >
+      Clear
+    </button>
+  </div>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    (click)="exportToExcel()"
+    [disabled]="
+      (exportLoading$ | async) || (manualCodeRedemption$ | async)?.length === 0
+    "
+    *appHasPermissions="[
+      {
+        feature: featurePermissionCode.ManualCodeRedemption,
+        action: actionPermissionCode.View
+      }
+    ]"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-export></svg-export>
+      Export Manual Code
+    </div>
+  </button>
+</form>
+
+<strong class="text-[20px]"
+  >Code searched:
+  <span class="uppercase demoproj-red-color">
+    {{ searchForm.get('search_text')?.value }}
+  </span>
+</strong>

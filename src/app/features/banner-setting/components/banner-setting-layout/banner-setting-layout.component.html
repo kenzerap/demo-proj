@@ -1,0 +1,136 @@
+<div class="grid grid-cols-[1fr_26.5rem] gap-[1rem]">
+  <div class="flex flex-col gap-[1rem]">
+    <nav
+      class="demoproj-tabs"
+      mat-tab-nav-bar
+      [tabPanel]="tabPanel"
+      mat-stretch-tabs="false"
+      mat-align-tabs="start"
+      [loading]="tabsLoading$ | async"
+    >
+      @for (tab of (tabs$ | async); track $index) {
+      <a
+        mat-tab-link
+        (click)="changeTab(tab.page_id)"
+        [active]="tab.page_id === (activeTab$ | async)"
+      >
+        {{ tab.page_name }}
+      </a>
+      }
+    </nav>
+
+    <div class="my-[1.5rem] flex items-center justify-end gap-[1rem]">
+      <ng-container
+        *appHasPermissions="[
+          {
+            feature: featurePermissionCode.BannerSetting,
+            action: actionPermissionCode.CreateEdit
+          }
+        ]"
+      >
+        <button
+          *ngIf="
+            (selectselectedTargetGroupIds$ | async)?.includes(-1) &&
+            !isEditOrder()
+          "
+          mat-button
+          class="base-border base-btn-border-color"
+          [disabled]="((bannerSettings$ | async) || []).length === 0"
+          (click)="setEditOrder(true)"
+        >
+          <div class="flex items-center justify-center gap-[0.5rem]">
+            <img src="edit.svg" alt="edit" [attr.loading]="'lazy'" />
+            Edit Order
+          </div>
+        </button>
+
+        <button
+          *ngIf="!isEditOrder()"
+          mat-button
+          class="demoproj-btn"
+          (click)="openCreateNewPopupDialog()"
+        >
+          <div class="flex items-center justify-center gap-[0.5rem]">
+            <svg-plus></svg-plus>
+            New Banner
+          </div>
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="isEditOrder()">
+        <button
+          mat-button
+          class="base-border base-btn-border-color"
+          (click)="cancelEditOrder()"
+        >
+          Cancel
+        </button>
+
+        <button
+          mat-button
+          class="demoproj-btn"
+          (click)="publishItems()"
+          [disabled]="reOrderLoading$ | async"
+        >
+          <mat-icon>check</mat-icon>
+          Publish
+        </button>
+      </ng-container>
+    </div>
+
+    <div
+      class="flex flex-wrap gap-[0.5rem]"
+      [loading]="targetGroupsLoading$ | async"
+    >
+      <ng-container *ngIf="!(targetGroupsLoading$ | async)">
+        <button
+          mat-button
+          class="filter-category"
+          *ngFor="let item of targetGroupUserCount$ | async"
+          [class.active]="
+            checkEqualTargetGroupIds(
+              (selectselectedTargetGroupIds$ | async) || [],
+              item.target_group_ids,
+              item.id
+            )
+          "
+          (click)="selectTargetGroup(item)"
+        >
+          <div class="flex items-center">
+            <svg-eye
+              *ngIf="item.target_group_ids.includes(-1)"
+              class="mr-[0.2rem]"
+            ></svg-eye>
+            <svg-dots-circle
+              *ngIf="item.target_group_ids.includes(-2)"
+              class="mr-[0.2rem]"
+            ></svg-dots-circle>
+
+            <span
+              class="truncate block max-w-[9.3rem]"
+              [matTooltip]="item.name"
+            >
+              {{ item.name }}
+            </span>
+            <span
+              *ngIf="
+                !item.target_group_ids.includes(-1) &&
+                !item.target_group_ids.includes(-2)
+              "
+            >
+              ({{ item.count | number : '1.0-2' }})
+            </span>
+          </div>
+        </button>
+      </ng-container>
+    </div>
+
+    <router-outlet></router-outlet>
+  </div>
+
+  <app-mobile-banner-setting-preview
+    [images]="(previewImages$ | async) || []"
+  ></app-mobile-banner-setting-preview>
+</div>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>

@@ -1,0 +1,203 @@
+<h2 mat-dialog-title class="demoproj-red-color mb-[1rem]">Upload Code</h2>
+<mat-dialog-content class="mat-typography dialog-content">
+  <form [formGroup]="uploadCodeForm" class="grid gap-[1rem] mb-[2rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Code Name *</div>
+      <app-demoproj-input formControlName="code_name">
+        <span error *ngIf="codeNameControl?.hasError('required')">
+          Please input Code Name
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Description</div>
+      <app-demoproj-input formControlName="description">
+        <span error *ngIf="descriptionControl?.hasError('required')">
+          Please input Description
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div
+      *ngIf="
+        (loading$ | async)! ||
+          (loadingValidate$ | async)! ||
+          (loadingCreateInventory$ | async)! ||
+          (loadingUploadCode$ | async)!;
+        else contentTemplate
+      "
+      [loading]="
+        (loading$ | async)! ||
+        (loadingValidate$ | async)! ||
+        (loadingCreateInventory$ | async)! ||
+        (loadingUploadCode$ | async)!
+      "
+      class="min-h-[3rem]"
+    ></div>
+    <ng-template #contentTemplate>
+      <div
+        class="upload-image"
+        [class.upload-image-error]="isInvalidUploadCode()"
+        appDragDropUpload
+        (fileDropped)="onFileDropped($event)"
+      >
+        <ng-container *ngIf="!isInvalidUploadCode()">
+          <div class="cover-image">
+            <svg-cloud-upload></svg-cloud-upload>
+          </div>
+          <div class="text-center">
+            <div class="demoproj-red-color font-semibold mb-[0.5rem]">
+              {{ imageNameUploaded() }}
+            </div>
+
+            <div class="base-text-color-gray">.xlsx .xls</div>
+          </div>
+          <div class="w-full relative">
+            <div class="base-text-color-gray label-divider">OR</div>
+            <mat-divider></mat-divider>
+          </div>
+
+          <input
+            type="file"
+            #uploadFile
+            (change)="onFileSelected($event)"
+            class="hidden"
+            accept=".xlsx,.xls"
+          />
+          <button
+            mat-button
+            class="demoproj-btn mt-[1rem]"
+            type="button"
+            (click)="uploadFile.click()"
+          >
+            Browse Files
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="isInvalidUploadCode()">
+          <div class="cover-image demoproj-light-red-background">
+            <svg-exclamation-mark [color]="'#c72b29'"></svg-exclamation-mark>
+          </div>
+          <div class="text-center">
+            <div class="font-semibold mb-[0.5rem]">File upload failed.</div>
+
+            <div class="base-text-color-gray">Please check the file again.</div>
+          </div>
+
+          <input
+            type="file"
+            #uploadFile
+            (change)="onFileSelected($event)"
+            class="hidden"
+          />
+          <button
+            mat-button
+            class="demoproj-red-color"
+            type="button"
+            (click)="uploadFile.click()"
+          >
+            <div class="flex items-center justify-center gap-[0.5rem]">
+              <svg-refresh></svg-refresh>
+              Browse Files
+            </div>
+          </button>
+        </ng-container>
+
+        <mat-error
+          *ngIf="
+            imageFileControl?.touched && imageFileControl?.hasError('required')
+          "
+          class="text-[0.75rem] absolute bottom-[0rem]"
+        >
+          Please upload file
+        </mat-error>
+      </div>
+
+      <ng-container *ngIf="isInvalidUploadCode()">
+        <div>Total Error ({{ countTotalError() }})</div>
+
+        <div class="grid gap-[0.5rem]">
+          <div
+            *ngIf="validateUploadCode()?.gap_rows?.length"
+            class="warning-toast"
+          >
+            <div class="w-full h-full bg-[#F3A218]"></div>
+            <div class="exclamation-icon">
+              <svg-exclamation-mark
+                [width]="9"
+                [height]="8.5"
+                [color]="'#F3A218'"
+              ></svg-exclamation-mark>
+            </div>
+            <div class="my-[0.5rem]">
+              <div class="font-bold">Incorrect value</div>
+              <div class="text-[#6C7585]">
+                There should be no gaps left in
+                <span class="text-[#c72b29]"
+                  >Code row
+                  {{ validateUploadCode()?.gap_rows?.join(', ') }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="validateUploadCode()?.duplicated_rows?.length"
+            class="warning-toast"
+          >
+            <div class="w-full h-full bg-[#F3A218]"></div>
+            <div class="exclamation-icon">
+              <svg-exclamation-mark
+                [width]="9"
+                [height]="8.5"
+                [color]="'#F3A218'"
+              ></svg-exclamation-mark>
+            </div>
+            <div class="my-[0.5rem]">
+              <div class="font-bold">Duplicated value</div>
+              <div class="text-[#6C7585]">
+                Duplicate inventory coupons in
+                <span class="text-[#c72b29]"
+                  >Code row
+                  {{ validateUploadCode()?.duplicated_rows?.join(', ') }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-template>
+  </form>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button
+    mat-button
+    mat-dialog-close
+    class="base-border base-btn-border-color"
+    [disabled]="
+      (loading$ | async)! ||
+      (loadingValidate$ | async)! ||
+      (loadingCreateInventory$ | async)! ||
+      (loadingUploadCode$ | async)!
+    "
+  >
+    Cancel
+  </button>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    (click)="onSubmit()"
+    [disabled]="
+      uploadCodeForm.invalid ||
+      (loading$ | async)! ||
+      (loadingValidate$ | async)! ||
+      (loadingCreateInventory$ | async)! ||
+      (loadingUploadCode$ | async)!
+    "
+  >
+    Upload
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,26 @@
+@use "styles/variables.scss" as *;
+
+.condition-row {
+  display: grid;
+  grid-template-columns: auto auto auto 2rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+  background-color: $base-color-light-gray;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+.action-btn {
+  min-width: 2rem !important;
+  border: 1px solid $base-color-red !important;
+}
+
+.condition-toggle {
+  position: absolute;
+}
+
+.delete-disabled {
+  pointer-events: none;
+  color: $base-color-gray;
+}

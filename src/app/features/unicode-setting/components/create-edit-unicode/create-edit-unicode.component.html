@@ -1,0 +1,78 @@
+<div class="grid grid-cols-[1fr] gap-[1rem]">
+  <div class="my-[1.5rem] flex items-center justify-between">
+    <div>
+      <h2 class="m-0">{{ unicodeId() ? 'Edit' : 'Create' }} Unicode</h2>
+    </div>
+
+    <div class="flex gap-[1rem]">
+      <ng-container
+        *appHasPermissions="[
+          {
+            feature: featurePermissionCode.UnicodeSetting,
+            action: actionPermissionCode.Export
+          }
+        ]"
+      >
+        <button
+          mat-button
+          class="base-border base-btn-border-color"
+          (click)="exportToExcel()"
+          [disabled]="exportLoading$ | async"
+          *ngIf="formMode() === 'view'"
+        >
+          <div class="flex items-center justify-center gap-[0.5rem]">
+            <svg-export
+              [color]="(exportLoading$ | async) ? '#98a2b4' : 'black'"
+            ></svg-export>
+            Export Code
+          </div>
+        </button>
+      </ng-container>
+
+      <button
+        mat-button
+        type="button"
+        class="base-border base-btn-border-color"
+        [disabled]="exportLoading$ | async"
+        (click)="setFormMode('edit')"
+        *ngIf="formMode() === 'view'"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <img src="edit.svg" alt="edit" loading="lazy" />
+          Edit
+        </div>
+      </button>
+
+      <button
+        mat-button
+        class="demoproj-btn"
+        (click)="onSubmit()"
+        [disabled]="loading$ | async"
+        *ngIf="formMode() !== 'view'"
+      >
+        <mat-icon>check</mat-icon>
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="grid gap-[1rem]">
+    <app-base-setting-section
+      [formGroup]="baseSettingForm"
+    ></app-base-setting-section>
+
+    <app-code-section
+      [formGroup]="codeForm"
+      [formMode]="formMode()"
+    ></app-code-section>
+
+    <app-rewards-section
+      [formGroup]="rewardsForm"
+      [formMode]="formMode()"
+    ></app-rewards-section>
+
+    <app-redeem-limit-section
+      [formGroup]="redeemLimitForm"
+    ></app-redeem-limit-section>
+  </div>
+</div>

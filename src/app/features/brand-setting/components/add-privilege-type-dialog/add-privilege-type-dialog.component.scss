@@ -1,0 +1,10 @@
+@use 'styles/mixin.scss' as *;
+@use 'styles/variables.scss' as *;
+
+.dialog-actions {
+  padding: 0 1.5rem 1.25rem 1.5rem;
+}
+
+.action-btn {
+  min-width: 2rem !important;
+}

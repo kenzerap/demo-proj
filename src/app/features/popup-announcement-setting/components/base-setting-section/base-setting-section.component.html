@@ -1,0 +1,203 @@
+<div class="grid grid-cols-[auto_1fr] gap-[1rem]">
+  <div
+    class="upload-image"
+    appDragDropUpload
+    [disabledDragDrop]="formMode === 'view'"
+    (fileDropped)="onFileDropped($event)"
+  >
+    <div class="cover-image">
+      <svg-default-image></svg-default-image>
+    </div>
+    <div class="text-center">
+      <div class="demoproj-red-color font-semibold mb-[0.5rem]">
+        {{ imageNameUploaded() }}
+      </div>
+      <div class="base-text-color-gray">
+        SVG, PNG, JPG or GIF (1372 x 1980 px)
+      </div>
+    </div>
+    <div class="w-full relative">
+      <div class="base-text-color-gray label-divider">OR</div>
+      <mat-divider></mat-divider>
+    </div>
+    <input
+      type="file"
+      #uploadFile
+      (change)="onFileSelected($event)"
+      class="hidden"
+      accept=".svg,.png,.jpg,.jpeg,.gif"
+    />
+    <button
+      mat-button
+      class="demoproj-btn"
+      [disabled]="formMode === 'view'"
+      type="button"
+      (click)="uploadFile.click()"
+    >
+      Browse Files
+    </button>
+
+    <mat-error
+      *ngIf="
+        imageFileControl?.touched && imageFileControl?.hasError('required')
+      "
+      class="text-[0.75rem] absolute bottom-[0rem]"
+    >
+      Please upload popup image
+    </mat-error>
+  </div>
+  <div>
+    <h3 class="mb-[1rem]">Popup Announcement Setting</h3>
+
+    <form *ngIf="formGroup" [formGroup]="formGroup">
+      <mat-slide-toggle
+        class="demoproj-slide-toggle mb-[1rem]"
+        hideIcon="true"
+        formControlName="published"
+      >
+        Published
+      </mat-slide-toggle>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Popup name *</div>
+        <app-demoproj-input formControlName="bannerName">
+          <span error *ngIf="bannerNameControl?.hasError('required')">
+            Please input popup name
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <div>
+        <div class="grid grid-cols-[auto_auto_auto] gap-[1rem] mb-[1rem]">
+          <div class="flex flex-col">
+            <div class="base-text-color-gray">Published time period *</div>
+            <mat-form-field class="demoproj-select">
+              <mat-select
+                formControlName="send_time_type"
+                [hideSingleSelectionIndicator]="true"
+              >
+                <mat-select-trigger>
+                  <span>{{
+                    getDropdownValue(sendTimeTypeControl?.value, sendTimeTypes)
+                  }}</span>
+                  <mat-icon class="absolute right-0"
+                    >keyboard_arrow_down</mat-icon
+                  >
+                </mat-select-trigger>
+                @for (type of sendTimeTypes; track type) {
+                <mat-option [value]="type.code">{{ type.value }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="base-text-color-gray">Start Date *</div>
+            <mat-form-field class="demoproj-input">
+              <input
+                matInput
+                [matDatepicker]="picker1"
+                formControlName="start_date"
+                [min]="formMode !== 'create' ? null : currentDate"
+              />
+              <mat-datepicker-toggle matTextSuffix [for]="picker1">
+                <svg-calendar matDatepickerToggleIcon></svg-calendar>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="startDateControl?.hasError('required')">
+                Please input date
+              </mat-error>
+
+              <mat-error
+                *ngIf="
+                  !startDateControl?.hasError('required') &&
+                  startDateControl?.hasError('matDatepickerMin')
+                "
+              >
+                Start Date Time must be a future date
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="base-text-color-gray">Time *</div>
+            <app-demoproj-timepicker formControlName="start_time">
+              <span error *ngIf="startTimeControl?.hasError('required')">
+                Please input time
+              </span>
+
+              <span
+                error
+                *ngIf="startTimeControl?.hasError('invalidTimeFormat')"
+              >
+                Invalid time
+              </span>
+
+              <span
+                error
+                *ngIf="startTimeControl?.hasError('invalidStartTime')"
+              >
+                Start Date Time must be a future date
+              </span>
+            </app-demoproj-timepicker>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-[auto_auto_auto] gap-[1rem] mb-[1rem]">
+          <mat-checkbox formControlName="isSetEndDate" class="demoproj-checkbox">
+            End date (set end date)
+          </mat-checkbox>
+
+          <div class="flex flex-col" *ngIf="!!isSetEndDateControl?.value">
+            <div class="base-text-color-gray">End Date *</div>
+            <mat-form-field class="demoproj-input">
+              <input
+                matInput
+                [matDatepicker]="picker2"
+                formControlName="end_date"
+                [min]="startDateControl?.value"
+              />
+              <mat-datepicker-toggle matTextSuffix [for]="picker2">
+                <svg-calendar matDatepickerToggleIcon></svg-calendar>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error *ngIf="endDateControl?.hasError('required')">
+                Please input date
+              </mat-error>
+
+              <mat-error
+                *ngIf="
+                  !endDateControl?.hasError('required') &&
+                  endDateControl?.hasError('matDatepickerMin')
+                "
+              >
+                Start Date Time should be before End Date Time
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col" *ngIf="!!isSetEndDateControl?.value">
+            <div class="base-text-color-gray">Time *</div>
+            <app-demoproj-timepicker formControlName="end_time">
+              <span error *ngIf="endTimeControl?.hasError('required')">
+                Please input time
+              </span>
+
+              <span error *ngIf="endTimeControl?.hasError('invalidTimeFormat')">
+                Invalid time
+              </span>
+
+              <span error *ngIf="endTimeControl?.hasError('invalidEndTime')">
+                Start Date Time should be before End Date Time
+              </span>
+            </app-demoproj-timepicker>
+          </div>
+        </div>
+      </div>
+
+      <mat-checkbox class="demoproj-checkbox" formControlName="dontShowButton"
+        >Show button don't show this pop up again</mat-checkbox
+      >
+    </form>
+  </div>
+</div>

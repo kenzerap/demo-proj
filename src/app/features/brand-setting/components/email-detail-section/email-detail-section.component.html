@@ -1,0 +1,275 @@
+<mat-card class="p-[1rem]" appearance="outlined">
+  <form *ngIf="formGroup" [formGroup]="formGroup" class="grid gap-[1rem]">
+    <div class="flex justify-between items-center">
+      <h3 class="mb-[1rem]">Email Detail</h3>
+
+      <mat-slide-toggle
+        class="demoproj-slide-toggle mb-[1rem]"
+        hideIcon="true"
+        formControlName="send_email_when_redeemed"
+      >
+        Send E-mail when user redeemed
+      </mat-slide-toggle>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">To *</div>
+      <app-demoproj-input formControlName="to_email">
+        <span error *ngIf="toEmailControl?.hasError('required')">
+          Please input To
+        </span>
+        <span error *ngIf="toEmailControl?.hasError('invalidEmail')">
+          Invalid email
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">CC *</div>
+      <app-demoproj-input formControlName="cc_email">
+        <span error *ngIf="ccEmailControl?.hasError('required')">
+          Please input CC
+        </span>
+        <span error *ngIf="ccEmailControl?.hasError('invalidEmail')">
+          Invalid email
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex gap-[1rem]">
+      <div class="flex flex-col w-full">
+        <div class="base-text-color-gray">Subject (TH) *</div>
+        <app-demoproj-input formControlName="email_subject_thai">
+          <span error *ngIf="emailSubjectThaiControl?.hasError('required')">
+            Please input Subject
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <div class="flex flex-col w-full">
+        <div class="base-text-color-gray">Subject (EN) *</div>
+        <app-demoproj-input formControlName="email_subject_english">
+          <span error *ngIf="emailSubjectEnglishControl?.hasError('required')">
+            Please input Subject
+          </span>
+        </app-demoproj-input>
+      </div>
+    </div>
+
+    <div class="flex gap-[1rem]">
+      <div class="flex flex-col gap-[0.5rem] w-full">
+        <div class="base-text-color-gray">Body (TH) *</div>
+        <p-editor
+          formControlName="email_body_thai_html_text"
+          [style]="{ height: '10rem' }"
+          (onTextChange)="editorTextChange($event, 'th')"
+          #EditorTH
+          [readonly]="!!emailBodyThaiHtmlTextControl?.disabled"
+          tabindex="0"
+          (focusout)="onEditorTouched('th')"
+        >
+          <ng-template pTemplate="header">
+            <span class="ql-formats">
+              <button type="button" class="ql-bold" aria-label="Bold"></button>
+              <button
+                type="button"
+                class="ql-italic"
+                aria-label="Italic"
+              ></button>
+              <button
+                type="button"
+                class="ql-underline"
+                aria-label="Underline"
+              ></button>
+              <button
+                class="ql-align ql-align-left"
+                aria-label="align-left"
+                value=""
+              ></button>
+              <button
+                class="ql-align"
+                value="center"
+                aria-label="align-center"
+              ></button>
+              <button
+                class="ql-align"
+                value="right"
+                aria-label="align-right"
+              ></button>
+            </span>
+          </ng-template>
+        </p-editor>
+
+        <div class="flex flex-wrap justify-between">
+          <div>
+            <mat-error
+              class="text-[0.75rem]"
+              *ngIf="
+                emailBodyThaiHtmlTextControl?.touched &&
+                emailBodyThaiControl?.hasError('required')
+              "
+            >
+              Please input body
+            </mat-error>
+
+            <mat-error
+              class="text-[0.75rem]"
+              *ngIf="emailBodyThaiControl?.hasError('maxLength')"
+            >
+              Length must be less than 2000 characters
+            </mat-error>
+          </div>
+
+          <div class="text-end base-text-color-gray">
+            {{ checkBodyLength('th') }}/2000
+          </div>
+        </div>
+
+        <div class="flex flex-col w-full">
+          <div class="base-text-color-gray">Select the existing form name</div>
+
+          <mat-form-field class="demoproj-select">
+            <mat-select
+              formControlName="existing_form_name_thai"
+              [hideSingleSelectionIndicator]="true"
+            >
+              <mat-select-trigger>
+                <span>{{
+                  getDropdownValue(
+                    existingFormNameThaiControl?.value,
+                    existingFormNameOptions
+                  )
+                }}</span>
+                <mat-icon class="absolute right-0"
+                  >keyboard_arrow_down</mat-icon
+                >
+              </mat-select-trigger>
+              @for (type of existingFormNameOptions; track type) {
+              <mat-option [value]="type.code">{{ type.value }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="flex flex-wrap gap-[0.5rem]">
+          <button
+            mat-button
+            class="base-border base-btn-border-color"
+            *ngFor="let item of variablesTh"
+            [disabled]="emailBodyThaiHtmlTextControl?.disabled"
+            (click)="selectVariable(item, 'th')"
+          >
+            {{ item.value }}
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-[0.5rem] w-full">
+        <div class="base-text-color-gray">Body (EN) *</div>
+        <p-editor
+          formControlName="email_body_english_html_text"
+          [style]="{ height: '10rem' }"
+          (onTextChange)="editorTextChange($event, 'en')"
+          #EditorEN
+          [readonly]="!!emailBodyEnglishHtmlTextControl?.disabled"
+          tabindex="1"
+          (focusout)="onEditorTouched('en')"
+        >
+          <ng-template pTemplate="header">
+            <span class="ql-formats">
+              <button type="button" class="ql-bold" aria-label="Bold"></button>
+              <button
+                type="button"
+                class="ql-italic"
+                aria-label="Italic"
+              ></button>
+              <button
+                type="button"
+                class="ql-underline"
+                aria-label="Underline"
+              ></button>
+              <button
+                class="ql-align ql-align-left"
+                aria-label="align-left"
+                value=""
+              ></button>
+              <button
+                class="ql-align"
+                value="center"
+                aria-label="align-center"
+              ></button>
+              <button
+                class="ql-align"
+                value="right"
+                aria-label="align-right"
+              ></button>
+            </span>
+          </ng-template>
+        </p-editor>
+
+        <div class="flex flex-wrap justify-between">
+          <div>
+            <mat-error
+              class="text-[0.75rem]"
+              *ngIf="
+                emailBodyEnglishHtmlTextControl?.touched &&
+                emailBodyEnglishControl?.hasError('required')
+              "
+            >
+              Please input body
+            </mat-error>
+
+            <mat-error
+              class="text-[0.75rem]"
+              *ngIf="emailBodyEnglishControl?.hasError('maxLength')"
+            >
+              Length must be less than 2000 characters
+            </mat-error>
+          </div>
+
+          <div class="text-end base-text-color-gray">
+            {{ checkBodyLength('en') }}/2000
+          </div>
+        </div>
+
+        <div class="flex flex-col w-full">
+          <div class="base-text-color-gray">Select the existing form name</div>
+
+          <mat-form-field class="demoproj-select">
+            <mat-select
+              formControlName="existing_form_name_english"
+              [hideSingleSelectionIndicator]="true"
+            >
+              <mat-select-trigger>
+                <span>{{
+                  getDropdownValue(
+                    existingFormNameEnglishControl?.value,
+                    existingFormNameOptions
+                  )
+                }}</span>
+                <mat-icon class="absolute right-0"
+                  >keyboard_arrow_down</mat-icon
+                >
+              </mat-select-trigger>
+              @for (type of existingFormNameOptions; track type) {
+              <mat-option [value]="type.code">{{ type.value }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="flex flex-wrap gap-[0.5rem]">
+          <button
+            mat-button
+            class="base-border base-btn-border-color"
+            *ngFor="let item of variablesEn"
+            [disabled]="emailBodyEnglishHtmlTextControl?.disabled"
+            (click)="selectVariable(item, 'en')"
+          >
+            {{ item.value }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-card>

@@ -1,0 +1,125 @@
+<h2 mat-dialog-title class="demoproj-red-color mb-[2rem]">
+  Add Customer Segmentation & Tier
+</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="grid gap-[1rem]">
+    <nav
+      class="demoproj-tabs"
+      mat-tab-nav-bar
+      [tabPanel]="tabPanel"
+      mat-stretch-tabs="false"
+      mat-align-tabs="start"
+    >
+      @for (tab of tabs(); track $index) {
+      <a
+        mat-tab-link
+        (click)="changeTab(tab.code)"
+        [active]="tab.code === activeTabCode()"
+      >
+        {{ tab.value }}
+      </a>
+      }
+    </nav>
+
+    <app-demoproj-table
+      *ngIf="activeTabCode() === 'segmentation'"
+      [data]="data.segmentGroups"
+      [isPaginatorEnabled]="false"
+      [tableColumns]="segmentationTableColumns()"
+    >
+      <ng-template
+        #customColumn
+        let-columnCode="columnCode"
+        let-rowData="rowData"
+      >
+        <ng-container [ngSwitch]="columnCode">
+          <ng-container *ngSwitchCase="'option'">
+            <mat-button-toggle-group
+              name="option"
+              aria-label="option"
+              [hideSingleSelectionIndicator]="true"
+              [value]="gettoggleValue(rowData, 'segmentation')"
+              class="demoproj-button-toggle-group"
+              (change)="onOptionChange(rowData, $event, 'segmentation')"
+            >
+              <mat-button-toggle value="include">Include</mat-button-toggle>
+              <mat-button-toggle value="exclude">Exclude</mat-button-toggle>
+            </mat-button-toggle-group>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>output2</ng-container>
+        </ng-container>
+      </ng-template>
+    </app-demoproj-table>
+
+    <app-demoproj-table
+      *ngIf="activeTabCode() === 'tier'"
+      [data]="data.tierGroups"
+      [isPaginatorEnabled]="false"
+      [tableColumns]="tierTableColumns()"
+    >
+      <ng-template
+        #customColumn
+        let-columnCode="columnCode"
+        let-rowData="rowData"
+      >
+        <ng-container [ngSwitch]="columnCode">
+          <ng-container *ngSwitchCase="'option'">
+            <mat-button-toggle-group
+              name="option"
+              aria-label="option"
+              [hideSingleSelectionIndicator]="true"
+              [value]="gettoggleValue(rowData, 'tier')"
+              class="demoproj-button-toggle-group"
+              (change)="onOptionChange(rowData, $event, 'tier')"
+            >
+              <mat-button-toggle value="include">Include</mat-button-toggle>
+              <mat-button-toggle value="exclude">Exclude</mat-button-toggle>
+            </mat-button-toggle-group>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'color'">
+            <div class="flex gap-[0.5rem]">
+              <span
+                class="w-[1.25rem] h-[1.25rem] flex rounded-[0.25rem]"
+                [style]="{ backgroundColor: rowData.color }"
+              ></span>
+              {{ rowData.color }}
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault></ng-container>
+        </ng-container>
+      </ng-template>
+    </app-demoproj-table>
+
+    <mat-divider></mat-divider>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <div class="flex justify-between items-center w-full">
+    <a class="link" (click)="navigateToCreateForm()">
+      {{
+        activeTabCode() === 'segmentation'
+          ? 'Create Segmentation'
+          : 'Create Tier'
+      }}
+    </a>
+    <div>
+      <button
+        mat-button
+        (click)="onCancel()"
+        class="base-border base-btn-border-color"
+      >
+        Cancel
+      </button>
+
+      <button mat-button class="demoproj-btn" (click)="onSubmit()">
+        <mat-icon>check</mat-icon>
+        Add
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>

@@ -1,0 +1,93 @@
+<div
+  class="my-[1.5rem] flex items-center gap-[1rem]"
+  [ngClass]="!isEditOrder() ? 'justify-between' : 'justify-end'"
+>
+  <app-hospital-list-filter *ngIf="!isEditOrder()"></app-hospital-list-filter>
+  <div class="flex items-center gap-[1rem]">
+    <ng-container
+      *appHasPermissions="[
+        {
+          feature: featurePermissionCode.Hospital,
+          action: actionPermissionCode.CreateEdit,
+        },
+      ]"
+    >
+      <button
+        *ngIf="!isEditOrder()"
+        [disabled]="((hospitalLists$ | async) || []).length === 0"
+        (click)="setEditOrder(true)"
+        mat-button
+        class="base-border base-btn-border-color"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <img src="edit.svg" alt="edit" [attr.loading]="'lazy'" />
+          Edit Order
+        </div>
+      </button>
+      <button
+        *ngIf="!isEditOrder()"
+        (click)="openCreateNewHospital()"
+        mat-button
+        class="demoproj-btn"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <svg-plus></svg-plus>
+          New Hospital
+        </div>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="isEditOrder()">
+      <button
+        mat-button
+        class="base-border base-btn-border-color"
+        (click)="cancelEditOrder()"
+      >
+        Cancel
+      </button>
+
+      <button
+        mat-button
+        class="demoproj-btn"
+        (click)="publishItems()"
+        [disabled]="reOrderLoading$ | async"
+      >
+        <mat-icon>check</mat-icon>
+        Publish
+      </button>
+    </ng-container>
+  </div>
+</div>
+<app-demoproj-table
+  class="min-w-full table-auto whitespace-nowrap"
+  [data]="
+    !isEditOrder() ? (hospitalLists$ | async)! : (virtualHospitals$ | async)!
+  "
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(listLoading$ | async)! || (getMissingHospitalsLoading$ | async)!"
+  [noDataMessage]="'No master data set'"
+  [disableDragDrop]="!isEditOrder()"
+  [searchHighlightText]="(selectCommonSearch$ | async)!"
+  [sortField]="defaultParams().sort_by || ''"
+  [sortDirection]="defaultParams().sort_direction || ''"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (dragDropChange)="onDragDropChange($event)"
+  (rowClick)="onRowClick($event)"
+  (sortChange)="onSortChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'is_published'">
+        <mat-slide-toggle
+          class="demoproj-slide-toggle"
+          hideIcon="true"
+          [checked]="rowData.is_published"
+          [disabled]="!isEditOrder()"
+          (change)="onToggleChange($event, rowData)"
+        ></mat-slide-toggle>
+      </ng-container>
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

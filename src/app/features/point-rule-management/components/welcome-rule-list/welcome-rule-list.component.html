@@ -1,0 +1,16 @@
+<app-demoproj-table
+  [data]="(pointRules$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  [noDataMessage]="
+    !(selectCommonSearch$ | async)
+      ? 'No Rule set'
+      : 'No Rule found. Please refine your search'
+  "
+  [searchHighlightText]="(selectCommonSearch$ | async)!"
+  (pageChange)="onPageChange($event)"
+  (rowClick)="onRowClick($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+>
+</app-demoproj-table>

@@ -1,0 +1,74 @@
+<div class="grid grid-cols-[1fr] gap-[1rem]">
+  <div class="my-[1.5rem] flex items-center justify-between">
+    <div>
+      <h2 class="m-0">
+        {{ homeScreenManagementId() ? 'Edit' : 'Create' }} Section
+      </h2>
+    </div>
+
+    <div class="flex gap-[1rem]">
+      <button
+        mat-button
+        type="button"
+        class="base-border base-btn-border-color"
+        (click)="setFormMode('edit')"
+        *ngIf="formMode() === 'view'"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <img src="edit.svg" alt="edit" loading="lazy" />
+          Edit
+        </div>
+      </button>
+
+      <button
+        mat-button
+        class="demoproj-btn"
+        (click)="onSubmit()"
+        [disabled]="createLoading$ | async"
+        *ngIf="formMode() !== 'view'"
+      >
+        <mat-icon>check</mat-icon>
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="grid gap-[1rem]">
+    <app-home-base-setting-section
+      [formMode]="formMode()"
+      [formGroup]="baseSettingForm"
+    ></app-home-base-setting-section>
+
+    <app-home-display-section
+      *ngIf="baseSettingForm.get('category')?.value"
+      [formGroup]="displaySettingForm"
+    ></app-home-display-section>
+
+    <app-home-group-condition-section
+      *ngIf="
+        baseSettingForm.get('category')?.value === categoryCode.GroupByPrivilege
+      "
+      [formGroup]="privilegeForm"
+      [formMode]="formMode()"
+    >
+    </app-home-group-condition-section>
+
+    <app-home-shortcut-menu-section
+      *ngIf="
+        baseSettingForm.get('category')?.value ===
+        categoryCode.GroupByShortcutMenu
+      "
+      [formGroup]="shortcutMenuForm"
+      [formMode]="formMode()"
+    ></app-home-shortcut-menu-section>
+
+    <app-home-highlight-card-section
+      *ngIf="
+        baseSettingForm.get('category')?.value ===
+        categoryCode.GroupByHightlightCard
+      "
+      [formGroup]="highlightCardForm"
+      [formMode]="formMode()"
+    ></app-home-highlight-card-section>
+  </div>
+</div>

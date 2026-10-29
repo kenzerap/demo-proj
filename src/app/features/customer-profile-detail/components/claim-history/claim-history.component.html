@@ -1,0 +1,17 @@
+<div class="mb-[1rem]">
+  <div class="font-bold">Claim History</div>
+  <div class="text-[#A2A1A8]">
+    Claim History: {{ (pagination$() | async)?.totalItems || 0 }} Claim(s)
+  </div>
+</div>
+
+<app-demoproj-table
+  [data]="(claimHistories$() | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$() | async"
+  [loading]="(loading$() | async)!"
+  [pageSizeOptions]="[5, 10, 20, 50]"
+  [tableStyle]="{ 'width.rem': 97 }"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+></app-demoproj-table>

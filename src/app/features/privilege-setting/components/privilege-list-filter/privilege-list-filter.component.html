@@ -1,0 +1,31 @@
+<form
+  class="grid grid-cols-[auto_auto_6rem_5rem] gap-4 items-center"
+  [formGroup]="searchForm"
+>
+  <app-demoproj-input
+    formControlName="privilegeId"
+    [placeholder]="'Search Privilege ID'"
+    class="min-w-[20rem]"
+  >
+    <span prefix>
+      <img src="icon-search.svg" alt="search Privilege ID" loading="lazy" />
+    </span>
+  </app-demoproj-input>
+
+  <app-demoproj-input
+    formControlName="commonSearch"
+    [placeholder]="'Search Privilege Name'"
+    class="min-w-[20rem]"
+  >
+    <span prefix>
+      <img src="icon-search.svg" alt="search Privilege Name" loading="lazy" />
+    </span>
+  </app-demoproj-input>
+
+  <button mat-button class="demoproj-btn" (click)="onSearch()">
+    <mat-icon>search</mat-icon>
+    Search
+  </button>
+
+  <button mat-button class="base-border" (click)="resetForm()">Clear</button>
+</form>

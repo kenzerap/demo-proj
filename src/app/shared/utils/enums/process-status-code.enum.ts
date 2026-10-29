@@ -1,0 +1,7 @@
+export enum ProcessStatusCode {
+  PENDING = 'PENDING',
+  VERIFIED = 'VERIFIED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+}

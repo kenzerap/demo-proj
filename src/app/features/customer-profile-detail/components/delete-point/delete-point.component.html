@@ -1,0 +1,61 @@
+<h2 mat-dialog-title class="demoproj-red-color">Delete point</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="addPointForm">
+    <div class="flex flex-col">
+      <div class="text-black">Point *</div>
+
+      <app-demoproj-input formControlName="point" [inputType]="'number'">
+        <span suffix class="demoproj-red-color">Point</span>
+
+        <span error *ngIf="pointControl?.hasError('required')">
+          Please input point value
+        </span>
+
+        <span
+          error
+          *ngIf="
+            pointControl?.hasError('min') ||
+            pointControl?.hasError('max') ||
+            pointControl?.hasError('pattern')
+          "
+        >
+          Points must be a number greater than 0 and smaller or equal to
+          {{ 1000000 | number : '1.0-2' }}.
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="text-black">Remark *</div>
+
+      <mat-form-field class="demoproj-input w-full">
+        <input
+          matInput
+          formControlName="remark"
+          (change)="trimSpaces('remark')"
+        />
+        <mat-error *ngIf="remarkControl?.hasError('required')">
+          Please input remark value
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button mat-button mat-dialog-close class="base-border base-btn-border-color">
+    Cancel
+  </button>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    (click)="onSubmit()"
+    [disabled]="loading$ | async"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-delete class="h-[1.3rem]" [color]="'white'"></svg-delete>
+      Delete Point
+    </div>
+  </button>
+</mat-dialog-actions>

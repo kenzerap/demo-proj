@@ -1,0 +1,27 @@
+<app-demoproj-table
+  [data]="(pointRules$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  [noDataMessage]="
+    !(selectCommonSearch$ | async)
+      ? 'No Rule set'
+      : 'No Rule found. Please refine your search'
+  "
+  [searchHighlightText]="(selectCommonSearch$ | async)!"
+  (pageChange)="onPageChange($event)"
+  (rowClick)="onRowClick($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'attribute'">
+        <div [appHighlightText]="(selectCommonSearch$ | async)!">
+          {{ rowData.attributes?.join(', ') || '-' }}
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

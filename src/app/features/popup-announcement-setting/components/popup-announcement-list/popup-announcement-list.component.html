@@ -1,0 +1,44 @@
+<app-demoproj-table
+  [data]="
+    (selectselectedTargetGroupIds$ | async)?.includes(-1)
+      ? (virtualPopupAnnouncements$ | async)!
+      : (popupAnnouncements$ | async)!
+  "
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="
+    (loading$ | async)! ||
+    (getMissingPopupAnnouncementsLoading$ | async)!
+  "
+  [noDataMessage]="'No Popup Set'"
+  [disableDragDrop]="!(isEditOrderMode$ | async)"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (rowClick)="onRowClick($event)"
+  (dragDropChange)="onDragDropChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'bannerNameWithImage'">
+        <div class="flex items-center gap-[0.5rem] my-[0.5rem]">
+          <img
+            class="w-[3.25rem] h-[3.25rem]"
+            loading="lazy"
+            [src]="encodeImageUrl(rowData.imageData, rowData.image)"
+          />
+          <div>{{ rowData.bannerName }}</div>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'isPublished'">
+        <mat-slide-toggle
+          class="demoproj-slide-toggle"
+          hideIcon="true"
+          [checked]="rowData.isPublished"
+          [disabled]="!(isEditOrderMode$ | async)"
+          (change)="onToggleChange($event, rowData)"
+        ></mat-slide-toggle>
+      </ng-container>
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

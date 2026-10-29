@@ -1,0 +1,14 @@
+@use 'styles/variables.scss' as *;
+
+.chips {
+  height: 1.5rem !important;
+  pointer-events: none;
+}
+
+.green {
+  background-color: #e7f6ec !important;
+}
+
+.gray {
+  background-color: $base-color-light-gray !important;
+}

@@ -1,0 +1,120 @@
+<mat-card
+  class="grid gap-[1rem] p-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <h3>Hospital Detail</h3>
+
+  <div class="grid">
+    <div class="mb-[1rem]">Health Insurance</div>
+    <mat-checkbox
+      class="demoproj-checkbox ml-[-0.688rem]"
+      [checked]="isCheckHealthInsurance('OPD')"
+      (change)="selectHealthInsurance('OPD')"
+      [disabled]="formMode === 'view'"
+    >
+      OPD
+    </mat-checkbox>
+    <mat-checkbox
+      class="demoproj-checkbox ml-[-0.688rem]"
+      [checked]="isCheckHealthInsurance('IPD')"
+      (change)="selectHealthInsurance('IPD')"
+      [disabled]="formMode === 'view'"
+    >
+      IPD
+    </mat-checkbox>
+    <mat-checkbox
+      class="demoproj-checkbox ml-[-0.688rem]"
+      [checked]="isCheckHealthInsurance('DENTAL')"
+      (change)="selectHealthInsurance('DENTAL')"
+      [disabled]="formMode === 'view'"
+    >
+      Dental
+    </mat-checkbox>
+  </div>
+
+  <div class="grid">
+    <div class="mb-[1rem]">Service Type</div>
+
+    <mat-checkbox
+      class="demoproj-checkbox ml-[-0.688rem]"
+      [checked]="isCheckServiceType('LIFE')"
+      (change)="selectServiceType('LIFE')"
+      [disabled]="formMode === 'view'"
+    >
+      Life
+    </mat-checkbox>
+    <mat-checkbox
+      class="demoproj-checkbox ml-[-0.688rem]"
+      [checked]="isCheckServiceType('A_H')"
+      (change)="selectServiceType('A_H')"
+      [disabled]="formMode === 'view'"
+    >
+      A&H
+    </mat-checkbox>
+    <mat-checkbox
+      class="demoproj-checkbox ml-[-0.688rem]"
+      [checked]="isCheckServiceType('GROUP')"
+      (change)="selectServiceType('GROUP')"
+      [disabled]="formMode === 'view'"
+    >
+      Group
+    </mat-checkbox>
+    <mat-checkbox
+      class="demoproj-checkbox ml-[-0.688rem]"
+      [checked]="isCheckServiceType('HEALTH_CHECKUP')"
+      (change)="selectServiceType('HEALTH_CHECKUP')"
+      [disabled]="formMode === 'view'"
+    >
+      HealthCheckup
+    </mat-checkbox>
+    <mat-checkbox
+      class="demoproj-checkbox ml-[-0.688rem]"
+      [checked]="isCheckServiceType('DEMOPROJ365')"
+      (change)="selectServiceType('DEMOPROJ365')"
+      [disabled]="formMode === 'view'"
+    >
+      Demoproj365
+    </mat-checkbox>
+
+    <div
+      class="ml-[2rem] mt-[0.5rem]"
+      *ngIf="isCheckServiceType('DEMOPROJ365')"
+    >
+      <div class="mb-[1rem]">Package *</div>
+
+      <div class="grid">
+        @for (healthcarePackage of (healthcarePackages$ | async); track
+        healthcarePackage) {
+        <mat-checkbox
+          class="demoproj-checkbox ml-[-0.688rem]"
+          [checked]="isCheckPackage(healthcarePackage.code)"
+          (change)="selectPackage($event.checked, healthcarePackage)"
+          [disabled]="formMode === 'view'"
+        >
+          {{ healthcarePackage.value }}
+        </mat-checkbox>
+        }
+
+        <mat-error
+          *ngIf="
+            (healthcarePackagesControl?.touched ||
+              healthcarePackagesControl?.dirty) &&
+            healthcarePackagesControl?.hasError('required')
+          "
+          class="text-[0.75rem] bottom-[0rem]"
+        >
+          Please select Package
+        </mat-error>
+      </div>
+    </div>
+  </div>
+
+  <mat-slide-toggle
+    class="demoproj-slide-toggle"
+    hideIcon="true"
+    formControlName="checkup_enable"
+    >Checkup</mat-slide-toggle
+  >
+</mat-card>

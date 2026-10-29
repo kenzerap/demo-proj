@@ -1,0 +1,26 @@
+@use 'styles/variables.scss' as *;
+
+.control-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2rem;
+  gap: 1rem;
+  align-items: center;
+  border-radius: 0.25rem;
+}
+
+.parent-row {
+  background-color: $base-color-light-gray;
+  padding: 1rem;
+}
+
+.shared-quota-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2rem;
+  gap: 1rem;
+  align-items: center;
+}
+
+.delete-disabled {
+  pointer-events: none;
+  color: $base-color-gray;
+}

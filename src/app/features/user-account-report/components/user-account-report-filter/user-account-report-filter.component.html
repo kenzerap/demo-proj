@@ -1,0 +1,31 @@
+<form class="grid grid-cols-[auto_auto_auto_6rem_5rem] gap-4 items-center" [formGroup]="searchForm">
+    <mat-form-field class="demoproj-input">
+        <mat-label>Registration Date</mat-label>
+        <span matPrefix>
+            <img src="icon-search.svg" alt="search" loading="lazy" />
+        </span>
+        <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Start date" formControlName="from_date_time" />
+            <input matEndDate placeholder="End date" formControlName="to_date_time" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matTextSuffix [for]="picker">
+            <svg-calendar matDatepickerToggleIcon></svg-calendar>
+        </mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <mat-form-field class="demoproj-select">
+        <mat-label>User Type</mat-label>
+        <mat-select formControlName="user_types" class="demoproj-select" multiple>
+            @for (item of userTypes; track item) {
+            <mat-option [value]="item">{{item}}</mat-option>
+            }
+        </mat-select>
+        <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+    </mat-form-field>
+    <button mat-button class="demoproj-btn" (click)="onSearch()"   [disabled]="!hasFilter(searchForm.value)"
+    >
+        <mat-icon>search</mat-icon>
+        Search
+    </button>
+    <button mat-button class="base-border" [disabled]="(listLoading$ | async)!" (click)="resetForm()">Clear</button>
+</form>

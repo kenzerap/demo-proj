@@ -1,0 +1,261 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex justify-between items-center">
+    <h3 class="mb-[1rem]">Rewards *</h3>
+
+    <mat-checkbox formControlName="is_advance_reward" class="demoproj-checkbox">
+      Advance Rewards
+    </mat-checkbox>
+  </div>
+
+  <div class="flex gap-[1rem]">
+    <div
+      class="group-card"
+      appearance="outlined"
+      [class.selected-group]="!!isPointControl?.value"
+      (click)="changeGroup(isPointControl)"
+    >
+      <div class="flex justify-end">
+        <mat-checkbox
+          class="demoproj-checkbox"
+          [checked]="isPointControl?.value"
+          [disabled]="formMode === 'view'"
+        >
+        </mat-checkbox>
+      </div>
+      <svg-point
+        [color]="isPointControl?.value ? '#c72b29' : 'black'"
+        [width]="68"
+        [height]="62"
+        class="flex justify-center items-center"
+      ></svg-point>
+
+      <div class="flex justify-center items-end">Point</div>
+    </div>
+
+    <div
+      class="group-card"
+      appearance="outlined"
+      [class.selected-group]="!!isPrivilegeControl?.value"
+      (click)="changeGroup(isPrivilegeControl)"
+    >
+      <div class="flex justify-end">
+        <mat-checkbox
+          class="demoproj-checkbox"
+          [checked]="isPrivilegeControl?.value"
+          [disabled]="formMode === 'view'"
+        >
+        </mat-checkbox>
+      </div>
+      <svg-gift-box
+        [color]="isPrivilegeControl?.value ? '#c72b29' : 'black'"
+        [width]="68"
+        [height]="62"
+        class="flex justify-center items-center"
+      ></svg-gift-box>
+
+      <div class="flex justify-center items-end">Privilege</div>
+    </div>
+  </div>
+
+  <mat-error
+    class="text-[0.75rem]"
+    *ngIf="
+      (isPointControl?.touched ||
+        isPointControl?.dirty ||
+        isPrivilegeControl?.touched ||
+        isPrivilegeControl?.dirty) &&
+      !isPointControl?.value &&
+      !isPrivilegeControl?.value
+    "
+  >
+    Please select point or privilege
+  </mat-error>
+
+  <ng-container *ngIf="!!isPointControl?.value">
+    <h3 class="mb-[1rem]">Earning Point</h3>
+
+    <div class="condition-row">
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Point *</div>
+
+        <app-demoproj-input
+          formControlName="earning_point"
+          [inputType]="'number'"
+          [formFieldGray]="true"
+        >
+          <span error *ngIf="earningPointControl?.hasError('required')">
+            Please input Point
+          </span>
+          <span error *ngIf="earningPointControl?.hasError('min')">
+            Value must be a number greater than or equal 0
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Point Expiry Date *</div>
+        <mat-form-field class="demoproj-input demoproj-form-field-gray">
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            formControlName="earning_point_expiry_date"
+            [min]="currentDate"
+          />
+          <mat-datepicker-toggle matTextSuffix [for]="picker1">
+            <svg-calendar matDatepickerToggleIcon></svg-calendar>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error
+            *ngIf="earningPointExpiryDateControl?.hasError('required')"
+          >
+            Please input date
+          </mat-error>
+
+          <mat-error
+            *ngIf="
+              !earningPointExpiryDateControl?.hasError('required') &&
+              earningPointExpiryDateControl?.hasError('matDatepickerMin')
+            "
+          >
+            Please select today or future date
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+  </ng-container>
+
+  <ng-container *ngIf="!!isPrivilegeControl?.value">
+    <div>
+      <div class="flex justify-between items-center">
+        <h3 class="mb-[1rem]">Privilege</h3>
+
+        <button
+          mat-button
+          class="base-border"
+          [disabled]="privilegeControl?.valid || formMode === 'view'"
+          (click)="openAddPrivilegeDialog()"
+        >
+          <div class="flex items-center justify-center gap-[0.5rem]">
+            <svg-plus
+              [color]="
+                privilegeControl?.valid || formMode === 'view'
+                  ? '#98a2b4'
+                  : 'black'
+              "
+            ></svg-plus>
+            Add Privilege
+          </div>
+        </button>
+      </div>
+
+      <div
+        class="control-row"
+        *ngIf="privilegeControl && privilegeControl.getRawValue()?.privilegeId"
+      >
+        <table aria-describedby="privilege-table">
+          <tr>
+            <th>Privilege Name</th>
+            <th>Total Quota</th>
+            <th>Segmentation</th>
+            <th>End Date</th>
+          </tr>
+          <tr>
+            <td>{{ privilegeControl.getRawValue().privilegeName }}</td>
+            <td>
+              {{ privilegeControl.getRawValue().quota || 0 | number : '1.0-2' }}
+            </td>
+            <td>{{ privilegeControl.getRawValue().segmentName }}</td>
+            <td>
+              {{
+                privilegeControl.getRawValue().endDateTime
+                  | date : 'dd/MM/yyyy, HH:mm'
+              }}
+            </td>
+          </tr>
+        </table>
+
+        <button
+          mat-button
+          [disabled]="formMode === 'view'"
+          (click)="openAddPrivilegeDialog()"
+          class="edit-btn"
+        >
+          <img src="edit.svg" alt="edit" loading="lazy" />
+        </button>
+      </div>
+
+      <mat-error
+        class="text-[0.75rem] text-center"
+        *ngIf="privilegeControl?.invalid && privilegeControl?.touched"
+      >
+        Please select Privilege
+      </mat-error>
+    </div>
+    <mat-divider></mat-divider>
+  </ng-container>
+
+  <mat-checkbox
+    class="demoproj-checkbox"
+    formControlName="is_special_condition_fraud_user"
+  >
+    Special condition for fraud users
+  </mat-checkbox>
+
+  <ng-container *ngIf="!!isSpecialConditionFraudUserControl?.value">
+    <div class="condition-row">
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Point *</div>
+
+        <app-demoproj-input
+          formControlName="fraud_condition_point"
+          [inputType]="'number'"
+          [formFieldGray]="true"
+        >
+          <span error *ngIf="fraudConditionPointControl?.hasError('required')">
+            Please input Point
+          </span>
+          <span error *ngIf="fraudConditionPointControl?.hasError('min')">
+            Value must be a number greater than or equal 0
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Point Expiry Date *</div>
+        <mat-form-field class="demoproj-input demoproj-form-field-gray">
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            formControlName="fraud_condition_point_expire_date"
+            [min]="currentDate"
+          />
+          <mat-datepicker-toggle matTextSuffix [for]="picker1">
+            <svg-calendar matDatepickerToggleIcon></svg-calendar>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error
+            *ngIf="fraudConditionPointExpireDateControl?.hasError('required')"
+          >
+            Please input date
+          </mat-error>
+
+          <mat-error
+            *ngIf="
+              !fraudConditionPointExpireDateControl?.hasError('required') &&
+              fraudConditionPointExpireDateControl?.hasError('matDatepickerMin')
+            "
+          >
+            Please select today or future date
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </ng-container>
+</mat-card>

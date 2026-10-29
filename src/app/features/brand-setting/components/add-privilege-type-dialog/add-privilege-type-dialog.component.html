@@ -1,0 +1,304 @@
+<h2 mat-dialog-title class="demoproj-red-color mb-[2rem]">Privilege Type</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="grid gap-[1rem]">
+    <form [formGroup]="createPrivilegeTypeForm">
+      <app-demoproj-table
+        [data]="(brandCategories$ | async)!"
+        [isPaginatorEnabled]="false"
+        [tableColumns]="privilegeTypeTableColumns()"
+        [loading]="(loading$ | async)!"
+        [isSingleSelect]="true"
+        [tableSectionStyle]="{ 'max-height': '21rem' }"
+        [selectedItems]="[selectedItem()]"
+        (selectedItemsChange)="onSelectedItemsChange($event)"
+      >
+        <ng-template
+          #customColumn
+          let-columnCode="columnCode"
+          let-rowData="rowData"
+        >
+          <ng-container [ngSwitch]="columnCode">
+            <ng-container *ngSwitchCase="'brand_category_name_thai'">
+              <div
+                *ngIf="
+                  formMode() !== 'edit' ||
+                  selectedItem()?.brand_category_id !==
+                    rowData.brand_category_id
+                "
+              >
+                {{ rowData.brand_category_name_thai }}
+              </div>
+
+              <div
+                class="flex flex-col mt-[1rem]"
+                *ngIf="
+                  formMode() === 'edit' &&
+                  selectedItem()?.brand_category_id ===
+                    rowData.brand_category_id
+                "
+              >
+                <app-demoproj-input formControlName="brand_category_name_thai">
+                  <span
+                    error
+                    *ngIf="
+                      (brandCategoryNameThaiControl?.dirty ||
+                        brandCategoryNameThaiControl?.touched) &&
+                      brandCategoryNameThaiControl?.hasError('required')
+                    "
+                  >
+                    Please input privilege type (TH)
+                  </span>
+                </app-demoproj-input>
+              </div>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'brand_category_name_english'">
+              <div
+                *ngIf="
+                  formMode() !== 'edit' ||
+                  selectedItem()?.brand_category_id !==
+                    rowData.brand_category_id
+                "
+              >
+                {{ rowData.brand_category_name_english }}
+              </div>
+
+              <div
+                class="flex flex-col mt-[1rem]"
+                *ngIf="
+                  formMode() === 'edit' &&
+                  selectedItem()?.brand_category_id ===
+                    rowData.brand_category_id
+                "
+              >
+                <app-demoproj-input formControlName="brand_category_name_english">
+                  <span
+                    error
+                    *ngIf="
+                      (brandCategoryNameEnglishControl?.dirty ||
+                        brandCategoryNameEnglishControl?.touched) &&
+                      brandCategoryNameEnglishControl?.hasError('required')
+                    "
+                  >
+                    Please input privilege type (EN)
+                  </span>
+                </app-demoproj-input>
+              </div>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'display_order'">
+              <div
+                *ngIf="
+                  formMode() !== 'edit' ||
+                  selectedItem()?.brand_category_id !==
+                    rowData.brand_category_id
+                "
+              >
+                {{ rowData.display_order }}
+              </div>
+
+              <div
+                class="flex flex-col mt-[1rem]"
+                *ngIf="
+                  formMode() === 'edit' &&
+                  selectedItem()?.brand_category_id ===
+                    rowData.brand_category_id
+                "
+              >
+                <app-demoproj-input
+                  formControlName="display_order"
+                  [inputType]="'number'"
+                >
+                  <span
+                    error
+                    *ngIf="
+                      (displayOrderControl?.dirty ||
+                        displayOrderControl?.touched) &&
+                      displayOrderControl?.hasError('required')
+                    "
+                  >
+                    Please input display order
+                  </span>
+                  <span error *ngIf="displayOrderControl?.hasError('min')">
+                    Display order must be a number greater than 0
+                  </span>
+                  <span
+                    error
+                    *ngIf="displayOrderControl?.hasError('displayOrderExists')"
+                  >
+                    Display order already existed
+                  </span>
+                </app-demoproj-input>
+              </div>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'actions'">
+              <div class="flex gap-[0.5rem]">
+                <button
+                  mat-button
+                  type="button"
+                  class="action-btn"
+                  *ngIf="
+                    formMode() === 'edit' &&
+                    selectedItem()?.brand_category_id ===
+                      rowData.brand_category_id
+                  "
+                  [disabled]="
+                    createPrivilegeTypeForm.invalid || (editLoading$ | async)
+                  "
+                  (click)="editPrivilegeType(rowData)"
+                >
+                  <svg-save-file
+                    [color]="
+                      createPrivilegeTypeForm.invalid || (editLoading$ | async)
+                        ? '#98a2b4'
+                        : '#C62B29'
+                    "
+                  ></svg-save-file>
+                </button>
+
+                <button
+                  mat-button
+                  type="button"
+                  class="action-btn"
+                  *ngIf="
+                    formMode() !== 'edit' ||
+                    selectedItem()?.brand_category_id !==
+                      rowData.brand_category_id
+                  "
+                  (click)="setEditMode(rowData)"
+                >
+                  <img src="edit.svg" alt="edit" loading="lazy" />
+                </button>
+
+                <button
+                  mat-button
+                  type="button"
+                  class="action-btn"
+                  *ngIf="
+                    formMode() !== 'edit' ||
+                    selectedItem()?.brand_category_id !==
+                      rowData.brand_category_id
+                  "
+                  (click)="deletePrivilegeType(rowData)"
+                >
+                  <svg-delete></svg-delete>
+                </button>
+              </div>
+            </ng-container>
+
+            <ng-container *ngSwitchDefault>output2</ng-container>
+          </ng-container>
+        </ng-template>
+      </app-demoproj-table>
+    </form>
+
+    <div class="text-[black]">
+      Display order was used:
+      <span class="demoproj-red-color">{{
+        brandCategoryDisplayOrders().join(', ')
+      }}</span>
+    </div>
+
+    <button
+      mat-button
+      class="base-border base-btn-border-color max-w-[12rem]"
+      [disabled]="formMode() === 'create'"
+      (click)="setFormMode('create')"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus
+          [color]="formMode() === 'create' ? '#98a2b4' : 'black'"
+        ></svg-plus>
+        Add Privilege Type
+      </div>
+    </button>
+
+    <form
+      class="grid grid-cols-[1fr_1fr_1fr_5rem] gap-[1rem] items-center"
+      *ngIf="formMode() === 'create'"
+      [formGroup]="createPrivilegeTypeForm"
+    >
+      <div class="flex flex-col w-full">
+        <div class="base-text-color-gray">Privilege Type (TH) *</div>
+        <app-demoproj-input formControlName="brand_category_name_thai">
+          <span
+            error
+            *ngIf="brandCategoryNameThaiControl?.hasError('required')"
+          >
+            Please input privilege type (TH)
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <div class="flex flex-col w-full">
+        <div class="base-text-color-gray">Privilege Type (EN) *</div>
+        <app-demoproj-input formControlName="brand_category_name_english">
+          <span
+            error
+            *ngIf="brandCategoryNameEnglishControl?.hasError('required')"
+          >
+            Please input privilege type (EN)
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <div class="flex flex-col w-full">
+        <div class="base-text-color-gray">Display Order *</div>
+        <app-demoproj-input formControlName="display_order" [inputType]="'number'">
+          <span error *ngIf="displayOrderControl?.hasError('required')">
+            Please input display order
+          </span>
+          <span error *ngIf="displayOrderControl?.hasError('min')">
+            Display order must be a number greater than 0
+          </span>
+          <span
+            error
+            *ngIf="displayOrderControl?.hasError('displayOrderExists')"
+          >
+            Display order already existed
+          </span>
+        </app-demoproj-input>
+      </div>
+
+      <button
+        mat-button
+        class="base-border base-btn-border-color"
+        [disabled]="createPrivilegeTypeForm.invalid || (createLoading$ | async)"
+        (click)="createPrivilegeType()"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <svg-plus
+            [color]="
+              createPrivilegeTypeForm.invalid || (createLoading$ | async)
+                ? '#98a2b4'
+                : 'black'
+            "
+          ></svg-plus>
+          Add
+        </div>
+      </button>
+    </form>
+
+    <mat-divider></mat-divider>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button
+    mat-button
+    (click)="onCancel()"
+    class="base-border base-btn-border-color"
+  >
+    Cancel
+  </button>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    [disabled]="formMode() !== 'view' || !selectedItem()"
+    (click)="onSubmit()"
+  >
+    <mat-icon>check</mat-icon>
+    Select
+  </button>
+</mat-dialog-actions>

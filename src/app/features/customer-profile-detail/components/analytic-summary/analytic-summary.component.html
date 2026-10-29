@@ -1,0 +1,155 @@
+<div class="grid grid-cols-[repeat(auto-fill,_21rem)] gap-[1rem]">
+  <ng-container *ngIf="analyticSummary$ | async as analyticSummary">
+    <mat-card class="card" appearance="outlined">
+      <div class="flex items-center gap-[1rem]">
+        <div
+          class="w-[2rem] h-[2rem] rounded-[0.5rem] base-border flex items-center justify-center"
+        >
+          <svg-person class="h-[1rem]"></svg-person>
+        </div>
+        <span class="title">User Type</span>
+      </div>
+      <div class="content h-full flex flex-col justify-between">
+        <h1 class="demoproj-red-color">
+          {{ analyticSummary.customerPolicy?.customer_type }}
+        </h1>
+        <div class="flex flex-wrap gap-[0.5rem]">
+          @for (type of analyticSummary.customerPolicy?.policy_types; track
+          $index) {
+          <mat-chip-row class="chips green" *ngIf="type === policyType.LIFE">
+            <div
+              class="flex items-center gap-[0.5rem] justify-center text-[#10973E]"
+            >
+              <svg-verified-user color="#10973E"></svg-verified-user>
+              Life
+            </div>
+          </mat-chip-row>
+
+          <mat-chip-row
+            class="chips yellow"
+            *ngIf="
+              type === policyType.NON_LIFE || type === policyType.Unit_Link
+            "
+          >
+            <div
+              class="flex items-center gap-[0.5rem] justify-center text-[#F5B547]"
+            >
+              <svg-verified-user color="#F5B547"></svg-verified-user>
+              {{ type }}
+            </div>
+          </mat-chip-row>
+
+          <mat-chip-row class="chips blue" *ngIf="type === policyType.GROUP">
+            <div
+              class="flex items-center gap-[0.5rem] justify-center text-[#1671D9]"
+            >
+              <svg-group color="#1671D9"></svg-group>
+              Group
+            </div>
+          </mat-chip-row>
+          }
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="card" appearance="outlined">
+      <div class="flex items-center gap-[1rem]">
+        <div
+          class="w-[2rem] h-[2rem] rounded-[0.5rem] base-border flex items-center justify-center"
+          [style.background]="analyticSummary.customerTier?.tier_color"
+        >
+          <svg-star
+            [color]="
+              analyticSummary.customerTier?.tier_color ? 'white' : 'black'
+            "
+            class="h-[1rem]"
+          ></svg-star>
+        </div>
+        <span class="title">Customer Tier</span>
+      </div>
+      <div class="content h-full flex flex-col justify-between capitalize">
+        <h1
+          [style.color]="analyticSummary.customerTier?.tier_color || '#000000'"
+        >
+          {{ analyticSummary.customerTier?.tier_name_thai || 'N/A' }}
+        </h1>
+      </div>
+    </mat-card>
+
+    <mat-card class="card" appearance="outlined">
+      <div class="flex items-center gap-[1rem]">
+        <div
+          class="w-[2rem] h-[2rem] rounded-[0.5rem] base-border flex items-center justify-center"
+        >
+          <img src="3d.svg" alt="3d.svg" loading="lazy" />
+        </div>
+        <span class="title">Total Point</span>
+      </div>
+      <div class="content h-full flex flex-col justify-between">
+        <h1>
+          {{
+            analyticSummary.customerPoint?.total_points || 0 | number : '1.0-2'
+          }}
+        </h1>
+        <div
+          class="demoproj-red-color"
+          *ngIf="analyticSummary.customerPoint?.expiring_total_points"
+        >
+          {{
+            analyticSummary.customerPoint?.expiring_total_points
+              | number : '1.0-2'
+          }}
+          points will expire on
+          {{
+            analyticSummary.customerPoint?.expiring_date | date : 'dd/MM/yyyy'
+          }}
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="card" appearance="outlined">
+      <div class="flex items-center gap-[1rem]">
+        <div
+          class="w-[2rem] h-[2rem] rounded-[0.5rem] base-border flex items-center justify-center"
+        >
+          <svg-file-cloud></svg-file-cloud>
+        </div>
+        <span class="title">Total Active Policy</span>
+      </div>
+      <div class="grid grid-cols-[1fr_1fr]">
+        <div>
+          <h1 class="text-[#10973E]">
+            {{
+              analyticSummary.customerPolicy?.individual_cnt || 0
+                | number : '1.0-2'
+            }}
+          </h1>
+          <mat-chip-row class="chips green">
+            <div
+              class="flex items-center gap-[0.5rem] justify-center text-[#10973E]"
+            >
+              <svg-verified-user color="#10973E"></svg-verified-user>
+              Individual
+            </div>
+          </mat-chip-row>
+        </div>
+
+        <div>
+          <h1 class="text-[#1671D9]">
+            {{
+              analyticSummary.customerPolicy?.group_cnt || 0 | number : '1.0-2'
+            }}
+          </h1>
+          <mat-chip-row class="chips blue">
+            <div
+              class="flex items-center gap-[0.5rem] justify-center text-[#1671D9]"
+            >
+              <svg-group color="#1671D9"></svg-group>
+              Group
+            </div>
+          </mat-chip-row>
+        </div>
+      </div>
+    </mat-card>
+  </ng-container>
+</div>

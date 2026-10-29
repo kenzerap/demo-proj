@@ -1,0 +1,24 @@
+<h2 mat-dialog-title class="dialog-title">Preview Image Receipt</h2>
+<mat-dialog-content class="mat-typography dialog-content">
+  <p-carousel
+    [value]="(eClaimImageUrls$() | async) || []"
+    [numVisible]="1"
+    [numScroll]="1"
+    [circular]="true"
+    [showIndicators]="false"
+    [showNavigators]="((eClaimImageUrls$() | async) || []).length > 1"
+    class="demoproj-carousel"
+  >
+    <ng-template let-image pTemplate="item">
+      <img
+        [src]="image"
+        [alt]="image"
+        class="w-full h-[35rem] object-contain"
+        loading="lazy"
+      />
+    </ng-template>
+  </p-carousel>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-footer">
+  <button mat-button mat-dialog-close class="demoproj-btn">Close</button>
+</mat-dialog-actions>

@@ -1,0 +1,261 @@
+<h2 mat-dialog-title class="demoproj-red-color mb-[1rem]">Upload Point File</h2>
+<mat-dialog-content class="mat-typography dialog-content">
+  <form [formGroup]="uploadPointForm" class="grid gap-[1rem] mb-[2rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Subject *</div>
+      <app-demoproj-input formControlName="subject">
+        <span error *ngIf="subjectControl?.hasError('required')">
+          Please input Subject
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Note *</div>
+      <app-demoproj-input formControlName="note">
+        <span error *ngIf="noteControl?.hasError('required')">
+          Please input Note
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Point Expiry Date *</div>
+      <mat-form-field class="demoproj-input">
+        <input
+          matInput
+          [matDatepicker]="picker1"
+          formControlName="point_expiry_date"
+          [min]="currentDate"
+        />
+        <mat-datepicker-toggle matTextSuffix [for]="picker1">
+          <svg-calendar matDatepickerToggleIcon></svg-calendar>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+        <mat-error *ngIf="pointExpiryDateControl?.hasError('required')">
+          Please input Point Expiry Date
+        </mat-error>
+
+        <mat-error
+          *ngIf="
+            !pointExpiryDateControl?.hasError('required') &&
+            pointExpiryDateControl?.hasError('matDatepickerMin')
+          "
+        >
+          Point Expiry Date must be a future date
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div
+      *ngIf="
+        (loadingValidate$ | async)! || (loadingUploadPoint$ | async)!;
+        else contentTemplate
+      "
+      [loading]="(loadingValidate$ | async)! || (loadingUploadPoint$ | async)!"
+      class="min-h-[3rem]"
+    ></div>
+    <ng-template #contentTemplate>
+      <div
+        class="upload-image"
+        [class.upload-image-error]="isInvalidUploadPoint()"
+        appDragDropUpload
+        (fileDropped)="onFileDropped($event)"
+      >
+        <ng-container *ngIf="!isInvalidUploadPoint()">
+          <div class="cover-image">
+            <svg-cloud-upload></svg-cloud-upload>
+          </div>
+          <div class="text-center">
+            <div class="demoproj-red-color font-semibold mb-[0.5rem]">
+              {{ imageNameUploaded() }}
+            </div>
+
+            <div class="base-text-color-gray">.xlsx .xls</div>
+          </div>
+          <div class="w-full relative">
+            <div class="base-text-color-gray label-divider">OR</div>
+            <mat-divider></mat-divider>
+          </div>
+
+          <input
+            type="file"
+            #uploadFile
+            (change)="onFileSelected($event)"
+            class="hidden"
+            accept=".xlsx,.xls"
+          />
+          <button
+            mat-button
+            class="demoproj-btn mt-[1rem]"
+            type="button"
+            (click)="uploadFile.click()"
+          >
+            Browse Files
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="isInvalidUploadPoint()">
+          <div class="cover-image demoproj-light-red-background">
+            <svg-exclamation-mark [color]="'#c72b29'"></svg-exclamation-mark>
+          </div>
+          <div class="text-center">
+            <div class="font-semibold mb-[0.5rem]">File upload failed.</div>
+
+            <div class="base-text-color-gray">Please check the file again.</div>
+          </div>
+
+          <input
+            type="file"
+            #uploadFile
+            (change)="onFileSelected($event)"
+            class="hidden"
+          />
+          <button
+            mat-button
+            class="demoproj-red-color"
+            type="button"
+            (click)="uploadFile.click()"
+          >
+            <div class="flex items-center justify-center gap-[0.5rem]">
+              <svg-refresh></svg-refresh>
+              Browse Files
+            </div>
+          </button>
+        </ng-container>
+
+        <mat-error
+          *ngIf="
+            excelFileControl?.touched && excelFileControl?.hasError('required')
+          "
+          class="text-[0.75rem] absolute bottom-[0rem]"
+        >
+          Please upload file
+        </mat-error>
+      </div>
+
+      <ng-container *ngIf="isInvalidUploadPoint()">
+        <div>Total Error ({{ countTotalError() }})</div>
+
+        <div class="grid gap-[0.5rem]">
+          <div
+            *ngIf="validateUploadPoint()?.gap_rows?.length"
+            class="warning-toast"
+          >
+            <div class="w-full h-full bg-[#F3A218]"></div>
+            <div class="exclamation-icon">
+              <svg-exclamation-mark
+                [width]="9"
+                [height]="8.5"
+                [color]="'#F3A218'"
+              ></svg-exclamation-mark>
+            </div>
+            <div class="my-[0.5rem]">
+              <div class="font-bold">Incorrect value</div>
+              <div class="text-[#6C7585]">
+                There should be no gaps left in
+                <span class="text-[#c72b29]"
+                  >row {{ validateUploadPoint()?.gap_rows?.join(', ') }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="validateUploadPoint()?.invalid_rows?.length"
+            class="warning-toast"
+          >
+            <div class="w-full h-full bg-[#F3A218]"></div>
+            <div class="exclamation-icon">
+              <svg-exclamation-mark
+                [width]="9"
+                [height]="8.5"
+                [color]="'#F3A218'"
+              ></svg-exclamation-mark>
+            </div>
+            <div class="my-[0.5rem]">
+              <div class="font-bold">Incorrect value</div>
+              <div class="text-[#6C7585]">
+                Invalid party id or point or remark from
+                <span class="text-[#c72b29]">
+                  row {{ validateUploadPoint()?.invalid_rows?.join(', ') }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="validateUploadPoint()?.not_found_rows?.length"
+            class="warning-toast"
+          >
+            <div class="w-full h-full bg-[#F3A218]"></div>
+            <div class="exclamation-icon">
+              <svg-exclamation-mark
+                [width]="9"
+                [height]="8.5"
+                [color]="'#F3A218'"
+              ></svg-exclamation-mark>
+            </div>
+            <div class="my-[0.5rem]">
+              <div class="font-bold">Incorrect value</div>
+              <div class="text-[#6C7585]">
+                Not found Party ID in
+                <span class="text-[#c72b29]">
+                  row {{ validateUploadPoint()?.not_found_rows?.join(', ') }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="validateUploadPoint()?.blank_rows?.length"
+            class="warning-toast"
+          >
+            <div class="w-full h-full bg-[#F3A218]"></div>
+            <div class="exclamation-icon">
+              <svg-exclamation-mark
+                [width]="9"
+                [height]="8.5"
+                [color]="'#F3A218'"
+              ></svg-exclamation-mark>
+            </div>
+            <div class="my-[0.5rem]">
+              <div class="font-bold">Incorrect value</div>
+              <div class="text-[#6C7585]">
+                Party ID or Point or remark can't blank in
+                <span class="text-[#c72b29]">
+                  row
+                  {{ validateUploadPoint()?.blank_rows?.join(', ') }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-template>
+  </form>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button
+    mat-button
+    mat-dialog-close
+    class="base-border base-btn-border-color"
+    [disabled]="(loadingValidate$ | async)! || (loadingUploadPoint$ | async)!"
+  >
+    Cancel
+  </button>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    (click)="onSubmit()"
+    [disabled]="
+      uploadPointForm.invalid ||
+      (loadingValidate$ | async)! ||
+      (loadingUploadPoint$ | async)!
+    "
+  >
+    Upload
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,68 @@
+@use 'styles/variables.scss' as *;
+
+.demoproj-paginator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.arrow-button,
+.page-button {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background-color: white;
+  border: 1px solid $base-btn-border-color;
+  border-radius: 0.25rem;
+  min-width: unset;
+}
+
+.arrow-button mat-icon {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-button {
+  min-width: 1.5rem;
+  height: 1.5rem;
+  width: unset;
+  color: $base-color-gray !important;
+}
+
+.page-button.active {
+  background-color: #fdecec;
+  color: black !important;
+  pointer-events: none;
+}
+
+.elipsis-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  min-width: unset;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: $base-color-gray !important;
+  pointer-events: none;
+}
+
+.page-select {
+  width: 3rem;
+  margin-left: 1rem;
+  border-radius: 0.25rem;
+  border-color: $base-btn-border-color;
+  height: 2.25rem;
+  padding-left: 0.2rem;
+  cursor: pointer;
+  color: $base-color-gray;
+
+  &:focus-visible {
+    outline: none;
+  }
+}

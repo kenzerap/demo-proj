@@ -1,0 +1,112 @@
+<mat-card class="p-[1rem]" appearance="outlined">
+  <h3 class="mb-[1rem]">Target Group</h3>
+
+  <form *ngIf="formGroup" [formGroup]="formGroup" class="grid gap-[1rem]">
+    <app-target-group-icon
+      [targetGroupControl]="targetGroupTypeControl"
+    ></app-target-group-icon>
+
+    <mat-divider
+      *ngIf="targetGroupTypeControl.value === targetGroupType.TARGET_GROUP"
+    ></mat-divider>
+
+    <div
+      *ngIf="targetGroupTypeControl.value === targetGroupType.TARGET_GROUP"
+      class="grid gap-[1rem]"
+    >
+      <div class="flex items-center justify-between">
+        <h3>Customer Segmentation & Tier</h3>
+
+        <button
+          mat-button
+          class="base-border base-btn-border-color"
+          [disabled]="!isEditable"
+          (click)="openAddTargetGroupDialog()"
+        >
+          <div class="flex items-center justify-center gap-[0.5rem]">
+            <svg-plus [color]="isEditable ? 'black' : '#98a2b4'"></svg-plus>
+            Add Target Group
+          </div>
+        </button>
+      </div>
+
+      <div>Include people who are in at least one of the following</div>
+
+      <div
+        cdkDropList
+        #includeList="cdkDropList"
+        [cdkDropListConnectedTo]="[excludeList]"
+        [cdkDropListData]="includeGroups()"
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListDisabled]="!isEditable"
+        class="grid gap-[1rem] min-h-[2rem]"
+      >
+        @for (item of includeGroups(); track item) {
+        <div cdkDrag>
+          <div
+            class="p-[1rem] bg-[#F7F9FC] rounded-[0.25rem] grid grid-cols-[auto_1fr_auto] gap-[1rem] items-center justify-between"
+          >
+            <mat-icon
+              cdkDragHandle
+              [class.drag-disabled]="!isEditable"
+              [class.cursor-move]="isEditable"
+              >drag_indicator</mat-icon
+            >
+            {{ item.name }}
+            <mat-icon
+              class="cursor-pointer"
+              (click)="removeItem(item, 'includeGroups')"
+              >close</mat-icon
+            >
+          </div>
+          <div *cdkDragPlaceholder class="drag-item-placeholder"></div>
+        </div>
+        }
+      </div>
+
+      <mat-error
+        *ngIf="
+          (formGroup.touched || formGroup.dirty) && includeGroups().length === 0
+        "
+        class="text-[0.75rem] text-center"
+      >
+        Please select Target Group
+      </mat-error>
+
+      <mat-divider></mat-divider>
+
+      <div>Exclude people who are in at least one of the following</div>
+      <div
+        cdkDropList
+        #excludeList="cdkDropList"
+        [cdkDropListConnectedTo]="[includeList]"
+        [cdkDropListData]="excludeGroups()"
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListDisabled]="!isEditable"
+        class="grid gap-[1rem] min-h-[2rem]"
+      >
+        @for (item of excludeGroups(); track item) {
+        <div cdkDrag>
+          <div
+            class="p-[1rem] bg-[#F7F9FC] rounded-[0.25rem] grid grid-cols-[auto_1fr_auto] gap-[1rem] items-center justify-between"
+          >
+            <mat-icon
+              cdkDragHandle
+              [class.drag-disabled]="!isEditable"
+              [class.cursor-move]="isEditable"
+              >drag_indicator</mat-icon
+            >
+            {{ item.name }}
+            <mat-icon
+              class="cursor-pointer"
+              (click)="removeItem(item, 'excludeGroups')"
+              >close</mat-icon
+            >
+          </div>
+          <div *cdkDragPlaceholder class="drag-item-placeholder"></div>
+        </div>
+        }
+      </div>
+    </div>
+  </form>
+</mat-card>

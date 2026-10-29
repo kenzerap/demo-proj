@@ -1,0 +1,41 @@
+.demoproj-carousel {
+  .p-element {
+    margin: 0;
+  }
+
+  &.demoproj-carousel-inside-navigators {
+    .p-carousel-prev,
+    .p-carousel-next {
+      position: absolute;
+      z-index: 1;
+    }
+    .p-carousel-prev {
+      left: 0;
+    }
+
+    .p-carousel-next {
+      right: 0;
+    }
+  }
+}
+
+.demoproj-hidden-timepicker {
+  position: absolute !important;
+  height: calc(3.5rem - 2px); // 2px is border width
+  .p-datepicker-input-icon-container {
+    z-index: 0;
+  }
+}
+
+.demoproj-editor {
+  .p-editor-toolbar {
+    display: none;
+  }
+
+  .p-editor-content {
+    border-top: 1px solid #e5e7eb !important;
+    border-top-left-radius: 6px !important;
+    border-top-right-radius: 6px !important;
+    padding-top: 8px !important;
+  }
+}

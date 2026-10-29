@@ -1,0 +1,15 @@
+.file-download {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  min-width: unset;
+}
+
+.btn-download {
+  border: 1px solid #cb1a14 !important;
+}

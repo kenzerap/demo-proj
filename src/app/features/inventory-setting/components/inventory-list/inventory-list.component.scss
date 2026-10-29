@@ -1,0 +1,8 @@
+@use 'styles/variables.scss' as *;
+
+.status-icon {
+  background-color: $base-color-green;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+}

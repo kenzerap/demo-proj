@@ -1,0 +1,39 @@
+<nav aria-label="breadcrumb" class="flex items-center gap-[3rem]">
+  <div class="flex items-center gap-[1rem]" *ngIf="breadcrumbs().length > 1">
+    <div class="icon-back base-border" (click)="goBack()">
+      <svg-btn-back></svg-btn-back>
+    </div>
+
+    <div class="base-text-color-gray">Go back</div>
+  </div>
+  <ol class="breadcrumb">
+    <li
+      class="breadcrumb-item"
+      *ngFor="let breadcrumb of breadcrumbs(); let last = last"
+      [class.active]="last"
+      [attr.aria-current]="last ? 'page' : null"
+    >
+      <ng-container *ngIf="!last">
+        <div class="flex items-center">
+          <a [routerLink]="breadcrumb.url" class="base-text-color-gray">{{
+            breadcrumb.title
+          }}</a>
+          <mat-icon class="base-text-color-gray ml-[0.5rem]"
+            >keyboard_arrow_right</mat-icon
+          >
+        </div>
+      </ng-container>
+      <ng-container *ngIf="last">
+        <div [class.normal-text]="breadcrumbs().length > 1">
+          <div>{{ breadcrumb.title }}</div>
+          <div
+            *ngIf="breadcrumb.subTitle"
+            class="text-[#A2A1A8] font-light mt-[0.5rem]"
+          >
+            {{ breadcrumb.subTitle }}
+          </div>
+        </div>
+      </ng-container>
+    </li>
+  </ol>
+</nav>

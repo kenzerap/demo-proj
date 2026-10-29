@@ -1,0 +1,9 @@
+<app-demoproj-table
+  [data]="(policyDetail$() | async)!"
+  [tableColumns]="tableColumns()"
+  [isPaginatorEnabled]="false"
+  [tableStyle]="{
+    'width.rem': policy.system_id !== policyTypeCode.GROUP ? 162 : 65
+  }"
+  [loading]="(loading$() | async)!"
+></app-demoproj-table>

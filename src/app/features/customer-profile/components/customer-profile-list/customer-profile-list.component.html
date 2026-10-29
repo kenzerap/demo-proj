@@ -1,0 +1,13 @@
+<div class="grid grid-rows-[auto_1fr] gap-4">
+  <app-customer-profile-filter></app-customer-profile-filter>
+  <app-demoproj-table
+    [data]="(customerProfiles$ | async)!"
+    [tableColumns]="tableColumns()"
+    [pagination]="pagination$ | async"
+    [loading]="(loading$ | async)!"
+    [searchHighlightText]="(selectCommonSearch$ | async)!"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (rowClick)="selectCustomer($event)"
+  ></app-demoproj-table>
+</div>

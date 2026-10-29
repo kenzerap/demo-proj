@@ -1,0 +1,8 @@
+@use 'styles/variables.scss' as *;
+
+.item-layout:hover,
+.item-layout-selected {
+  color: $base-color-red;
+  filter: brightness(0) saturate(100%) invert(27%) sepia(15%) saturate(4802%)
+    hue-rotate(326deg) brightness(109%) contrast(115%);
+}

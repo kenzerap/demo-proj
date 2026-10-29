@@ -1,0 +1,54 @@
+<div class="demoproj-paginator">
+  <div class="font-bold">
+    Page {{ displayedCurrentPage }} of {{ totalPages || 0 }}
+  </div>
+
+  <div class="flex items-center gap-[0.5rem]">
+    <!-- Previous Button -->
+    <button
+      mat-button
+      (click)="previousPage()"
+      [disabled]="displayedCurrentPage === 1"
+      class="arrow-button"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <!-- Page Numbers -->
+    @if (totalPages > 0) {
+    <button
+      *ngFor="let page of visiblePages"
+      [ngClass]="page !== '...' ? 'page-button' : 'elipsis-btn'"
+      mat-button
+      [class.active]="page === displayedCurrentPage"
+      (click)="changePage(page)"
+    >
+      {{ page }}
+    </button>
+    }
+
+    <!-- Next Button -->
+    <button
+      mat-button
+      class="arrow-button"
+      (click)="nextPage()"
+      [disabled]="(displayedCurrentPage === totalPages) || !totalPages"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <!-- Records Per Page -->
+  <div class="flex items-center base-text-color-gray">
+    <span>Records/page</span>
+    <select
+      class="page-select"
+      [(ngModel)]="pageSize"
+      (change)="onPageSizeChange()"
+    >
+      <option *ngFor="let size of pageSizeOptions" [value]="size">
+        {{ size }}
+      </option>
+    </select>
+  </div>
+</div>

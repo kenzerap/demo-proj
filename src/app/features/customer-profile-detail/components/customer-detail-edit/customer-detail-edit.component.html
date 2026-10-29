@@ -1,0 +1,218 @@
+<form [formGroup]="customerForm" class="flex flex-col gap-[1rem]">
+  <div
+    class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem] mb-[1rem]"
+  >
+    <svg-users color="#98a2b4"></svg-users>
+    <div class="flex flex-col gap-[0.5rem]">
+      <div class="base-text-color-gray">Party ID</div>
+      <div>{{ customerDetail.party_id }}</div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]">
+    <svg-users color="#98a2b4"></svg-users>
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">First name *</div>
+      <mat-form-field class="demoproj-input w-full">
+        <input
+          matInput
+          formControlName="first_name"
+          (change)="trimSpaces('first_name')"
+        />
+        <mat-error *ngIf="firstNameControl?.hasError('required')">
+          Please input first name
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]">
+    <svg-users color="#98a2b4"></svg-users>
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Last name *</div>
+      <mat-form-field class="demoproj-input w-full">
+        <input
+          matInput
+          formControlName="last_name"
+          (change)="trimSpaces('last_name')"
+        />
+        <mat-error *ngIf="lastNameControl?.hasError('required')">
+          Please input last name
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div
+    class="grid grid-cols-[auto_8rem_1fr] items-center justify-center gap-[1rem]"
+  >
+    <svg-verified-user color="#98a2b4"></svg-verified-user>
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">ID Type *</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="security_type"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getSecurityTypeCode(selectedSecurityTypeControl?.value)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of securityTypes; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">National ID/Passport ID *</div>
+
+      <mat-form-field class="demoproj-input w-full">
+        <input
+          matInput
+          formControlName="security_no"
+          (change)="trimSpaces('security_no')"
+        />
+        <mat-error *ngIf="securityNoControl?.hasError('required')">
+          Please input National ID/Passport ID
+        </mat-error>
+
+        <mat-error
+          *ngIf="
+            securityNoControl?.hasError('invalidThaiIdCard') &&
+            !securityNoControl?.hasError('required')
+          "
+        >
+          ID card number is invalid.
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]">
+    <svg-phone color="#98a2b4"></svg-phone>
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Phone Number *</div>
+
+      <div class="grid grid-cols-[3.5rem_1fr] gap-[0.5rem]">
+        <mat-form-field class="demoproj-select">
+          <mat-select
+            [formControl]="selectedMobileCodeControl"
+            [hideSingleSelectionIndicator]="true"
+          >
+            <mat-select-trigger>
+              <span>{{ selectedMobileCodeControl.value }}</span>
+              <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+            </mat-select-trigger>
+            @for (item of mobileCodes; track item) {
+            <mat-option [value]="item.value">{{ item.value }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="demoproj-input w-full">
+          <input
+            matInput
+            formControlName="mobile_no"
+            [maxlength]="10"
+            (change)="trimSpaces('mobile_no')"
+          />
+          <mat-error *ngIf="mobileNoControl?.hasError('required')">
+            Please input phone number
+          </mat-error>
+          <mat-error
+            *ngIf="
+              mobileNoControl?.hasError('pattern') &&
+              !mobileNoControl?.hasError('required')
+            "
+          >
+            Invalid phone number
+          </mat-error>
+          <mat-error
+            *ngIf="
+              mobileNoControl?.hasError('maxLength') &&
+              !mobileNoControl?.hasError('required') &&
+              !mobileNoControl?.hasError('pattern')
+            "
+          >
+            Mobile number must contain 10 digits
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]">
+    <svg-users color="#98a2b4"></svg-users>
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Email *</div>
+      <mat-form-field class="demoproj-input w-full">
+        <input
+          matInput
+          formControlName="email"
+          (change)="trimSpaces('email')"
+        />
+        <mat-error *ngIf="emailControl?.hasError('required')">
+          Please input email
+        </mat-error>
+        <mat-error
+          *ngIf="
+            emailControl?.hasError('email') &&
+            !emailControl?.hasError('required')
+          "
+        >
+          Invalid email
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div
+    class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem] mb-[1rem]"
+  >
+    <svg-compass color="#98a2b4"></svg-compass>
+    <div class="flex flex-col gap-[0.5rem]">
+      <div class="base-text-color-gray">Address</div>
+      <div>
+        {{ getCustomerAddress(customerDetail) }}
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[auto_1fr] items-center justify-center gap-[1rem]">
+    <svg-birthday-cake color="#98a2b4"></svg-birthday-cake>
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Birthdate *</div>
+      <mat-form-field class="demoproj-input">
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="birth_date"
+          [max]="currentDate"
+        />
+        <mat-datepicker-toggle matTextSuffix [for]="picker">
+          <svg-calendar matDatepickerToggleIcon></svg-calendar>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="birthDateControl?.hasError('required')">
+          Please input birthdate
+        </mat-error>
+
+        <mat-error
+          *ngIf="
+            !birthDateControl?.hasError('required') &&
+            (birthDateControl?.hasError('matDatepickerMax') ||
+              birthDateControl?.hasError('matDatepickerParse'))
+          "
+        >
+          Invalid birthdate
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+<mat-divider></mat-divider>

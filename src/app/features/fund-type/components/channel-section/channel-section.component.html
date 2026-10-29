@@ -1,0 +1,94 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <h3>Channel</h3>
+
+  <div
+    formArrayName="channels"
+    class="grid gap-[1rem]"
+    *ngIf="channelOptions$ | async as channelOptions"
+  >
+    <div
+      *ngFor="let channelFormGroup of channelsFormArray.controls; let i = index"
+      [formGroupName]="i"
+      class="condition-row"
+    >
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Channel</div>
+        <mat-form-field class="demoproj-select demoproj-form-field-gray">
+          <mat-select
+            formControlName="channel"
+            [hideSingleSelectionIndicator]="true"
+          >
+            <mat-select-trigger>
+              <span>{{
+                getDropdownValue(
+                  channelFormGroup.get('channel')?.value,
+                  channelOptions
+                )
+              }}</span>
+              <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+            </mat-select-trigger>
+            @for (item of channelOptions; track item) {
+              <mat-option
+                [value]="item.code"
+                [disabled]="disableItemDropdown(item.code)"
+                >{{ item.value }}</mat-option
+              >
+            }
+          </mat-select>
+          <mat-error
+            *ngIf="channelFormGroup.get('channel')?.hasError('required')"
+          >
+            Please select Channel
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-slide-toggle
+        class="demoproj-slide-toggle"
+        hideIcon="true"
+        formControlName="visible"
+      >
+        Visible
+      </mat-slide-toggle>
+
+      <mat-icon
+        class="cursor-pointer"
+        [class.delete-disabled]="formMode === 'view'"
+        (click)="removeChannel(i)"
+        >close</mat-icon
+      >
+    </div>
+  </div>
+
+  <mat-error
+    class="text-[0.75rem] text-center"
+    *ngIf="channelsFormArray.controls.length === 0"
+  >
+    Please add a channel
+  </mat-error>
+
+  <div class="flex items-center justify-end">
+    <button
+      mat-button
+      class="base-border"
+      [disabled]="formMode === 'view' || isAllChannelsSelected()"
+      (click)="addChannel()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus
+          [color]="
+            formMode === 'view' || isAllChannelsSelected()
+              ? '#98a2b4'
+              : 'black'
+          "
+        ></svg-plus>
+        Add channel
+      </div>
+    </button>
+  </div>
+</mat-card>

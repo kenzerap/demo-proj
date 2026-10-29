@@ -1,0 +1,30 @@
+<div class="grid grid-cols-[auto_1fr] gap-[1.5rem]">
+  <app-customer-detail-view></app-customer-detail-view>
+  <div
+    class="grid gap-[2rem]"
+    [ngClass]="
+      (customerType$ | async) !== customerTypeCode.PROSPECT
+        ? 'grid-rows-[auto_auto_auto_auto]'
+        : 'grid-rows-[auto_auto_1fr]'
+    "
+  >
+    <app-analytic-summary></app-analytic-summary>
+    <app-client-info-svoc [partyId]="partyId()"></app-client-info-svoc>
+    <ng-container
+      *ngIf="(customerType$ | async) !== customerTypeCode.PROSPECT; else noData"
+    >
+      <app-policy-list></app-policy-list>
+      <app-family-policy-list></app-family-policy-list>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #noData>
+  <div class="flex justify-center items-center">
+    <app-no-data
+      [imgUrl]="noDataMessage.imgUrl"
+      [title]="noDataMessage.title"
+      [subTitle]="noDataMessage.subTitle"
+    ></app-no-data>
+  </div>
+</ng-template>

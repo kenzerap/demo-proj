@@ -1,0 +1,629 @@
+<div class="segment-group-condition-section-container relative">
+  <h3 class="mb-[1rem]">The Segment must meet the following Condition</h3>
+
+  <form *ngIf="formGroup" [formGroup]="formGroup" class="grid gap-[1rem]">
+    <div formArrayName="segment_groups">
+      <div
+        class="relative"
+        [attr.id]="'segment_group' + i"
+        *ngFor="let segment_group of segment_groups.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <div class="flex flex-start mt-[1rem]" *ngIf="i > 0">
+          <button
+            mat-button
+            class="demoproj-btn mb-[1rem]"
+            [disabled]="formMode === 'view'"
+          >
+            <div class="flex items-center justify-center gap-[0.5rem]">OR</div>
+          </button>
+        </div>
+        <mat-card
+          class="mb-[1rem] p-[1rem] ml-[1rem] active-segment-section"
+          appearance="outlined"
+        >
+          <div class="segment-group-item-container">
+            <h3 class="mb-[1rem]" *ngIf="i === 0">Group {{ i + 1 }}</h3>
+            <div *ngIf="i > 0" class="flex justify-between align-center">
+              <h3 class="mb-[1rem]">Group {{ i + 1 }}</h3>
+
+              <button
+                mat-button
+                type="button"
+                class="action-btn lex items-start justify-center gap-[0.5rem]"
+                (click)="onDeleteSegmentGroup(i)"
+                [class.action-btn-disabled]="formMode === 'view'"
+              >
+                <svg-delete
+                  [color]="formMode === 'view' ? '#98a2b4' : '#c72b29'"
+                ></svg-delete>
+              </button>
+            </div>
+            <div>
+              <div formArrayName="segment_rules">
+                <div
+                  *ngFor="
+                    let segment_rule of segmentRuleControls(i);
+                    let j = index
+                  "
+                  [formGroupName]="j"
+                >
+                  <div
+                    class="segment-rule-divider relative mt-[2rem] mb-[2rem]"
+                    *ngIf="j > 0"
+                  >
+                    <mat-divider></mat-divider>
+                    <div
+                      class="absolute top-[-1.6rem] left-1/2 transform -translate-x-1/2 p-[0.5rem]"
+                    >
+                      <button
+                        mat-button
+                        class="demoproj-btn mb-[1rem]"
+                        [disabled]="formMode === 'view'"
+                      >
+                        <div
+                          class="flex items-center justify-center gap-[0.5rem]"
+                        >
+                          AND
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div
+                    class="segment-rule-item flex justify-between gap-[1rem] mt-[1rem] mb-[1rem] p-[1rem] demoproj-form-field-gray"
+                  >
+                    <div class="flex flex-row gap-[1rem] w-full">
+                      <div class="flex flex-col w-full">
+                        <div class="base-text-color-gray">Select Attribute</div>
+
+                        <mat-form-field class="demoproj-select demoproj-form-field-gray">
+                          <mat-select
+                            formControlName="attribute"
+                            [hideSingleSelectionIndicator]="true"
+                            (valueChange)="onAttributeChange(i, j, $event)"
+                          >
+                            <mat-select-trigger>
+                              <span>{{
+                                getDropdownValue(
+                                  segmentAttributeControl(i, j).value,
+                                  selectAttributeOptions
+                                )
+                              }}</span>
+                              <mat-icon class="absolute right-0"
+                                >keyboard_arrow_down</mat-icon
+                              >
+                            </mat-select-trigger>
+                            @for (type of selectAttributeOptions; track type) {
+                              <mat-option [value]="type.code" [disabled]="isDisablePartyId(type.code, i)">{{
+                                type.value
+                              }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div
+                        class="flex flex-col w-full"
+                        *ngIf="
+                          segmentAttributeControl(i, j).value ===
+                          CustomerSegmentRuleAttribute.PARTY_ID
+                        "
+                      >
+                        <div class="base-text-color-gray">Set segmentation</div>
+
+                        <mat-form-field class="demoproj-select">
+                          <mat-select
+                            formControlName="segmentation_source"
+                            [hideSingleSelectionIndicator]="true"
+                            (valueChange)="onSegmentationSourceChange(i, j)"
+                          >
+                            <mat-select-trigger>
+                              <span>{{
+                                getDropdownValue(
+                                  segmentSegmentationSourceControl(i, j).value,
+                                  selectSegmentationSourceValuesOptions
+                                )
+                              }}</span>
+                              <mat-icon class="absolute right-0"
+                                >keyboard_arrow_down</mat-icon
+                              >
+                            </mat-select-trigger>
+                            @for (
+                              item of selectSegmentationSourceValuesOptions;
+                              track item.code
+                            ) {
+                              <mat-option [value]="item.code">{{
+                                item.value
+                              }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="flex flex-col w-full">
+                        <div class="base-text-color-gray">
+                          Select a Condition
+                        </div>
+
+                        <mat-form-field class="demoproj-select">
+                          <mat-select
+                            formControlName="rule_expression"
+                            [hideSingleSelectionIndicator]="true"
+                          >
+                            <mat-select-trigger>
+                              <span>{{
+                                getDropdownValue(
+                                  segmentRuleExpressionControl(i, j).value,
+                                  getSegmentRuleExpressionOptions(
+                                    segmentAttributeControl(i, j).value
+                                  )
+                                )
+                              }}</span>
+                              <mat-icon class="absolute right-0"
+                                >keyboard_arrow_down</mat-icon
+                              >
+                            </mat-select-trigger>
+                            @for (
+                              type of getSegmentRuleExpressionOptions(
+                                segmentAttributeControl(i, j).value
+                              );
+                              track type.code
+                            ) {
+                              <mat-option [value]="type.code">{{
+                                type.value
+                              }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div
+                        class="flex flex-col w-full"
+                        *ngIf="
+                          segmentAttributeControl(i, j).value ===
+                          CustomerSegmentRuleAttribute.CUSTOMER_TYPE
+                        "
+                      >
+                        <div class="base-text-color-gray">Value</div>
+
+                        <mat-form-field class="demoproj-select">
+                          <mat-select
+                            formControlName="rule_value"
+                            [hideSingleSelectionIndicator]="true"
+                          >
+                            <mat-select-trigger>
+                              <span>{{
+                                getDropdownValue(
+                                  segmentValueControl(i, j).value,
+                                  segmentCustomerTypeValuesOptions
+                                )
+                              }}</span>
+                              <mat-icon class="absolute right-0"
+                                >keyboard_arrow_down</mat-icon
+                              >
+                            </mat-select-trigger>
+                            @for (
+                              type of segmentCustomerTypeValuesOptions;
+                              track type
+                            ) {
+                              <mat-option [value]="type.code">{{
+                                type.value
+                              }}</mat-option>
+                            }
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              segmentValueControl(i, j).hasError('required')
+                            "
+                          >
+                            Please select value
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <div
+                        class="flex flex-col w-full"
+                        *ngIf="
+                          segmentAttributeControl(i, j).value ===
+                          CustomerSegmentRuleAttribute.IS_BLOCK
+                        "
+                      >
+                        <div class="base-text-color-gray">Value</div>
+
+                        <mat-form-field class="demoproj-select">
+                          <mat-select
+                            formControlName="rule_value"
+                            [hideSingleSelectionIndicator]="true"
+                          >
+                            <mat-select-trigger>
+                              <span>{{
+                                getDropdownValue(
+                                  segmentValueControl(i, j).value,
+                                  segmentIsBlockValuesOptions
+                                )
+                              }}</span>
+                              <mat-icon class="absolute right-0"
+                                >keyboard_arrow_down</mat-icon
+                              >
+                            </mat-select-trigger>
+                            @for (
+                              type of segmentIsBlockValuesOptions;
+                              track type
+                            ) {
+                              <mat-option [value]="type.code">{{
+                                type.value
+                              }}</mat-option>
+                            }
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              segmentValueControl(i, j).hasError('required')
+                            "
+                          >
+                            Please select privilege
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <div
+                        class="flex flex-col w-full"
+                        *ngIf="
+                          segmentAttributeControl(i, j).value ===
+                          CustomerSegmentRuleAttribute.IS_FRAUD
+                        "
+                      >
+                        <div class="base-text-color-gray">Value</div>
+
+                        <mat-form-field class="demoproj-select">
+                          <mat-select
+                            formControlName="rule_value"
+                            [hideSingleSelectionIndicator]="true"
+                          >
+                            <mat-select-trigger>
+                              <span>{{
+                                getDropdownValue(
+                                  segmentValueControl(i, j).value,
+                                  segmentIsFraudValuesOptions
+                                )
+                              }}</span>
+                              <mat-icon class="absolute right-0"
+                                >keyboard_arrow_down</mat-icon
+                              >
+                            </mat-select-trigger>
+                            @for (
+                              type of segmentIsFraudValuesOptions;
+                              track type
+                            ) {
+                              <mat-option [value]="type.code">{{
+                                type.value
+                              }}</mat-option>
+                            }
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              segmentValueControl(i, j).hasError('required')
+                            "
+                          >
+                            Please select privilege
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <div
+                        class="flex flex-col w-full"
+                        *ngIf="
+                          segmentAttributeControl(i, j).value ===
+                          CustomerSegmentRuleAttribute.PRODUCT_TYPE
+                        "
+                      >
+                        <div class="base-text-color-gray">Value</div>
+
+                        <mat-form-field class="demoproj-select">
+                          <mat-select
+                            formControlName="rule_value"
+                            [hideSingleSelectionIndicator]="true"
+                          >
+                            <mat-select-trigger
+                              *ngIf="((productTypes$ | async)?.length || 0) > 0"
+                            >
+                              <span>{{
+                                getDropdownValue(
+                                  segmentValueControl(i, j).value,
+                                  productTypeOptions
+                                )
+                              }}</span>
+                              <mat-icon class="absolute right-0"
+                                >keyboard_arrow_down</mat-icon
+                              >
+                            </mat-select-trigger>
+                            @for (type of productTypeOptions; track type) {
+                              <mat-option [value]="type.code">{{
+                                type.value
+                              }}</mat-option>
+                            }
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              segmentValueControl(i, j).hasError('required')
+                            "
+                          >
+                            Please select product type
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <div
+                        class="flex flex-col w-full"
+                        *ngIf="
+                          segmentAttributeControl(i, j).value ===
+                          CustomerSegmentRuleAttribute.CHANNEL_DESC
+                        "
+                      >
+                        <div class="base-text-color-gray">Value</div>
+                        <app-demoproj-autocomplete-dropdown
+                          formControlName="rule_value"
+                          [formFieldGray]="true"
+                          [nonGroupOptions]="policyChannelOptions"
+                        >
+                          <span
+                            error
+                            *ngIf="
+                              segmentValueControl(i, j).hasError('required')
+                            "
+                          >
+                            Please select value
+                          </span>
+                        </app-demoproj-autocomplete-dropdown>
+                      </div>
+
+                      <div
+                        class="flex flex-col w-full"
+                        *ngIf="
+                          segmentAttributeControl(i, j).value ===
+                            CustomerSegmentRuleAttribute.PRODUCT_TYPE ||
+                          segmentAttributeControl(i, j).value ===
+                            CustomerSegmentRuleAttribute.CHANNEL_DESC
+                        "
+                      >
+                        <div class="base-text-color-gray">Active</div>
+                        <mat-form-field class="demoproj-input">
+                          <mat-date-range-input [rangePicker]="picker">
+                            <input
+                              matStartDate
+                              placeholder="Start date"
+                              formControlName="active_from_date"
+                            />
+                            <input
+                              matEndDate
+                              placeholder="End date"
+                              formControlName="active_to_date"
+                            />
+                          </mat-date-range-input>
+                          <mat-datepicker-toggle matIconSuffix [for]="picker">
+                            <svg-calendar
+                              matDatepickerToggleIcon
+                            ></svg-calendar>
+                          </mat-datepicker-toggle>
+                          <mat-date-range-picker
+                            #picker
+                          ></mat-date-range-picker>
+
+                          <mat-error
+                            *ngIf="
+                              segmentValueControl(i, j).hasError('required')
+                            "
+                          >
+                            Please input date
+                          </mat-error>
+
+                          <mat-error
+                            *ngIf="
+                              !segmentValueControl(i, j).hasError('required') &&
+                              segmentValueControl(i, j).hasError(
+                                'matDatepickerMin'
+                              )
+                            "
+                          >
+                            Start Date Time should be before End Date Time
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <div
+                        class="flex flex-col w-full"
+                        *ngIf="
+                          segmentAttributeControl(i, j).value ===
+                          CustomerSegmentRuleAttribute.PRODUCT_NAME
+                        "
+                      >
+                        <div class="base-text-color-gray">Value</div>
+
+                        <app-demoproj-autocomplete-dropdown
+                          formControlName="rule_value"
+                          [formFieldGray]="true"
+                          [nonGroupOptions]="(productNameOptions$ | async)!"
+                        >
+                          <span
+                            error
+                            *ngIf="
+                              segmentValueControl(i, j).hasError('required')
+                            "
+                          >
+                            Please select value
+                          </span>
+                        </app-demoproj-autocomplete-dropdown>
+                      </div>
+
+                      <div
+                        class="flex flex-col w-full"
+                        *ngIf="
+                          segmentAttributeControl(i, j).value ===
+                            CustomerSegmentRuleAttribute.PARTY_ID &&
+                          segmentSegmentationSourceControl(i, j).value ===
+                            segmentationSourceCode.MANUAL
+                        "
+                      >
+                        <div class="base-text-color-gray">Value</div>
+
+                        <app-demoproj-input
+                          formControlName="rule_value"
+                          [formFieldGray]="true"
+                          [maxLength]="null"
+                        >
+                          <span
+                            error
+                            *ngIf="
+                              segmentValueControl(i, j).hasError('required')
+                            "
+                          >
+                            Please input Value
+                          </span>
+                        </app-demoproj-input>
+                      </div>
+                    </div>
+
+                    <div *ngIf="j > 0" class="flex justify-end">
+                      <div
+                        class="flex items-start justify-center gap-[0.5rem]"
+                        (click)="onDeleteSegmentRule(i, j)"
+                        [class.delete-disabled]="formMode === 'view'"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    *ngIf="
+                      segmentAttributeControl(i, j).value ===
+                        CustomerSegmentRuleAttribute.PARTY_ID &&
+                      segmentSegmentationSourceControl(i, j).value ===
+                        segmentationSourceCode.UPLOAD
+                    "
+                    class="grid gap-[1rem]"
+                  >
+                    <div class="flex items-center justify-end">
+                      <button
+                        mat-button
+                        class="demoproj-btn"
+                        [disabled]="formMode === 'view'"
+                        (click)="openUploadFileDialog(i, j)"
+                      >
+                        <div
+                          class="flex items-center justify-center gap-[0.5rem]"
+                        >
+                          <svg-plus></svg-plus>
+                          Upload File
+                        </div>
+                      </button>
+                    </div>
+                    <app-demoproj-table
+                      [data]="getSegmentPartyIdFileList(i, j)"
+                      [tableColumns]="tableColumns()"
+                      [noDataMessage]="'No partyId file set'"
+                      [isPaginatorEnabled]="false"
+                    >
+                      <ng-template
+                        #customColumn
+                        let-columnCode="columnCode"
+                        let-rowData="rowData"
+                      >
+                        <ng-container [ngSwitch]="columnCode">
+                          <ng-container *ngSwitchCase="'actions'">
+                            <button
+                              mat-button
+                              type="button"
+                              class="action-file-btn"
+                              (click)="downloadPartyIdFile(rowData)"
+                            >
+                              <svg-btn-download
+                                [color]="'#c72b29'"
+                              ></svg-btn-download>
+                            </button>
+
+                            <button
+                              mat-button
+                              type="button"
+                              class="action-file-btn"
+                              [disabled]="formMode === 'view'"
+                              (click)="deletePartyIdFile(rowData, i, j)"
+                            >
+                              <svg-delete
+                                [color]="
+                                  formMode === 'view' ? '#98a2b4' : '#c72b29'
+                                "
+                              ></svg-delete>
+                            </button>
+                          </ng-container>
+
+                          <ng-container *ngSwitchDefault></ng-container>
+                        </ng-container>
+                      </ng-template>
+                    </app-demoproj-table>
+                  </div>
+
+                  <div
+                    *ngIf="j === segmentRuleControls(i).length - 1"
+                    class="flex justify-end mt-[1rem]"
+                  >
+                    <button
+                      mat-button
+                      class="base-border base-btn-border-color"
+                      (click)="addNewSegmentRule(i)"
+                      [disabled]="formMode === 'view'"
+                    >
+                      <div
+                        class="flex items-center justify-center gap-[0.5rem]"
+                      >
+                        <svg-plus
+                          [color]="formMode === 'view' ? '#98a2b4' : '#344054'"
+                        ></svg-plus>
+                        Add Condition
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+
+        <div
+          class="horizontal-divider-group-item absolute"
+          *ngIf="i > 0"
+          [ngStyle]="{
+            top: connectGroupItem(i),
+          }"
+        ></div>
+      </div>
+    </div>
+  </form>
+
+  <div class="flex flex-start mt-[1rem] ml-[0.5rem]">
+    <button
+      mat-button
+      class="base-btn-border-color"
+      (click)="addNewSegmentGroup()"
+      [disabled]="formMode === 'view'"
+    >
+      <div
+        [ngClass]="formMode === 'view' ? 'text-[#98a2b4]' : 'text-[#C62B29]'"
+        class="flex items-center justify-center gap-[0.5rem]"
+      >
+        <svg-plus
+          [color]="formMode === 'view' ? '#98a2b4' : '#C62B29'"
+        ></svg-plus>
+        Add Group
+      </div>
+    </button>
+  </div>
+  <div
+    class="horizontal-divider-all-group absolute"
+    [ngStyle]="{
+      height: connectAllGroupConnector(),
+      top: '8rem',
+    }"
+    [class.disabled-horizontal-divider-all-group]="formMode === 'view'"
+  ></div>
+</div>

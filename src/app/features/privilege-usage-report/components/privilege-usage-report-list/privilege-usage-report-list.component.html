@@ -1,0 +1,24 @@
+<div class="my-[1.5rem] flex items-center justify-between gap-[1rem]">
+  <app-privilege-usage-report-filter></app-privilege-usage-report-filter>
+  <button mat-button class="demoproj-btn" *appHasPermissions="[
+    {
+      feature: featurePermissionCode.PrivilegeUsageReport,
+      action: actionPermissionCode.Export
+    }
+  ]" [disabled]="(exportLoading$ | async) || !(filters$ | async) || !hasFilter((filters$ | async)!)"
+    (click)="exportToExcel()">
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-export></svg-export>
+      Export to excel
+    </div>
+  </button>
+</div>
+<app-demoproj-table class="min-w-full table-auto whitespace-nowrap" [data]="(privilegeUsageReport$ | async)!"
+  [tableColumns]="tableColumns()" [pagination]="pagination$ | async" [loading]="(listLoading$ | async)!"
+  [noDataMessage]="
+        !(selectCommonSearch$ | async)
+          ? 'Use the filters above to display your report data.'
+          : 'No Privilege Usage Report found. Please refine your search'"
+  [searchHighlightText]="(selectSearchHighlightText$ | async) || ''" (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)">
+</app-demoproj-table>

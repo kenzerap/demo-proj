@@ -1,0 +1,331 @@
+<section
+  class="table-container demoproj-table base-border"
+  [ngStyle]="tableSectionStyle"
+  matSort
+  [matSortActive]="sortField"
+  [matSortDirection]="sortDirection"
+  (matSortChange)="onSortChange($event)"
+>
+  <table
+    mat-table
+    [dataSource]="loading ? [] : data"
+    [ngStyle]="tableStyle"
+    cdkDropList
+    (cdkDropListDropped)="drop($event)"
+    [cdkDropListData]="data"
+    [cdkDropListDisabled]="disableDragDrop || dragDropDisabled()"
+  >
+    @for (columnItem of tableColumns; track $index) {
+      <ng-container [ngSwitch]="columnItem.type">
+        <ng-container
+          *ngSwitchCase="columnType().DragDrop"
+          [matColumnDef]="columnItem.code"
+        >
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            [disabled]="!columnItem.isSortable"
+            [class.cursor-pointer]="columnItem.isSortable"
+            [ngStyle]="{ width: columnItem.width || 'auto' }"
+          >
+            <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            <mat-icon
+              [class.drag-disabled]="disableDragDrop || element.dragDisabled"
+              [class.cursor-move]="!disableDragDrop && !element.dragDisabled"
+              (mousedown)="
+                !disableDragDrop && !element.dragDisabled ? onMouseDown() : null
+              "
+              >drag_indicator</mat-icon
+            >
+          </td>
+        </ng-container>
+
+        <ng-container
+          *ngSwitchCase="columnType().Date"
+          [matColumnDef]="columnItem.code"
+        >
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            [disabled]="!columnItem.isSortable"
+            [class.cursor-pointer]="columnItem.isSortable"
+            [ngStyle]="{ width: columnItem.width || 'auto' }"
+          >
+            {{ columnItem.value }}
+            <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            {{ (element[columnItem.code] | date: 'dd/MM/yyyy') || '-' }}
+          </td>
+        </ng-container>
+
+        <ng-container
+          *ngSwitchCase="columnType().DateTime"
+          [matColumnDef]="columnItem.code"
+        >
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            [disabled]="!columnItem.isSortable"
+            [class.cursor-pointer]="columnItem.isSortable"
+            [ngStyle]="{ width: columnItem.width || 'auto' }"
+          >
+            {{ columnItem.value }}
+            <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            {{ (element[columnItem.code] | date: 'dd/MM/yyyy, HH:mm') || '-' }}
+          </td>
+        </ng-container>
+
+        <ng-container
+          *ngSwitchCase="columnType().Phone"
+          [matColumnDef]="columnItem.code"
+        >
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            [disabled]="!columnItem.isSortable"
+            [class.cursor-pointer]="columnItem.isSortable"
+            [ngStyle]="{ width: columnItem.width || 'auto' }"
+          >
+            {{ columnItem.value }}
+            <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            <span [appHighlightText]="searchHighlightText" [ignoreDash]="true">
+              {{ (element[columnItem.code] | phoneFormat) || '-' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container
+          *ngSwitchCase="columnType().SecurityNo"
+          [matColumnDef]="columnItem.code"
+        >
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            [disabled]="!columnItem.isSortable"
+            [class.cursor-pointer]="columnItem.isSortable"
+            [ngStyle]="{ width: columnItem.width || 'auto' }"
+          >
+            {{ columnItem.value }}
+            <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            <span [appHighlightText]="searchHighlightText" [ignoreDash]="true">
+              {{ (element[columnItem.code] | securityNoFormat) || '-' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container
+          *ngSwitchCase="columnType().Number"
+          [matColumnDef]="columnItem.code"
+        >
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            [disabled]="!columnItem.isSortable"
+            [class.cursor-pointer]="columnItem.isSortable"
+            [ngStyle]="{ width: columnItem.width || 'auto' }"
+          >
+            {{ columnItem.value }}
+            <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            <span [appHighlightText]="searchHighlightText">
+              {{ (element[columnItem.code] | number: '1.0-2') || '-' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container
+          *ngSwitchCase="columnType().String"
+          [matColumnDef]="columnItem.code"
+        >
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            [disabled]="!columnItem.isSortable"
+            [class.cursor-pointer]="columnItem.isSortable"
+            [ngStyle]="{ width: columnItem.width || 'auto' }"
+          >
+            {{ columnItem.value }}
+            <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            <span
+              [appHighlightText]="searchHighlightText"
+              [class.column-word-break]="!!columnItem.width"
+              [ngStyle]="{ width: columnItem.width || 'auto' }"
+            >
+              {{ element[columnItem.code] || '-' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container
+          *ngSwitchCase="columnType().Point"
+          [matColumnDef]="columnItem.code"
+        >
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            [disabled]="!columnItem.isSortable"
+            [class.cursor-pointer]="columnItem.isSortable"
+            [ngStyle]="{ width: columnItem.width || 'auto' }"
+          >
+            {{ columnItem.value }}
+            <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            <span
+              [appHighlightText]="searchHighlightText"
+              [ngClass]="
+                element[columnItem.code] > 0
+                  ? 'demoproj-green-color'
+                  : element[columnItem.code] < 0
+                    ? 'demoproj-red-color'
+                    : ''
+              "
+            >
+              {{ (element[columnItem.code] | prefixNumber) || '-' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container
+          *ngSwitchCase="columnType().Custom"
+          [matColumnDef]="columnItem.code"
+        >
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            [disabled]="!columnItem.isSortable"
+            [class.cursor-pointer]="columnItem.isSortable"
+            [ngStyle]="{ width: columnItem.width || 'auto' }"
+          >
+            {{ columnItem.value }}
+            <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            <ng-container
+              *ngTemplateOutlet="
+                customColumnTemplate;
+                context: { columnCode: columnItem.code, rowData: element }
+              "
+            ></ng-container>
+          </td>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+          <ng-container [matColumnDef]="columnItem.code">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              [disabled]="!columnItem.isSortable"
+              [class.cursor-pointer]="columnItem.isSortable"
+              [ngStyle]="{ width: columnItem.width || 'auto' }"
+            >
+              {{ columnItem.value }}
+              <div matSortHeaderIcon class="sort-header-indicator-icon"></div>
+            </th>
+
+            <td mat-cell *matCellDef="let element">
+              <span
+                [appHighlightText]="searchHighlightText"
+                [textContent]="element[columnItem.code]"
+              >
+                {{ element[columnItem.code] || '-' }}
+              </span>
+            </td>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    }
+
+    <!-- no data row -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="h-[3rem]" [attr.colspan]="displayedColumns().length">
+        <p *ngIf="!loading; else loadingTemplate" class="text-center">
+          {{ noDataMessage }}
+        </p>
+        <ng-template #loadingTemplate>
+          <div class="flex justify-center items-center h-[6rem]">
+            <mat-progress-spinner
+              mode="indeterminate"
+              diameter="50"
+              class="demoproj-spinner"
+            >
+            </mat-progress-spinner>
+          </div>
+        </ng-template>
+      </td>
+    </tr>
+
+    <!-- pagination Column -->
+    @if (isPaginatorEnabled) {
+      <ng-container matColumnDef="pagination">
+        <td
+          mat-footer-cell
+          *matFooterCellDef
+          [attr.colspan]="displayedColumns().length"
+          class="base-border"
+        >
+          <app-demoproj-paginator
+            [pageSize]="pagination?.size!"
+            [totalPages]="pagination?.totalPages!"
+            [totalRecords]="pagination?.totalItems!"
+            [currentPage]="pagination?.page!"
+            [pageSizeOptions]="pageSizeOptions"
+            (pageChange)="onPageChange($event)"
+            (pageSizeChange)="onPageSizeChange($event)"
+          ></app-demoproj-paginator>
+        </td>
+      </ng-container>
+    }
+
+    <tr
+      mat-header-row
+      *matHeaderRowDef="displayedColumns(); sticky: true"
+      class="table-header"
+    ></tr>
+
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns()"
+      class="table-row"
+      [class.selected]="checkSelected(row)"
+      (click)="onRowClick(row)"
+      cdkDrag
+      [cdkDragData]="row"
+    ></tr>
+
+    @if (isPaginatorEnabled) {
+      <tr mat-footer-row *matFooterRowDef="['pagination']; sticky: true"></tr>
+    }
+  </table>
+</section>

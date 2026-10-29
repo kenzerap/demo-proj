@@ -1,0 +1,8 @@
+<app-demoproj-table
+  [data]="(pointExpiries$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+></app-demoproj-table>

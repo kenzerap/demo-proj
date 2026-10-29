@@ -1,0 +1,35 @@
+<div class="w-full relative">
+  <mat-form-field class="demoproj-input w-full relative z-[1]">
+    <input matInput [formControl]="formControl" />
+
+    <span matIconSuffix>
+      <button mat-icon-button type="button" (click)="openTimePicker()">
+        <mat-icon class="text-[#667185]"> schedule </mat-icon>
+      </button>
+    </span>
+
+    <mat-error>
+      <ng-content select="[error]"></ng-content>
+    </mat-error>
+  </mat-form-field>
+  <p-datepicker
+    [formControl]="hiddenFormControl"
+    [iconDisplay]="'input'"
+    [showIcon]="true"
+    [timeOnly]="true"
+    class="demoproj-hidden-timepicker left-0 top-0 w-full"
+    inputStyleClass="w-full opacity-0"
+  >
+    <ng-template pTemplate="inputicon" let-clickCallBack="clickCallBack">
+      <button
+        mat-icon-button
+        #trigger
+        type="button"
+        (click)="clickCallBack($event)"
+        [disabled]="formControl.disabled"
+      >
+        <mat-icon class="text-[#667185]"> schedule </mat-icon>
+      </button>
+    </ng-template>
+  </p-datepicker>
+</div>

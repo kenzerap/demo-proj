@@ -1,0 +1,13 @@
+<div class="w-[393px]">
+  <h2 class="font-bold text-center mt-[1rem] mb-[0.5rem]">Preview</h2>
+  <img
+    src="mobile-header.svg"
+    alt="mobile-header"
+    loading="lazy"
+    class="flex"
+  />
+  <div class="virtual-banner" *ngIf="showBanner">
+    <ng-content select="[banner-setting]"></ng-content>
+  </div>
+  <img src="mobile-body.svg" alt="mobile-body" loading="lazy" class="flex" />
+</div>

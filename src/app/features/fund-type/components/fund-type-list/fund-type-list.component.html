@@ -1,0 +1,49 @@
+<div class="my-[1.5rem] flex items-center justify-between gap-[1rem]">
+  <app-fund-type-list-filter></app-fund-type-list-filter>
+  <button
+    mat-button
+    class="demoproj-btn"
+    *appHasPermissions="[
+      {
+        feature: featurePermissionCode.FundType,
+        action: actionPermissionCode.CreateEdit
+      }
+    ]"
+    (click)="createFundType()"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-plus></svg-plus>
+      New Fund Type
+    </div>
+  </button>
+</div>
+
+<app-demoproj-table
+  [data]="(fundTypes$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  [noDataMessage]="
+    !(selectCommonSearch$ | async)
+      ? 'No Fund Type set'
+      : 'No Fund Type found. Please refine your search'
+  "
+  [searchHighlightText]="(selectCommonSearch$ | async)!"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (rowClick)="onRowClick($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'is_active'">
+        <mat-chip-row [class]="rowData.is_active ? 'chips green' : 'chips base-text-color-gray'">
+          <span [class]="rowData.is_active ? 'text-[#10973E]' : 'black'">
+            {{ rowData.is_active ? 'Active' : 'Inactive' }}
+          </span>
+        </mat-chip-row>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

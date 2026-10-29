@@ -1,0 +1,61 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex justify-between items-center">
+    <h3 class="mb-[1rem]">Redeem *</h3>
+
+    <mat-checkbox formControlName="is_advance" class="demoproj-checkbox">
+      Advance Redeem
+    </mat-checkbox>
+  </div>
+
+  <h3>Setting Point</h3>
+
+  <div class="condition-row">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Value</div>
+
+      <app-demoproj-input
+        formControlName="value"
+        [inputType]="'number'"
+        [formFieldGray]="true"
+      >
+        <span error *ngIf="valueControl?.hasError('required')">
+          Please input Value
+        </span>
+        <span error *ngIf="valueControl?.hasError('min')">
+          Value must be a number greater than or equal 0
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Unit</div>
+
+      <mat-form-field class="demoproj-select demoproj-form-field-gray">
+        <mat-select
+          formControlName="unit"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{ getDropdownValue(unitControl?.value, unitOptions) }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of unitOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <mat-checkbox
+    formControlName="is_only_promotion_or_unicode"
+    class="demoproj-checkbox"
+  >
+    Redeem only promocode/unicode
+  </mat-checkbox>
+</mat-card>

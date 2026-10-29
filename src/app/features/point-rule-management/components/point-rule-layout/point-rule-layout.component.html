@@ -1,0 +1,43 @@
+<div class="grid grid-cols-[1fr] gap-[1rem]">
+  <nav
+    class="demoproj-tabs"
+    mat-tab-nav-bar
+    [tabPanel]="tabPanel"
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+  >
+    @for (tab of tabs(); track $index) {
+    <a
+      mat-tab-link
+      (click)="changeTab(tab.code)"
+      [active]="tab.code === activeTab()"
+    >
+      {{ tab.value }}
+    </a>
+    }
+  </nav>
+
+  <div class="mt-[1.5rem] flex items-center justify-between gap-[1rem]">
+    <app-point-rule-list-filter></app-point-rule-list-filter>
+    <button
+      mat-button
+      class="demoproj-btn"
+      *appHasPermissions="[
+        {
+          feature: featurePermissionCode.PointRules,
+          action: actionPermissionCode.CreateEdit
+        }
+      ]"
+      (click)="createPointRule()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus></svg-plus>
+        New Rule Point
+      </div>
+    </button>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>

@@ -1,0 +1,35 @@
+@use 'styles/variables.scss' as *;
+
+.upload-image {
+  width: 25rem;
+  height: 25rem;
+  border: 1px dashed $base-border-color;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  position: relative;
+}
+
+.cover-image {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+  border-radius: 50%;
+}
+
+.label-divider {
+  position: absolute;
+  width: 2rem;
+  text-align: center;
+  left: calc(50% - 1rem);
+  top: -10px;
+  z-index: 1;
+  background-color: white;
+}

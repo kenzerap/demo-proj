@@ -1,0 +1,50 @@
+<div class="my-[1.5rem]">
+  <app-manual-code-redemption-filter></app-manual-code-redemption-filter>
+</div>
+<app-demoproj-table
+  class="min-w-full table-auto whitespace-nowrap"
+  [data]="(manualCodeRedemption$ | async)!"
+  [tableColumns]="tableColumns()"
+  [loading]="(listLoading$ | async)!"
+  [pagination]="pagination$ | async"
+  [noDataMessage]="
+    !(selectCommonSearch$ | async) ? 'Search redeem code' : 'No records found'
+  "
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'status'">
+        <span
+          class="inline-flex items-center rounded-full px-3 py-1 font-[400]"
+          [ngClass]="
+            (rowData?.status | lowercase) === 'available'
+              ? 'badge-green'
+              : 'badge-red'
+          "
+        >
+          {{ rowData?.status | titlecase }}
+        </span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'redeemed_date'">
+        {{
+          (rowData?.status | lowercase) === 'redeemed'
+            ? (rowData?.redeemed_date | date : 'dd/MM/yyyy, HH:mm')
+            : '-'
+        }}
+      </ng-container>
+      <ng-container *ngSwitchCase="'action'">
+        <svg-pen-square
+          (click)="markAsRedeem(rowData)"
+          [color]="
+            (rowData?.status | lowercase) === 'available'
+              ? '#c72b29'
+              : '#98A2B3'
+          "
+        ></svg-pen-square>
+      </ng-container>
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

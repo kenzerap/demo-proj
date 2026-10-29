@@ -1,0 +1,54 @@
+<mat-card
+  class="p-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex justify-between items-center mb-[1rem]">
+    <h3>Upload Code List</h3>
+
+    <div class="my-[1.5rem] flex items-center justify-end gap-[1rem]">
+      <button
+        mat-button
+        class="demoproj-btn"
+        [disabled]="formGroup.invalid || formMode === 'view'"
+        (click)="openUploadCodeDialog()"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <svg-plus></svg-plus>
+          Upload Code
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <app-demoproj-table
+    [data]="(uploadCodes$ | async)!"
+    [tableColumns]="tableColumns()"
+    [isPaginatorEnabled]="false"
+    [noDataMessage]="'No stock set'"
+  >
+    <ng-template
+      #customColumn
+      let-columnCode="columnCode"
+      let-rowData="rowData"
+    >
+      <ng-container [ngSwitch]="columnCode">
+        <ng-container *ngSwitchCase="'actions'">
+          <button
+            mat-button
+            type="button"
+            class="action-btn"
+            [disabled]="formMode === 'view'"
+            (click)="deleteUploadCode(rowData)"
+          >
+            <svg-delete
+              [color]="formMode === 'view' ? '#98a2b4' : '#c72b29'"
+            ></svg-delete>
+          </button>
+        </ng-container>
+        <ng-container *ngSwitchDefault></ng-container>
+      </ng-container>
+    </ng-template>
+  </app-demoproj-table>
+</mat-card>

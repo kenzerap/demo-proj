@@ -1,0 +1,66 @@
+<div class="grid grid-cols-[1fr] gap-[1rem]">
+  <nav
+    class="demoproj-tabs"
+    mat-tab-nav-bar
+    [tabPanel]="tabPanel"
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+  >
+    @for (tab of tabs(); track $index) {
+    <a
+      mat-tab-link
+      (click)="changeTab(tab.code)"
+      [active]="tab.code === activeTab()"
+    >
+      {{ tab.value }}
+    </a>
+    }
+  </nav>
+
+  <div class="my-[1.5rem] flex items-center justify-end gap-[1rem]">
+    <ng-container
+      *appHasPermissions="[
+        {
+          feature: featurePermissionCode.InventorySetting,
+          action: actionPermissionCode.View
+        }
+      ]"
+    >
+      <button
+        mat-button
+        class="base-border base-btn-border-color"
+        (click)="exportToExcel()"
+        [disabled]="exportLoading$ | async"
+        *ngIf="activeTab() === inventoryTabCode.UPLOAD_CODE"
+      >
+        <div class="flex items-center justify-center gap-[0.5rem]">
+          <svg-export
+            [color]="(exportLoading$ | async) ? '#98a2b4' : 'black'"
+          ></svg-export>
+          Export Code
+        </div>
+      </button>
+    </ng-container>
+
+    <button
+      mat-button
+      class="demoproj-btn"
+      *appHasPermissions="[
+        {
+          feature: featurePermissionCode.InventorySetting,
+          action: actionPermissionCode.CreateEdit
+        }
+      ]"
+      (click)="createInventory()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus></svg-plus>
+        New stock
+      </div>
+    </button>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>

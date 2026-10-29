@@ -1,0 +1,76 @@
+<h2 mat-dialog-title class="demoproj-red-color mb-[1rem]">New User</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="createUserAccountForm">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Email *</div>
+      <app-demoproj-input formControlName="email" [inputType]="'email'">
+        <span error *ngIf="emailControl?.hasError('required')">
+          Please input email
+        </span>
+
+        <span error *ngIf="emailControl?.hasError('email')">
+          Invalid email
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Group *</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="group_id"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(
+                groupIdControl?.value,
+                (userGroupOptions$ | async) || []
+              )
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of (userGroupOptions$ | async); track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Status *</div>
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="status"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(statusControl?.value, statusOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of statusOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button mat-button mat-dialog-close class="base-border base-btn-border-color">
+    Cancel
+  </button>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    (click)="onSubmit()"
+    [disabled]="loading$ | async"
+  >
+    <mat-icon>check</mat-icon>
+    Save
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,19 @@
+<mat-dialog-content class="mat-typography dialog-content text-center">
+  <svg-warning-circle class="mb-[2rem]"></svg-warning-circle>
+  <div class="mb-[1rem]">
+    <div class="font-bold mb-[1rem]">This privilege type is used</div>
+    <div>
+      This privilege type is used in active brand.
+      <ng-container *ngFor="let brand of data.brands; let last = last">
+        <a class="link" (click)="navigateToDetail(brand.brand_id)">
+          {{ brand.brand_name_thai }}
+        </a>
+        {{ last ? '' : ', ' }}
+      </ng-container>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button mat-button class="demoproj-btn" mat-dialog-close>Close</button>
+</mat-dialog-actions>

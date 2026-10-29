@@ -1,0 +1,56 @@
+<div class="grid grid-cols-[1fr] gap-[1rem] pt-[1.5rem]">
+  <div class="mb-[1.5rem] flex items-center justify-between">
+    <div>
+      <h2 class="m-0">
+        {{ customerSegmentationId() ? 'Name: ' + (customerSegmentationDetail$ | async)?.segment_name  : 'Create Customer Segmentation' }}
+      </h2>
+    </div>
+
+    <button
+      mat-button
+      class="demoproj-btn"
+      (click)="onSubmit()"
+      [disabled]="loading$ | async"
+      *ngIf="formMode() !== 'view'"
+    >
+      <mat-icon>check</mat-icon>
+      Save
+    </button>
+  </div>
+
+  <div class="grid gap-[1rem]">
+    <div class="grid gap-[1rem]">
+      <mat-card class="p-[1rem] active-segment-section" appearance="outlined">
+        <div>
+          <h3 class="mb-[1rem]">Active Segment</h3>
+        </div>
+        <form [formGroup]="baseDetailForm">
+          <div>
+            <mat-slide-toggle
+              formControlName="status"
+              class="demoproj-slide-toggle mb-[1rem]"
+              hideIcon="true"
+              [checked]="statusControl?.value"
+              (change)="onBlockToggle($event)"
+              >Active Segment</mat-slide-toggle
+            >
+          </div>
+        </form>
+      </mat-card>
+    </div>
+
+    <app-cust-segment-base-detail-section
+      [formGroup]="baseDetailForm"
+      [isCreateMode]="formMode() === 'create'"
+      [formMode]="formMode()"
+    ></app-cust-segment-base-detail-section>
+
+    <app-cust-segment-group-condition-section
+      *ngIf="segmentTypeControl?.value === SetSegmentType.SET_MANUALLY"
+      [formDetailGroup]="baseDetailForm"
+      [formGroup]="segmentGroupConditionForm"
+      [isCreateMode]="formMode() === 'create'"
+      [formMode]="formMode()"
+    ></app-cust-segment-group-condition-section>
+  </div>
+</div>

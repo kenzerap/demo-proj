@@ -1,0 +1,53 @@
+<div *ngIf="isReview" class="review-imgage">
+  <img
+    [src]="reviewImageUrl"
+    class="w-full h-full object-cover"
+    alt="review-imgage"
+    [attr.loading]="'lazy'"
+  />
+</div>
+
+<div
+  *ngIf="!isReview"
+  class="upload-image"
+  appDragDropUpload
+  [disabledDragDrop]="disabledDragDrop"
+  (fileDropped)="onFileDropped($event)"
+>
+  <div class="cover-image">
+    <svg-default-image></svg-default-image>
+  </div>
+  <div class="text-center">
+    <div class="demoproj-red-color font-semibold mb-[0.5rem]">
+      {{ imageNameUploaded }}
+    </div>
+    <div class="base-text-color-gray">{{ description }}</div>
+  </div>
+  <div class="w-full relative">
+    <div class="base-text-color-gray label-divider">OR</div>
+    <mat-divider></mat-divider>
+  </div>
+  <input
+    type="file"
+    #uploadFile
+    (change)="onFileSelected($event)"
+    class="hidden"
+    [accept]="fileAccept"
+  />
+  <button
+    mat-button
+    class="demoproj-btn"
+    [disabled]="disabledDragDrop"
+    type="button"
+    (click)="uploadFile.click()"
+  >
+    Browse Files
+  </button>
+
+  <mat-error
+    *ngIf="isRequireError"
+    class="text-[0.75rem] absolute bottom-[0rem]"
+  >
+    Please upload popup image
+  </mat-error>
+</div>

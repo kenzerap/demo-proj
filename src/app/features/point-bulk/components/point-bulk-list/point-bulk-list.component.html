@@ -1,0 +1,51 @@
+<div class="my-[1.5rem] flex items-center justify-between gap-[1rem]">
+  <app-point-bulk-list-filter></app-point-bulk-list-filter>
+
+  <div class="flex items-center gap-[1rem]">
+    <button
+      mat-button
+      class="base-border base-btn-border-color"
+      (click)="downloadFileTemplate()"
+      [disabled]="downloadLoading$ | async"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-btn-download
+          [color]="(downloadLoading$ | async) ? '#98a2b4' : 'black'"
+        ></svg-btn-download>
+        Download File Template
+      </div>
+    </button>
+    <button
+      mat-button
+      class="demoproj-btn"
+      *appHasPermissions="[
+        {
+          feature: featurePermissionCode.PointBulkAction,
+          action: actionPermissionCode.CreateEdit
+        }
+      ]"
+      (click)="openUploadPointDialog()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus></svg-plus>
+        Upload Point File
+      </div>
+    </button>
+  </div>
+</div>
+
+<app-demoproj-table
+  [data]="(pointBulks$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  [noDataMessage]="
+    !(selectCommonSearch$ | async)
+      ? 'No point set'
+      : 'No Point found. Please refine your search'
+  "
+  [searchHighlightText]="(selectCommonSearch$ | async)!"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+>
+</app-demoproj-table>

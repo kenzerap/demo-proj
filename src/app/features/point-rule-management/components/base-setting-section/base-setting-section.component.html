@@ -1,0 +1,323 @@
+<mat-card
+  class="grid gap-[1rem] p-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <div class="flex items-center justify-between mb-[1rem]">
+    <h3>Point Rule setting</h3>
+
+    <mat-slide-toggle
+      class="demoproj-slide-toggle mb-[1rem]"
+      hideIcon="true"
+      formControlName="is_published"
+      >Published</mat-slide-toggle
+    >
+  </div>
+
+  <div class="flex items-center justify-between gap-[1rem]">
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Point rule name *</div>
+      <app-demoproj-input formControlName="name">
+        <span error *ngIf="nameControl?.hasError('required')">
+          Please input Point rule name
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Description *</div>
+      <app-demoproj-input formControlName="description">
+        <span error *ngIf="descriptionControl?.hasError('required')">
+          Please input Description
+        </span>
+      </app-demoproj-input>
+    </div>
+  </div>
+
+  <div
+    class="grid gap-[1rem] mb-[1rem]"
+    [ngClass]="
+      categoryControl?.value === categoryCode.ProductBasedRule &&
+      expiryConditionControl?.value === expiryConditionCode.SetExpiryValue
+        ? 'grid-cols-[auto_auto_auto_auto]'
+        : categoryControl?.value === categoryCode.CriteriaBasedRule &&
+          criteriaTypeControl?.value === criteriaCode.DailyCheckIn
+          || categoryControl?.value === categoryCode.ProductBasedRule
+        ? 'grid-cols-[auto_auto_auto]'
+        : 'grid-cols-[auto_auto]'
+    "
+  >
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Category</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="category"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span *ngIf="(categoryOptions.length || 0) > 0">{{
+              getDropdownValue(categoryControl?.value, categoryOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of categoryOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="flex flex-col" *ngIf="categoryControl?.value === categoryCode.ProductBasedRule">
+      <div class="base-text-color-gray">Count Expiry from *</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select formControlName="count_expiry_from" [hideSingleSelectionIndicator]="true">
+          <mat-select-trigger>
+            <span *ngIf="(countExpiryFromOptions.length || 0) > 0">{{
+              getDropdownValue(countExpiryFromControl?.value, countExpiryFromOptions)
+              }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of countExpiryFromOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+        <mat-error *ngIf="countExpiryFromControl?.hasError('required')">
+          Please input Count Expiry from
+        </mat-error>
+
+      </mat-form-field>
+    </div>
+    <div class="flex flex-col" *ngIf="categoryControl?.value === categoryCode.ProductBasedRule">
+      <div class="base-text-color-gray">Expiry condition *</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select formControlName="expiry_condition" [hideSingleSelectionIndicator]="true">
+          <mat-select-trigger>
+            <span *ngIf="(expiryConditionOptions.length || 0) > 0">{{
+              getDropdownValue(expiryConditionControl?.value, expiryConditionOptions)
+              }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of expiryConditionOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+        <mat-error *ngIf="expiryConditionControl?.hasError('required')">
+          Please input Expiry condition
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div
+      class="flex flex-col"
+      *ngIf="categoryControl?.value === categoryCode.CriteriaBasedRule"
+    >
+      <div class="base-text-color-gray">Criteria</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="criteria_type"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span *ngIf="(criteriaOptions.length || 0) > 0">{{
+              getDropdownValue(criteriaTypeControl?.value, criteriaOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of criteriaOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div
+      class="flex flex-col"
+      *ngIf="
+        categoryControl?.value === categoryCode.WelcomeRule ||
+        (categoryControl?.value === categoryCode.CriteriaBasedRule &&
+          criteriaTypeControl?.value === criteriaCode.DailyCheckIn)
+      "
+    >
+      <div class="base-text-color-gray">Expiry Date Duration *</div>
+      <app-demoproj-input
+        formControlName="expiry_date_duration"
+        [inputType]="'number'"
+      >
+        <span error *ngIf="expiryDateDurationControl?.hasError('required')">
+          Please input Expiry Date Duration
+        </span>
+        <span error *ngIf="expiryDateDurationControl?.hasError('min')">
+          Value must be a number greater than 0
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col" *ngIf="
+            categoryControl?.value === categoryCode.ProductBasedRule &&
+            expiryConditionControl?.value === expiryConditionCode.SetExpiryValue
+          ">
+      <div class="base-text-color-gray">Expiry Date Duration *</div>
+      <app-demoproj-input formControlName="expiry_date_duration" [inputType]="'number'">
+        <span error *ngIf="expiryDateDurationControl?.hasError('required')">
+          Please input Expiry Date Duration
+        </span>
+        <span error *ngIf="expiryDateDurationControl?.hasError('min')">
+          Value must be a number greater than 0
+        </span>
+      </app-demoproj-input>
+    </div>
+  </div>
+
+
+  <div
+    class="grid grid-cols-[auto_auto] gap-[1rem] mb-[1rem]"
+    *ngIf="
+      categoryControl?.value === categoryCode.CriteriaBasedRule &&
+      criteriaTypeControl?.value === criteriaCode.FeatureEngagement
+    "
+  >
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Expiry Date Duration *</div>
+      <app-demoproj-input
+        formControlName="expiry_date_duration"
+        [inputType]="'number'"
+      >
+        <span error *ngIf="expiryDateDurationControl?.hasError('required')">
+          Please input Expiry Date Duration
+        </span>
+        <span error *ngIf="expiryDateDurationControl?.hasError('min')">
+          Value must be a number greater than 0
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Reset Period</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="criteria_reset_period"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span *ngIf="(resetPeriodOptions.length || 0) > 0">{{
+              getDropdownValue(
+                criteriaResetPeriodControl?.value,
+                resetPeriodOptions
+              )
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of resetPeriodOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div>
+    <div class="grid grid-cols-[auto_auto_auto] gap-[1rem] mb-[1rem]">
+      <div class="min-w-[12rem]"></div>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Start Date *</div>
+        <mat-form-field class="demoproj-input">
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            formControlName="start_date"
+            [min]="formMode !== 'create' ? null : currentDate"
+          />
+          <mat-datepicker-toggle matTextSuffix [for]="picker1">
+            <svg-calendar matDatepickerToggleIcon></svg-calendar>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="startDateControl?.hasError('required')">
+            Please input date
+          </mat-error>
+
+          <mat-error
+            *ngIf="
+              !startDateControl?.hasError('required') &&
+              startDateControl?.hasError('matDatepickerMin')
+            "
+          >
+            Start Date Time must be a future date
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Time *</div>
+        <app-demoproj-timepicker formControlName="start_time">
+          <span error *ngIf="startTimeControl?.hasError('required')">
+            Please input time
+          </span>
+
+          <span error *ngIf="startTimeControl?.hasError('invalidTimeFormat')">
+            Invalid time
+          </span>
+
+          <span error *ngIf="startTimeControl?.hasError('invalidStartTime')">
+            Start Date Time must be a future date
+          </span>
+        </app-demoproj-timepicker>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-[auto_auto_auto] gap-[1rem]">
+      <mat-checkbox formControlName="isSetEndDate" class="demoproj-checkbox">
+        End date (set end date)
+      </mat-checkbox>
+
+      <div class="flex flex-col" *ngIf="!!isSetEndDateControl?.value">
+        <div class="base-text-color-gray">End Date *</div>
+        <mat-form-field class="demoproj-input">
+          <input
+            matInput
+            [matDatepicker]="picker2"
+            formControlName="end_date"
+            [min]="startDateControl?.value"
+          />
+          <mat-datepicker-toggle matTextSuffix [for]="picker2">
+            <svg-calendar matDatepickerToggleIcon></svg-calendar>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+          <mat-error *ngIf="endDateControl?.hasError('required')">
+            Please input date
+          </mat-error>
+
+          <mat-error
+            *ngIf="
+              !endDateControl?.hasError('required') &&
+              endDateControl?.hasError('matDatepickerMin')
+            "
+          >
+            Start Date Time should be before End Date Time
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-col" *ngIf="!!isSetEndDateControl?.value">
+        <div class="base-text-color-gray">Time *</div>
+        <app-demoproj-timepicker formControlName="end_time">
+          <span error *ngIf="endTimeControl?.hasError('required')">
+            Please input time
+          </span>
+
+          <span error *ngIf="endTimeControl?.hasError('invalidTimeFormat')">
+            Invalid time
+          </span>
+
+          <span error *ngIf="endTimeControl?.hasError('invalidEndTime')">
+            Start Date Time should be before End Date Time
+          </span>
+        </app-demoproj-timepicker>
+      </div>
+    </div>
+  </div>
+</mat-card>

@@ -1,0 +1,37 @@
+<mat-dialog-content class="mat-typography dialog-content text-center">
+  <svg-warning-circle
+    *ngIf="data.type === 'warning'"
+    class="mb-[2rem]"
+  ></svg-warning-circle>
+  <svg-success-circle
+    *ngIf="data.type === 'success'"
+    class="mb-[2rem] justify-center"
+  ></svg-success-circle>
+  <div class="mb-[1rem]" *ngIf="data.title">
+    <h2 class="base-text-color">{{ data.title }}</h2>
+  </div>
+  <div class="mb-[1rem]">
+    <div [innerHTML]="data.message"></div>
+  </div>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button
+    *ngIf="data.btnCloseText"
+    mat-button
+    mat-dialog-close
+    class="base-border base-btn-border-color"
+  >
+    {{ data.btnCloseText }}
+  </button>
+
+  <button
+    *ngIf="data.btnConfirmText"
+    mat-button
+    class="demoproj-btn"
+    (click)="onConfirm()"
+  >
+    <mat-icon *ngIf="!data.hideConfirmIcon">check</mat-icon>
+    {{ data.btnConfirmText }}
+  </button>
+</mat-dialog-actions>

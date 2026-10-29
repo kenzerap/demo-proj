@@ -1,0 +1,59 @@
+<div class="my-[1.5rem] flex items-center justify-between gap-[1rem]">
+  <app-promocode-list-filter></app-promocode-list-filter>
+  <button
+    mat-button
+    class="demoproj-btn"
+    *appHasPermissions="[
+      {
+        feature: featurePermissionCode.PromocodeSetting,
+        action: actionPermissionCode.CreateEdit
+      }
+    ]"
+    (click)="createPromoCode()"
+  >
+    <div class="flex items-center justify-center gap-[0.5rem]">
+      <svg-plus></svg-plus>
+      New PromoCode
+    </div>
+  </button>
+</div>
+
+<app-demoproj-table
+  [data]="(promoCodes$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  [noDataMessage]="
+    !(selectCommonSearch$ | async)
+      ? 'No Promocode set'
+      : 'No Promocode found. Please refine your search'
+  "
+  [searchHighlightText]="(selectCommonSearch$ | async)!"
+  (pageChange)="onPageChange($event)"
+  (rowClick)="onRowClick($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'codes'">
+        <div [appHighlightText]="(selectCommonSearch$ | async)!">
+          {{ rowData.codes?.join(', ') || '-' }}
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'rewards'">
+        <div [appHighlightText]="(selectCommonSearch$ | async)!">
+          {{ getRewardName(rowData) }}
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'earning_point'">
+        <div [appHighlightText]="(selectCommonSearch$ | async)!">
+          {{ (rowData.earning_point?.[0]?.point | number : '1.0-2') || '-' }}
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>

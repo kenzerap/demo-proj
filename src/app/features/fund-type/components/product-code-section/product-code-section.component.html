@@ -1,0 +1,89 @@
+<mat-card
+  class="p-[1rem] grid gap-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <h3>Product Code</h3>
+
+  <div
+    formArrayName="product_codes"
+    class="grid gap-[1rem]"
+    *ngIf="productCodeOptions$ | async as productCodeOptions"
+  >
+    <div
+      *ngFor="
+        let codeFormGroup of productCodesFormArray.controls;
+        let i = index
+      "
+      [formGroupName]="i"
+      class="condition-row"
+    >
+      <div class="flex flex-col">
+        <div class="base-text-color-gray">Product Code</div>
+        <mat-form-field class="demoproj-select demoproj-form-field-gray">
+          <mat-select
+            formControlName="product_code"
+            [hideSingleSelectionIndicator]="true"
+          >
+            <mat-select-trigger>
+              <span>{{
+                getDropdownValue(
+                  codeFormGroup.get('product_code')?.value,
+                  productCodeOptions
+                )
+              }}</span>
+              <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+            </mat-select-trigger>
+            @for (item of productCodeOptions; track item) {
+              <mat-option
+                [value]="item.code"
+                [disabled]="disableItemDropdown(item.code)"
+                >{{ item.value }}</mat-option
+              >
+            }
+          </mat-select>
+          <mat-error
+            *ngIf="codeFormGroup.get('product_code')?.hasError('required')"
+          >
+            Please select Product Code
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-icon
+        class="cursor-pointer"
+        [class.delete-disabled]="formMode === 'view'"
+        (click)="removeProductCode(i)"
+        >close</mat-icon
+      >
+    </div>
+  </div>
+
+  <mat-error
+    class="text-[0.75rem] text-center"
+    *ngIf="productCodesFormArray.controls.length === 0"
+  >
+    Please add a product code
+  </mat-error>
+
+  <div class="flex items-center justify-end">
+    <button
+      mat-button
+      class="base-border"
+      [disabled]="formMode === 'view' || isAllProductCodesSelected()"
+      (click)="addProductCode()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus
+          [color]="
+            formMode === 'view' || isAllProductCodesSelected()
+              ? '#98a2b4'
+              : 'black'
+          "
+        ></svg-plus>
+        Add product code
+      </div>
+    </button>
+  </div>
+</mat-card>

@@ -1,0 +1,128 @@
+<mat-card
+  class="p-[1rem]"
+  appearance="outlined"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <h3>Product-Based Rule</h3>
+
+  <div class="grid grid-cols-[auto_auto] gap-[1rem] mb-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Product Name *</div>
+      <app-demoproj-autocomplete-dropdown
+        formControlName="product_name"
+        [nonGroupOptions]="(productNameOptions$ | async)!"
+      >
+        <span error *ngIf="productNameControl?.hasError('required')">
+          Please select Product Name
+        </span>
+      </app-demoproj-autocomplete-dropdown>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Plan code</div>
+      <app-demoproj-input formControlName="plan_code"> </app-demoproj-input>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[auto_auto] gap-[1rem] mb-[1rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Marketing product name (TH)</div>
+      <app-demoproj-input formControlName="marketing_name_th"> </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Marketing product name (EN)</div>
+      <app-demoproj-input formControlName="marketing_name_en"> </app-demoproj-input>
+    </div>
+  </div>
+
+  <div
+    formArrayName="channel_rules"
+    class="mb-[1rem] grid gap-[1rem]"
+    *ngIf="rulesFormArray.controls.length > 0"
+  >
+    <ng-container
+      *ngFor="let ruleFormGroup of rulesFormArray.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <div class="condition-row">
+        <div class="flex flex-col">
+          <div class="base-text-color-gray">Select Channel *</div>
+
+          <app-demoproj-autocomplete-dropdown
+            formControlName="channel"
+            [formFieldGray]="true"
+            [nonGroupOptions]="(channelOptions$ | async)!"
+          >
+            <span
+              error
+              *ngIf="ruleFormGroup.get('channel')?.hasError('required')"
+            >
+              Please input Channel
+            </span>
+          </app-demoproj-autocomplete-dropdown>
+        </div>
+
+        <div class="flex flex-col">
+          <div class="base-text-color-gray">
+            Earning point Rate (Points Per 1 Baht Paid) *
+          </div>
+          <app-demoproj-input
+            [formFieldGray]="true"
+            formControlName="point_rate"
+            [inputType]="'number'"
+          >
+            <span
+              error
+              *ngIf="ruleFormGroup?.get('point_rate')?.hasError('required')"
+            >
+              Please input Earning point Rate
+            </span>
+            <span
+              error
+              *ngIf="
+                ruleFormGroup?.get('point_rate')?.hasError('min') ||
+                ruleFormGroup?.get('point_rate')?.hasError('max')
+              "
+            >
+              Value must be a number greater than or equal 0.01 or less than
+              1,000
+            </span>
+          </app-demoproj-input>
+        </div>
+
+        <mat-icon
+          class="cursor-pointer"
+          [class.delete-disabled]="formMode === 'view'"
+          (click)="removeCondition(i)"
+          >close</mat-icon
+        >
+      </div>
+    </ng-container>
+  </div>
+
+  <mat-error
+    class="text-[0.75rem] text-center"
+    *ngIf="rulesFormArray.controls.length === 0"
+  >
+    Please select channel
+  </mat-error>
+
+  <div class="flex items-center justify-end">
+    <button
+      mat-button
+      class="base-border"
+      [disabled]="formMode === 'view'"
+      (click)="addRule()"
+    >
+      <div class="flex items-center justify-center gap-[0.5rem]">
+        <svg-plus
+          [color]="formMode === 'view' ? '#98a2b4' : 'black'"
+        ></svg-plus>
+
+        Add Channel
+      </div>
+    </button>
+  </div>
+</mat-card>

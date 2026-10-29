@@ -1,0 +1,23 @@
+@use 'styles/variables.scss' as *;
+
+.control-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  background-color: $base-color-light-gray;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+th {
+  vertical-align: top;
+}
+
+td {
+  text-align: center;
+}
+
+.edit-btn {
+  min-width: unset;
+}

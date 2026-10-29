@@ -1,0 +1,46 @@
+<div class="mb-[1rem]">
+  <div class="font-bold">e-Claims Submit</div>
+  <div class="text-[#A2A1A8]">
+    e-Claims submit: {{ (eClaimSubmits$() | async)?.length || 0 }} Submit(s)
+  </div>
+</div>
+
+<app-demoproj-table
+  [data]="(eClaimSubmits$() | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$() | async"
+  [loading]="(loading$() | async)!"
+  [pageSizeOptions]="[5, 10, 20, 50]"
+  [tableStyle]="{ 'width.rem': 55 }"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    @if (columnCode !== 'actions') {
+    <div class="flex items-center justify-center">
+      <button
+        mat-button
+        class="file-download p-0"
+        [ngStyle]="{
+          'border-color': checkDisabled(rowData, columnCode)
+            ? '#A29999'
+            : '#CB1A14'
+        }"
+        [disabled]="checkDisabled(rowData, columnCode)"
+        (click)="openReviewImagesDialog(rowData, columnCode)"
+      >
+        <svg-file-download
+          [color]="checkDisabled(rowData, columnCode) ? '#A29999' : '#CB1A14'"
+        ></svg-file-download>
+      </button>
+    </div>
+    }@else {
+    <button mat-button class="btn-download" (click)="downloadZipFile(rowData, columnCode)">
+      <div class="flex items-center justify-center gap-[0.5rem] text-[#cb1a14]">
+        <svg-btn-download></svg-btn-download>
+        Download
+      </div>
+    </button>
+    }
+  </ng-template>
+</app-demoproj-table>

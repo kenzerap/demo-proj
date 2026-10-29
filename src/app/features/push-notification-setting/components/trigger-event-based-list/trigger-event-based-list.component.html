@@ -1,0 +1,20 @@
+<app-demoproj-table
+  [data]="(notifications$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (rowClick)="onRowClick($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    @if (columnCode === 'published') {
+    <mat-slide-toggle
+      class="demoproj-slide-toggle"
+      hideIcon="true"
+      [checked]="rowData.published"
+      [disabled]="true"
+    ></mat-slide-toggle>
+    }
+  </ng-template>
+</app-demoproj-table>

@@ -1,0 +1,132 @@
+<div class="flex gap-[0.5rem] items-center demoproj-red-color mb-[1rem]">
+  <div
+    class="w-[2.25rem] h-[2.25rem] flex items-center justify-center bg-[#fbeae9] rounded-full"
+  >
+    <svg-group-bg-red></svg-group-bg-red>
+  </div>
+  Family List
+</div>
+
+<div [loading]="loading$ | async" class="min-h-[3rem]">
+  <ng-container
+    *ngIf="((familyPolicies$ | async) || []).length > 0 && !(loading$ | async)"
+  >
+    <mat-divider></mat-divider>
+    @for (policy of (familyPolicies$ | async); track $index) {
+    <div class="grid gap-[1rem] mt-[1rem]">
+      <mat-expansion-panel
+        class="demoproj-expansion-panel"
+        (opened)="setExpansionStatus(policy.policy_id, true)"
+        (closed)="setExpansionStatus(policy.policy_id, false)"
+      >
+        <mat-expansion-panel-header class="panel-header">
+          <mat-panel-title class="panel-title">
+            <div>
+              <span class="demoproj-red-color">Policy No: </span>
+              <span class="font-bold">{{ policy.policy_no }}</span>
+            </div>
+
+            <div class="base-text-color-gray">
+              <span>Policy Type: </span>
+              <span>{{
+                policy.system_id === policyTypeCode.GROUP
+                  ? 'Group Insurance'
+                  : 'Individual Insurance'
+              }}</span>
+            </div>
+            <div class="base-text-color-gray">
+              {{
+                policy.system_id === policyTypeCode.GROUP
+                  ? policy.policy_holder
+                  : policy.product_name
+              }}
+            </div>
+
+            <div
+              class="base-text-color-gray"
+              *ngIf="policy.system_id === policyTypeCode.GROUP"
+            >
+              <span>Certificate Number: </span>
+              <span>{{ policy.client_cert_no }}</span>
+            </div>
+
+            <div class="base-text-color-gray">
+              <span>Insured Name: </span>
+              <span>{{ policy.insured_name }}</span>
+            </div>
+            <div>
+              <mat-chip class="status status-green mb-[0.5rem] mr-[0.5rem]">
+                <div class="text-[#10973e]">
+                  {{
+                    policy.system_id === policyTypeCode.GROUP
+                      ? policy.last_policy_status
+                      : policy.policy_status
+                  }}
+                </div>
+              </mat-chip>
+
+              <mat-chip class="status status-gray mr-[0.5rem]">
+                <span>Sum Insured: </span>
+                <span
+                  >{{
+                    policy.sum_insured_amount || 0 | number : '1.0-2'
+                  }}
+                  Baht</span
+                >
+              </mat-chip>
+
+              <mat-chip
+                *ngIf="policy.premium_amount"
+                class="status status-gray mr-[0.5rem]"
+              >
+                <span>Premium: </span>
+                <span
+                  >{{
+                    policy.premium_amount || 0 | number : '1.0-2'
+                  }}
+                  Baht</span
+                >
+              </mat-chip>
+
+              <mat-chip
+                *ngIf="
+                  policy.show_payment &&
+                  policy.paid_to_date &&
+                  policy.system_id !== policyTypeCode.GROUP
+                "
+                class="status status-gray mr-[0.5rem]"
+              >
+                <span>Schedule payment: </span>
+                <span>{{ policy.paid_to_date | date : 'dd/MM/yyyy' }}</span>
+              </mat-chip>
+
+              <mat-chip *ngIf="policy.show_payment" class="status status-red">
+                <div class="demoproj-red-color">Pay now</div>
+              </mat-chip>
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <!-- expansion content -->
+        <div
+          *ngIf="!!this.expansionStatus()[policy.policy_id]"
+          class="mt-[1rem] flex flex-col gap-[1rem]"
+        >
+          <app-claim-history [policy]="policy"></app-claim-history>
+          <app-e-claim-submit [policy]="policy"></app-e-claim-submit>
+        </div>
+      </mat-expansion-panel>
+      <mat-divider></mat-divider>
+    </div>
+    }
+  </ng-container>
+
+  <app-no-data
+    *ngIf="
+      ((familyPolicies$ | async) || []).length === 0 && !(loading$ | async)
+    "
+    [imgUrl]="noDataMessage.imgUrl"
+    [title]="noDataMessage.title"
+    [subTitle]="noDataMessage.subTitle"
+  ></app-no-data>
+</div>

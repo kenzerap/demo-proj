@@ -1,0 +1,65 @@
+<h2 mat-dialog-title class="demoproj-red-color mb-[1rem]">
+  {{ data.productStock ? 'Update' : 'New' }} Product Stock
+</h2>
+<mat-dialog-content class="mat-typography dialog-content">
+  <form [formGroup]="productStockForm" class="grid gap-[1rem] mb-[2rem]">
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Product Name *</div>
+      <app-demoproj-input formControlName="product_name">
+        <span error *ngIf="productNameControl?.hasError('required')">
+          Please input Product Name
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Description</div>
+      <app-demoproj-input formControlName="description">
+        <span error *ngIf="descriptionControl?.hasError('required')">
+          Please input Description
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Quantity *</div>
+      <app-demoproj-input formControlName="quantity" [inputType]="'number'">
+        <span error *ngIf="quantityControl?.hasError('required')">
+          Please input Quantity
+        </span>
+        <span error *ngIf="quantityControl?.hasError('min')">
+          Quantity must be a number greater than or equal 0
+        </span>
+      </app-demoproj-input>
+    </div>
+  </form>
+  <mat-divider></mat-divider>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'" class="dialog-actions">
+  <button
+    mat-button
+    mat-dialog-close
+    class="base-border base-btn-border-color"
+    [disabled]="
+      (loading$ | async)! ||
+      (loadingCreateInventory$ | async)! ||
+      (loadingProductStock$ | async)!
+    "
+  >
+    Cancel
+  </button>
+
+  <button
+    mat-button
+    class="demoproj-btn"
+    (click)="onSubmit()"
+    [disabled]="
+      productStockForm.invalid ||
+      (loading$ | async)! ||
+      (loadingCreateInventory$ | async)! ||
+      (loadingProductStock$ | async)!
+    "
+  >
+    {{ data.productStock ? 'Update' : 'Create' }}
+  </button>
+</mat-dialog-actions>

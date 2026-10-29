@@ -1,0 +1,169 @@
+<form
+  class="grid grid-cols-[1fr] gap-[1rem]"
+  *ngIf="formGroup"
+  [formGroup]="formGroup"
+>
+  <h3>Privilege Setting</h3>
+
+  <div class="flex flex-col">
+    <div class="base-text-color-gray">Privilege name (TH) *</div>
+    <app-demoproj-input formControlName="name_th">
+      <span error *ngIf="nameThControl?.hasError('required')">
+        Please input Privilege name
+      </span>
+    </app-demoproj-input>
+  </div>
+
+  <div class="flex flex-col">
+    <div class="base-text-color-gray">Privilege name (EN) *</div>
+    <app-demoproj-input formControlName="name_en">
+      <span error *ngIf="nameEnControl?.hasError('required')">
+        Please input Privilege name
+      </span>
+    </app-demoproj-input>
+  </div>
+
+  <div class="flex gap-[1rem] mb-[1rem]">
+    <app-upload-file
+      [disabledDragDrop]="formMode === 'view'"
+      [imageNameUploaded]="privilegeImageNameUploaded()"
+      [isRequireError]="
+        !!privilegeImageFileControl?.touched &&
+        !!privilegeImageFileControl?.hasError('required')
+      "
+      [description]="'Image Privilege Detail (640 x 426 px)'"
+      [isReview]="formMode === 'view'"
+      [reviewImageUrl]="privilegeImageUrlControl?.getRawValue()"
+      (fileDropped)="onFileDropped($event, 'privilege')"
+      (fileSelected)="onFileSelected($event, 'privilege')"
+    ></app-upload-file>
+    <app-upload-file
+      [disabledDragDrop]="formMode === 'view'"
+      [imageNameUploaded]="thumnailImageNameUploaded()"
+      [isRequireError]="
+        !!thumnailImageFileControl?.touched &&
+        !!thumnailImageFileControl?.hasError('required')
+      "
+      [description]="'Image Thumbnail (640 x 360 px)'"
+      [isReview]="formMode === 'view'"
+      [reviewImageUrl]="thumnailImageUrlControl?.getRawValue()"
+      (fileDropped)="onFileDropped($event, 'thumnail')"
+      (fileSelected)="onFileSelected($event, 'thumnail')"
+    ></app-upload-file>
+  </div>
+
+  <div class="grid grid-cols-[repeat(3,_minmax(12rem,_1fr))] gap-[1rem]">
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Privilege Type *</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="privilege_type"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(
+                privilegeTypeControl?.value,
+                privilegeTypeOptions
+              )
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of privilegeTypeOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div
+      class="flex flex-col"
+      *ngIf="privilegeTypeControl?.value === privilegeType.BOOKING"
+    >
+      <div class="base-text-color-gray">URL *</div>
+      <app-demoproj-input formControlName="booking_url">
+        <span
+          error
+          *ngIf="
+            (bookingUrlControl?.touched || bookingUrlControl?.dirty) &&
+            bookingUrlControl?.hasError('required')
+          "
+        >
+          Please input URL
+        </span>
+        <span
+          error
+          *ngIf="
+            (bookingUrlControl?.touched || bookingUrlControl?.dirty) &&
+            bookingUrlControl?.hasError('invalidUrl')
+          "
+        >
+          Invalid URL
+        </span>
+      </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Campaign Type *</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="campaign_type"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(campaignTypeControl?.value, campaignTypeOptions)
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of campaignTypeOptions; track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="base-text-color-gray">Brand *</div>
+
+      <mat-form-field class="demoproj-select">
+        <mat-select
+          formControlName="brand_id"
+          [hideSingleSelectionIndicator]="true"
+        >
+          <mat-select-trigger>
+            <span>{{
+              getDropdownValue(
+                brandIdControl?.value,
+                (brandOptions$ | async) || []
+              )
+            }}</span>
+            <mat-icon class="absolute right-0">keyboard_arrow_down</mat-icon>
+          </mat-select-trigger>
+          @for (type of (brandOptions$ | async); track type) {
+          <mat-option [value]="type.code">{{ type.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div
+      class="flex flex-col"
+      *ngIf="privilegeTypeControl?.value !== privilegeType.BOOKING"
+    >
+      <div class="base-text-color-gray">Telephone</div>
+      <app-demoproj-input formControlName="telephone"> </app-demoproj-input>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="base-text-color-gray">Website</div>
+      <app-demoproj-input formControlName="website">
+        <span error *ngIf="websiteControl?.hasError('invalidUrl')">
+          Invalid URL
+        </span>
+      </app-demoproj-input>
+    </div>
+  </div>
+</form>

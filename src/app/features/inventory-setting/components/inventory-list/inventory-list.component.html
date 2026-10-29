@@ -1,0 +1,26 @@
+<app-demoproj-table
+  [data]="(inventories$ | async)!"
+  [tableColumns]="tableColumns()"
+  [pagination]="pagination$ | async"
+  [loading]="(loading$ | async)!"
+  [noDataMessage]="'No Inventory set'"
+  [sortField]="defaultParams().sort_by || ''"
+  [sortDirection]="defaultParams().sort_direction || ''"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (rowClick)="onRowClick($event)"
+  (sortChange)="onSortChange($event)"
+>
+  <ng-template #customColumn let-columnCode="columnCode" let-rowData="rowData">
+    <ng-container [ngSwitch]="columnCode">
+      <ng-container *ngSwitchCase="'ready_to_use'">
+        <div class="flex items-center gap-[0.5rem] my-[0.5rem]">
+          <div class="status-icon"></div>
+          <div>{{ (rowData.ready_to_use | number : '1.0-2') || '-' }}</div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+  </ng-template>
+</app-demoproj-table>
